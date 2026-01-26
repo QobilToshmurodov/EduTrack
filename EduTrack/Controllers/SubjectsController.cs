@@ -1,5 +1,4 @@
-using EduTrackDataAccess.Repositories.Subjects;
-using EduTrackDataAccess.Entities;
+using EduTrack.Services;
 using EduTrack.ViewModels.Subjects;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,27 +8,25 @@ namespace EduTrack.Controllers
     [Route("api/[controller]")]
     public class SubjectsController : ControllerBase
     {
-        private readonly ISubjectRepository _repository;
+        private readonly ISubjectService _service;
 
-        public SubjectsController(ISubjectRepository repository)
+        public SubjectsController(ISubjectService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var subjects = await _repository.GetAllSubject();
-            var result = subjects.Select(s => new SubjectOptionVm { Id = s.Id, Name = s.Name });
+            var result = await _service.GetAllSubjectsAsync();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var subject = await _repository.GetSubject(id);
-            if (subject == null) return NotFound();
-            var vm = new SubjectOptionVm { Id = subject.Id, Name = subject.Name };
+            var vm = await _service.GetSubjectByIdAsync(id);
+            if (vm == null) return NotFound();
             return Ok(vm);
         }
 
@@ -37,27 +34,22 @@ namespace EduTrack.Controllers
         public async Task<IActionResult> Create([FromBody] SubjectLookupVm model)
         {
             if (model == null) return BadRequest();
-            var entity = new Subject { Name = model.Name };
-            var created = await _repository.CreateSubject(entity);
-            var vm = new SubjectOptionVm { Id = created.Id, Name = created.Name };
+            var vm = await _service.CreateSubjectAsync(model);
             return CreatedAtAction(nameof(Get), new { id = vm.Id }, vm);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] SubjectLookupVm model)
         {
-            var existing = await _repository.GetSubject(id);
-            if (existing == null) return NotFound();
-            existing.Name = model.Name;
-            var updated = await _repository.UpdateSubject(id, existing);
-            var vm = new SubjectOptionVm { Id = updated.Id, Name = updated.Name };
+            var vm = await _service.UpdateSubjectAsync(id, model);
+            if (vm == null) return NotFound();
             return Ok(vm);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _repository.DeleteSubject(id);
+            var deleted = await _service.DeleteSubjectAsync(id);
             if (!deleted) return NotFound();
             return NoContent();
         }

@@ -1,6 +1,7 @@
 using EduTrackDataAccess;
 using Microsoft.EntityFrameworkCore;
 using EduTrackDataAccess.Repositories.Subjects;
+using EduTrack.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<EdutrackDbContext>(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.AddScoped<ISubjectService, SubjectService>();
 
 builder.Services.AddEndpointsApiExplorer();
 
