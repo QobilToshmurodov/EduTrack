@@ -1,5 +1,4 @@
-﻿using EduTrack.ViewModels.Subjects;
-using EduTrackDataAccess.Entities;
+﻿using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Subjects;
 
 namespace EduTrack.Services
@@ -13,34 +12,31 @@ namespace EduTrack.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<SubjectOptionVm>> GetAllSubjectsAsync()
+        public async Task<IEnumerable<Subject>> GetAllSubjectsAsync()
         {
-            var subjects = await _repository.GetAllSubject();
-            return subjects.Select(s => new SubjectOptionVm { Id = s.Id, Name = s.Name });
+            return await _repository.GetAllSubject();
         }
 
-        public async Task<SubjectOptionVm> GetSubjectByIdAsync(int id)
+        public async Task<Subject> GetSubjectByIdAsync(int id)
         {
-            var subject = await _repository.GetSubject(id);
-            if (subject == null) return null;
-            return new SubjectOptionVm { Id = subject.Id, Name = subject.Name };
+            return await _repository.GetSubject(id);
         }
 
-        public async Task<SubjectOptionVm> CreateSubjectAsync(SubjectLookupVm model)
+        public async Task<Subject> CreateSubjectAsync(Subject model)
         {
-            var entity = new Subject { Name = model.Name };
-            var created = await _repository.CreateSubject(entity);
-            return new SubjectOptionVm { Id = created.Id, Name = created.Name };
+            return await _repository.CreateSubject(model);
         }
 
-        public async Task<SubjectOptionVm> UpdateSubjectAsync(int id, SubjectLookupVm model)
+        public async Task<Subject> UpdateSubjectAsync(int id, Subject model)
         {
             var existing = await _repository.GetSubject(id);
             if (existing == null) return null;
 
             existing.Name = model.Name;
-            var updated = await _repository.UpdateSubject(id, existing);
-            return new SubjectOptionVm { Id = updated.Id, Name = updated.Name };
+            // Shartga ko'ra boshqa propertylarni ham yangilash mumkin bo'lsa qo'shish kerak.
+            // Hozircha faqat Name yangilanmoqda.
+
+            return await _repository.UpdateSubject(id, existing);
         }
 
         public async Task<bool> DeleteSubjectAsync(int id)

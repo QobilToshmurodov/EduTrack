@@ -1,5 +1,5 @@
 using EduTrack.Services;
-using EduTrack.ViewModels.Subjects;
+using EduTrackDataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Controllers
@@ -25,25 +25,25 @@ namespace EduTrack.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var vm = await _service.GetSubjectByIdAsync(id);
-            if (vm == null) return NotFound();
-            return Ok(vm);
+            var subject = await _service.GetSubjectByIdAsync(id);
+            if (subject == null) return NotFound();
+            return Ok(subject);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SubjectLookupVm model)
+        public async Task<IActionResult> Create([FromBody] Subject model)
         {
             if (model == null) return BadRequest();
-            var vm = await _service.CreateSubjectAsync(model);
-            return CreatedAtAction(nameof(Get), new { id = vm.Id }, vm);
+            var created = await _service.CreateSubjectAsync(model);
+            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] SubjectLookupVm model)
+        public async Task<IActionResult> Update(int id, [FromBody] Subject model)
         {
-            var vm = await _service.UpdateSubjectAsync(id, model);
-            if (vm == null) return NotFound();
-            return Ok(vm);
+            var updated = await _service.UpdateSubjectAsync(id, model);
+            if (updated == null) return NotFound();
+            return Ok(updated);
         }
 
         [HttpDelete("{id}")]
