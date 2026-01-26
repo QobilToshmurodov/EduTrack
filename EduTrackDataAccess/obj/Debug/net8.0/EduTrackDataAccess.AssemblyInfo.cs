@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EduTrackDataAccess")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45fed1945ac476c73b43389f83a6fde7d7d33735")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a559cbd4ff625ec823a82c2d01c6c29b819f9aad")]
 [assembly: System.Reflection.AssemblyProductAttribute("EduTrackDataAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EduTrackDataAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

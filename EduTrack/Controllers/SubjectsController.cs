@@ -8,9 +8,9 @@ namespace EduTrack.Controllers
     [Route("api/[controller]")]
     public class SubjectsController : ControllerBase
     {
-        private readonly ISubjectService _service;
+        private readonly SubjectService _service;
 
-        public SubjectsController(ISubjectService service)
+        public SubjectsController(SubjectService service)
         {
             _service = service;
         }

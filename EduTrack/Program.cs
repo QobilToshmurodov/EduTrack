@@ -11,7 +11,7 @@ builder.Services.AddDbContext<EdutrackDbContext>(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
-builder.Services.AddScoped<ISubjectService, SubjectService>();
+builder.Services.AddScoped<SubjectService>();
 
 builder.Services.AddEndpointsApiExplorer();
 

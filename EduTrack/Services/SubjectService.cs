@@ -4,7 +4,7 @@ using EduTrackDataAccess.Repositories.Subjects;
 
 namespace EduTrack.Services
 {
-    public class SubjectService : ISubjectService
+    public class SubjectService
     {
         private readonly ISubjectRepository _repository;
 
