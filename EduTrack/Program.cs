@@ -1,43 +1,30 @@
-
-using Microsoft.EntityFrameworkCore;
 using EduTrackDataAccess;
-using System;
+using Microsoft.EntityFrameworkCore;
+using EduTrackDataAccess.Repositories.Subjects;
 
-namespace EduTrack
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<EduTrackDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<EdutrackDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Add services to the container.
+builder.Services.AddControllers();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 
-            var app = builder.Build();
+builder.Services.AddEndpointsApiExplorer();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+builder.Services.AddSwaggerGen();
 
-            app.UseHttpsRedirection();
+var app = builder.Build();
 
-            app.UseAuthorization();
+app.UseSwagger();
 
+app.UseSwaggerUI();
 
-            app.MapControllers();
+app.UseHttpsRedirection();
 
-            app.Run();
-        }
-    }
-}
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EduTrackDataAccess.Entities
+﻿namespace EduTrackDataAccess.Entities
 {
     public class NotificationLog
     {
@@ -13,8 +7,8 @@ namespace EduTrackDataAccess.Entities
         public int StudentId { get; set; }
         public int EventId { get; set; }
 
-        public Parent Parent { get; set; } = null!;
-        public Student Student { get; set; } = null!;
+        public Parent Parent { get; set; }
+        public Student Student { get; set; }
         public AttendanceEvent Event { get; set; }
     }
 }
