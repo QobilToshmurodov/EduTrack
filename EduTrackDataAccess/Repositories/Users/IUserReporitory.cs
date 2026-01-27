@@ -9,7 +9,7 @@ namespace EduTrackDataAccess.Repositories.Users
 {
     public interface IUserReporitory
     {
-        Task<IEnumerable<User>> GetAllTeacherSubjectGroup();
+        Task<IEnumerable<User>> GetAllUser();
         Task<User> GetUser(int id);
         Task<User> CreateUser(User user);
         Task<User> UpdateUser(int id, User user);

@@ -36,11 +36,10 @@ namespace EduTrackDataAccess.Repositories.Users
             return false;
         }
 
-        public async Task<IEnumerable<User>> GetAllTeacherSubjectGroup()
+        public async Task<IEnumerable<User>> GetAllUser()
         {
             return await _dbContext.Users.ToListAsync();
         }
-
         public async Task<User> GetUser(int id)
         {
             return await _dbContext.Users.FindAsync(id);
