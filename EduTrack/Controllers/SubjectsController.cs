@@ -1,5 +1,5 @@
+using EduTrack.Application.DTOs;
 using EduTrack.Services;
-using EduTrackDataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Controllers
@@ -31,17 +31,18 @@ namespace EduTrack.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Subject model)
+        public async Task<IActionResult> Create([FromBody] SubjectCreateDto dto)
         {
-            if (model == null) return BadRequest();
-            var created = await _service.CreateSubjectAsync(model);
+            if (dto == null) return BadRequest();
+            var created = await _service.CreateSubjectAsync(dto);
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Subject model)
+        public async Task<IActionResult> Update(int id, [FromBody] SubjectUpdateDto dto)
         {
-            var updated = await _service.UpdateSubjectAsync(id, model);
+            if (dto == null) return BadRequest();
+            var updated = await _service.UpdateSubjectAsync(id, dto);
             if (updated == null) return NotFound();
             return Ok(updated);
         }

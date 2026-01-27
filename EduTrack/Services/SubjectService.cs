@@ -1,4 +1,5 @@
-﻿using EduTrackDataAccess.Entities;
+﻿using EduTrack.Application.DTOs;
+using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Subjects;
 
 namespace EduTrack.Services
@@ -12,31 +13,58 @@ namespace EduTrack.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Subject>> GetAllSubjectsAsync()
+        public async Task<IEnumerable<SubjectDto>> GetAllSubjectsAsync()
         {
-            return await _repository.GetAllSubject();
+            var subjects = await _repository.GetAllSubject();
+            return subjects.Select(s => new SubjectDto
+            {
+                Id = s.Id,
+                Name = s.Name
+            });
         }
 
-        public async Task<Subject> GetSubjectByIdAsync(int id)
+        public async Task<SubjectDto?> GetSubjectByIdAsync(int id)
         {
-            return await _repository.GetSubject(id);
+            var subject = await _repository.GetSubject(id);
+            if (subject == null) return null;
+
+            return new SubjectDto
+            {
+                Id = subject.Id,
+                Name = subject.Name
+            };
         }
 
-        public async Task<Subject> CreateSubjectAsync(Subject model)
+        public async Task<SubjectDto> CreateSubjectAsync(SubjectCreateDto dto)
         {
-            return await _repository.CreateSubject(model);
+            var subject = new Subject
+            {
+                Name = dto.Name
+            };
+
+            var created = await _repository.CreateSubject(subject);
+
+            return new SubjectDto
+            {
+                Id = created.Id,
+                Name = created.Name
+            };
         }
 
-        public async Task<Subject> UpdateSubjectAsync(int id, Subject model)
+        public async Task<SubjectDto?> UpdateSubjectAsync(int id, SubjectUpdateDto dto)
         {
             var existing = await _repository.GetSubject(id);
             if (existing == null) return null;
 
-            existing.Name = model.Name;
-            // Shartga ko'ra boshqa propertylarni ham yangilash mumkin bo'lsa qo'shish kerak.
-            // Hozircha faqat Name yangilanmoqda.
+            existing.Name = dto.Name;
 
-            return await _repository.UpdateSubject(id, existing);
+            var updated = await _repository.UpdateSubject(id, existing);
+
+            return new SubjectDto
+            {
+                Id = updated.Id,
+                Name = updated.Name
+            };
         }
 
         public async Task<bool> DeleteSubjectAsync(int id)

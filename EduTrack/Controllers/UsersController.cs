@@ -1,6 +1,6 @@
 ﻿
-using EduTrack.Services;
-using EduTrackDataAccess.Entities;
+using EduTrack.Application.DTOs;
+using EduTrack.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Controllers
@@ -9,48 +9,39 @@ namespace EduTrack.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly UserService _service;
+        private readonly IUserService _service;
 
-        public UsersController(UserService service)
+        public UsersController(IUserService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var result = await _service.GetUsersAsync();
+            var result = await _service.GetAllAsync(cancellationToken);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
         {
-            var user = await _service.GetUserByIdAsync(id);
+            var user = await _service.GetByIdAsync(id, cancellationToken);
             if (user == null) return NotFound();
             return Ok(user);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] User model)
+        public async Task<IActionResult> Create([FromBody] UserCreateDto model, CancellationToken cancellationToken)
         {
-            if (model == null) return BadRequest();
-            var created = await _service.CreateUserAsync(model);
+            var created = await _service.CreateAsync(model, cancellationToken);
             return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] User model)
-        {
-            var updated = await _service.UpdateUserAsync(id, model);
-            if (updated == null) return NotFound();
-            return Ok(updated);
-        }
-
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
-            var deleted = await _service.DeleteUserAsync(id);
+            var deleted = await _service.DeleteAsync(id, cancellationToken);
             if (!deleted) return NotFound();
             return NoContent();
         }
