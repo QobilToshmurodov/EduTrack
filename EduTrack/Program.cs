@@ -46,7 +46,11 @@ builder.Services.AddAuthentication(x =>
 
 builder.Services.AddControllers();
 
+// Unit Of Work
+builder.Services.AddScoped<EduTrack.Domain.Interfaces.Common.IUnitOfWork, UnitOfWork>();
+
 // Repositories
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();

@@ -4,54 +4,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EduTrack.Infrastructure.Persistence.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken = default)
+        public override async Task<IEnumerable<User>> GetAllAsync(bool trackChanges = false, CancellationToken cancellationToken = default)
         {
-            return await _context.Users
+            return await Query(trackChanges)
                 .Include(u => u.Student)
                 .Include(u => u.Teacher)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public override async Task<User?> GetByIdAsync(object id, CancellationToken cancellationToken = default)
         {
-            return await _context.Users
+            return await _dbSet
                 .Include(u => u.Student)
                 .Include(u => u.Teacher)
-                .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+                .FirstOrDefaultAsync(u => u.Id == (int)id, cancellationToken);
         }
 
         public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username, cancellationToken);
-        }
-
-        public async Task AddAsync(User user, CancellationToken cancellationToken = default)
-        {
-            await _context.Users.AddAsync(user, cancellationToken);
-        }
-
-        public void Update(User user)
-        {
-            _context.Users.Update(user);
-        }
-
-        public void Delete(User user)
-        {
-            _context.Users.Remove(user);
-        }
-
-        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            await _context.SaveChangesAsync(cancellationToken);
+            return await _dbSet.FirstOrDefaultAsync(u => u.Username == username, cancellationToken);
         }
     }
 }

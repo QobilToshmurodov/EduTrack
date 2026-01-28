@@ -31,11 +31,11 @@ namespace EduTrack.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] UserCreateDto model, CancellationToken cancellationToken)
+        [HttpPost("with-student")]
+        public async Task<IActionResult> CreateWithStudent([FromBody] UserCreateDto model, [FromQuery] string fullName, [FromQuery] int groupId, CancellationToken cancellationToken)
         {
-            var created = await _service.CreateAsync(model, cancellationToken);
-            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            await _service.CreateUserWithStudentAsync(model, fullName, groupId, cancellationToken);
+            return Ok();
         }
 
         [HttpDelete("{id}")]

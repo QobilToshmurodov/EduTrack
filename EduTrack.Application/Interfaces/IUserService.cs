@@ -8,5 +8,6 @@ namespace EduTrack.Application.Interfaces
         Task<UserDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
         Task<UserDto> CreateAsync(UserCreateDto dto, CancellationToken cancellationToken = default);
         Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
+        Task CreateUserWithStudentAsync(UserCreateDto userDto, string fullName, int groupId, CancellationToken cancellationToken = default);
     }
 }
