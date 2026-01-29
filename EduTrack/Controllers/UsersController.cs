@@ -1,6 +1,5 @@
-﻿
-using EduTrack.Application.DTOs;
-using EduTrack.Application.Interfaces;
+﻿using EduTrack.Models;
+using EduTrack.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Controllers
@@ -9,41 +8,58 @@ namespace EduTrack.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService _service;
-
-        public UsersController(IUserService service)
+        private readonly UserService _service;
+        public UsersController(UserService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        public async Task<IActionResult> Get()
         {
-            var result = await _service.GetAllAsync(cancellationToken);
-            return Ok(result);
+
+            return Ok(await _service.GetAll());
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(int id)
         {
-            var user = await _service.GetByIdAsync(id, cancellationToken);
-            if (user == null) return NotFound();
-            return Ok(user);
+            if (id == 0)
+                return NotFound($"Data with the given ID: {id} was not found.");
+
+            else if (id < 0)
+                return BadRequest("Wrong data.");
+
+            return Ok(await _service.Get(id));
         }
 
-        [HttpPost("with-student")]
-        public async Task<IActionResult> CreateWithStudent([FromBody] UserCreateDto model, [FromQuery] string fullName, [FromQuery] int groupId, CancellationToken cancellationToken)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] UserModel model)
         {
-            await _service.CreateUserWithStudentAsync(model, fullName, groupId, cancellationToken);
-            return Ok();
+            var createdUser = await _service.Create(model);
+            var routeValue = new { id = createdUser.Id };
+            return CreatedAtRoute(routeValue, createdUser);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] UserModel model)
+        {
+            var updatedUser = await _service.Update(id, model);
+            return Ok(updatedUser);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _service.DeleteAsync(id, cancellationToken);
-            if (!deleted) return NotFound();
-            return NoContent();
+            bool deletedUser = await _service.Delete(id);
+            if (deletedUser)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

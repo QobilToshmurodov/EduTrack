@@ -1,9 +1,10 @@
-﻿using EduTrackDataAccess.Entities;
+﻿using EduTrack.Models;
+using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Groups;
 
 namespace EduTrack.Services
 {
-    public class GroupService
+    public class GroupService :IGenericService<GroupModel>
     {
         private readonly IGroupsRepository _repository;
         public GroupService(IGroupsRepository repository)
@@ -11,34 +12,71 @@ namespace EduTrack.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Group>> GetAllGroupAsync()
+        public async Task<GroupModel> Create(GroupModel model)
         {
-            return await _repository.GetAllGroup();
+            var groups = new Group
+            {
+                Id = model.Id,
+                Name = model.Name,
+
+            };
+            var createdGroups = await _repository.CreateGroup(groups);
+            var result = new GroupModel()
+            {
+                Id = createdGroups.Id,
+                Name = createdGroups.Name,
+            };
+            return result;
         }
 
-        public async Task<Group> GetGroupByIdAsync(int id)
-        {
-            return await _repository.GetGroup(id);
-        }
-
-        public async Task<Group> CreateGroupAsync(Group model)
-        {
-            return await _repository.CreateGroup(model);
-        }
-
-        public async Task<Group> UpdateGroupAsync(int id, Group model)
-        {
-            var existing = await _repository.GetGroup(id);
-            if (existing == null) return null;
-
-            existing.Name = model.Name;
-
-            return await _repository.UpdateGroup(id, existing);
-        }
-
-        public async Task<bool> DeleteGroupAsync(int id)
+        public async Task<bool> Delete(int id)
         {
             return await _repository.DeleteGroup(id);
+        }
+
+        public async Task<GroupModel> Get(int id)
+        {
+            var groups = await _repository.GetGroup(id);
+            var model = new GroupModel
+            {
+                Id = groups.Id,
+                Name = groups.Name,
+            };
+            return model;
+
+        }
+
+        public async Task<IEnumerable<GroupModel>> GetAll()
+        {
+            var result = new List<GroupModel>();
+            var groups = await _repository.GetAllGroup();
+            foreach (var group in groups)
+            {
+                var model = new GroupModel
+                {
+                    Id = group.Id,
+                    Name = group.Name,
+
+                };
+                result.Add(model);
+            }
+            return result;
+        }
+
+        public async Task<GroupModel> Update(int id, GroupModel model)
+        {
+            var groups = new Group
+            {
+                Id = model.Id,
+                Name = model.Name,
+            };
+            var updadedGroups = await _repository.UpdateGroup(id, groups);
+            var result = new GroupModel
+            {
+                Id = updadedGroups.Id,
+                Name = updadedGroups.Name,
+            };
+            return result;
         }
     }
 }

@@ -7,18 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduTrack", "EduTrack\EduTra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduTrackDataAccess", "EduTrackDataAccess\EduTrackDataAccess.csproj", "{231ACD2E-6F16-6154-937D-E40677C92A26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduTrack.Domain", "EduTrack.Domain\EduTrack.Domain.csproj", "{0E65D479-6A3D-405A-9422-8979AF06C861}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduTrack.Application", "EduTrack.Application\EduTrack.Application.csproj", "{B5B33D13-39B4-4106-86C2-EBDDAF8A7454}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduTrack.Infrastructure", "EduTrack.Infrastructure\EduTrack.Infrastructure.csproj", "{9D8671BE-C038-4991-8368-D831144A1D01}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduTrack.Infrastructure.Identity", "EduTrack.Infrastructure.Identity\EduTrack.Infrastructure.Identity.csproj", "{9F865ACC-EAC9-4B71-A554-11A9C9ECE77E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduTrack.BotWorker", "EduTrack.BotWorker\EduTrack.BotWorker.csproj", "{9FB5D0DA-8CA6-4B0E-B4A0-EA353A80F861}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduTrack.Shared", "EduTrack.Shared\EduTrack.Shared.csproj", "{B7E4F1B4-72F5-4D05-A4BA-ECF77FFE8C31}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,30 +21,6 @@ Global
 		{231ACD2E-6F16-6154-937D-E40677C92A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{231ACD2E-6F16-6154-937D-E40677C92A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{231ACD2E-6F16-6154-937D-E40677C92A26}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E65D479-6A3D-405A-9422-8979AF06C861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E65D479-6A3D-405A-9422-8979AF06C861}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E65D479-6A3D-405A-9422-8979AF06C861}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E65D479-6A3D-405A-9422-8979AF06C861}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B5B33D13-39B4-4106-86C2-EBDDAF8A7454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B5B33D13-39B4-4106-86C2-EBDDAF8A7454}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B5B33D13-39B4-4106-86C2-EBDDAF8A7454}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B5B33D13-39B4-4106-86C2-EBDDAF8A7454}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D8671BE-C038-4991-8368-D831144A1D01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D8671BE-C038-4991-8368-D831144A1D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D8671BE-C038-4991-8368-D831144A1D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D8671BE-C038-4991-8368-D831144A1D01}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F865ACC-EAC9-4B71-A554-11A9C9ECE77E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F865ACC-EAC9-4B71-A554-11A9C9ECE77E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F865ACC-EAC9-4B71-A554-11A9C9ECE77E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F865ACC-EAC9-4B71-A554-11A9C9ECE77E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FB5D0DA-8CA6-4B0E-B4A0-EA353A80F861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FB5D0DA-8CA6-4B0E-B4A0-EA353A80F861}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FB5D0DA-8CA6-4B0E-B4A0-EA353A80F861}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FB5D0DA-8CA6-4B0E-B4A0-EA353A80F861}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7E4F1B4-72F5-4D05-A4BA-ECF77FFE8C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7E4F1B4-72F5-4D05-A4BA-ECF77FFE8C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7E4F1B4-72F5-4D05-A4BA-ECF77FFE8C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7E4F1B4-72F5-4D05-A4BA-ECF77FFE8C31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

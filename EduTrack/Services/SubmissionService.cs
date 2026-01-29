@@ -1,10 +1,11 @@
-﻿using EduTrackDataAccess.Entities;
+﻿using EduTrack.Models;
+using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Subjects;
 using EduTrackDataAccess.Repositories.Submissions;
 
 namespace EduTrack.Services
 {
-    public class SubmissionService
+    public class SubmissionService : IGenericService<SubmissionModel>
     {
         private readonly ISubmissionsRepository _repository;
 
@@ -12,35 +13,83 @@ namespace EduTrack.Services
         {
             _repository = repository;
         }
-        public async Task<IEnumerable<Submission>> GetSubmissionAsync()
+        public async Task<SubmissionModel> Create(SubmissionModel model)
         {
-            return await _repository.GetAllSubmission();
-        }
-        public async Task<Submission> GetSubmissionByIdAsync(int id)
-        {
-            return await _repository.GetSubmission(id);
-        }
+            var submissions = new Submission
+            {
+                Id = model.Id,
+                AssignmentId = model.AssignmentId,
+                StudentId = model.StudentId,
+                FileUrl = model.FileUrl,
 
-        public async Task<Submission> CreateSubmissionAsync(Submission model)
-        {
-            return await _repository.CreateSubmission(model);
-        }
-
-        public async Task<Submission> UpdateSubmissionAsync(int id, Submission model)
-        {
-            var existing = await _repository.GetSubmission(id);
-            if (existing == null) return null;
-
-            existing.AssignmentId = model.AssignmentId;
-            existing.StudentId = model.StudentId;
-            existing.FileUrl = model.FileUrl;
-
-            return await _repository.UpdateSubmission(id, existing);
+            };
+            var createdSubmissions = await _repository.CreateSubmission(submissions);
+            var result = new SubmissionModel()
+            {
+                Id = createdSubmissions.Id,
+                AssignmentId= createdSubmissions.AssignmentId,
+                StudentId= createdSubmissions.StudentId,
+                FileUrl= createdSubmissions.FileUrl,
+            };
+            return result;
         }
 
-        public async Task<bool> DeleteSubmissionAsync(int id)
+        public async Task<bool> Delete(int id)
         {
             return await _repository.DeleteSubmission(id);
+        }
+
+        public async Task<SubmissionModel> Get(int id)
+        {
+            var submissions = await _repository.GetSubmission(id);
+            var model = new SubmissionModel
+            {
+                Id = submissions.Id,
+                AssignmentId=submissions.AssignmentId,
+                StudentId=submissions.StudentId,
+                FileUrl=submissions.FileUrl,
+            };
+            return model;
+
+        }
+
+        public async Task<IEnumerable<SubmissionModel>> GetAll()
+        {
+            var result = new List<SubmissionModel>();
+            var submissions = await _repository.GetAllSubmission();
+            foreach (var submission in submissions)
+            {
+                var model = new SubmissionModel
+                {
+                    Id = submission.Id,
+                    AssignmentId = submission.AssignmentId,
+                    StudentId=submission.StudentId,
+                    FileUrl=submission.FileUrl,
+
+                };
+                result.Add(model);
+            }
+            return result;
+        }
+
+        public async Task<SubmissionModel> Update(int id, SubmissionModel model)
+        {
+            var Submissions = new Submission
+            {
+                Id = model.Id,
+                AssignmentId = model.AssignmentId,
+                StudentId = model.StudentId,
+                FileUrl = model.FileUrl,
+            };
+            var updadedSubmissions = await _repository.UpdateSubmission(id, Submissions);
+            var result = new SubmissionModel
+            {
+                Id = updadedSubmissions.Id,
+                AssignmentId=updadedSubmissions.AssignmentId,
+                StudentId=updadedSubmissions.StudentId,
+                FileUrl=updadedSubmissions.FileUrl,
+            };
+            return result;
         }
     }
 }

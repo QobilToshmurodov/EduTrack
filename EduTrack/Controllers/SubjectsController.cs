@@ -1,4 +1,4 @@
-using EduTrack.Application.DTOs;
+﻿using EduTrack.Models;
 using EduTrack.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,50 +9,58 @@ namespace EduTrack.Controllers
     public class SubjectsController : ControllerBase
     {
         private readonly SubjectService _service;
-
         public SubjectsController(SubjectService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> Get()
         {
-            var result = await _service.GetAllSubjectsAsync();
-            return Ok(result);
+
+            return Ok(await _service.GetAll());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var subject = await _service.GetSubjectByIdAsync(id);
-            if (subject == null) return NotFound();
-            return Ok(subject);
+            if (id == 0)
+                return NotFound($"Data with the given ID: {id} was not found.");
+
+            else if (id < 0)
+                return BadRequest("Wrong data.");
+
+            return Ok(await _service.Get(id));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] SubjectCreateDto dto)
+        public async Task<IActionResult> Post([FromBody] SubjectModel model)
         {
-            if (dto == null) return BadRequest();
-            var created = await _service.CreateSubjectAsync(dto);
-            return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
+            var createdSubject = await _service.Create(model);
+            var routeValue = new { id = createdSubject.Id };
+            return CreatedAtRoute(routeValue, createdSubject);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] SubjectUpdateDto dto)
+        public async Task<IActionResult> Put(int id, [FromBody] SubjectModel model)
         {
-            if (dto == null) return BadRequest();
-            var updated = await _service.UpdateSubjectAsync(id, dto);
-            if (updated == null) return NotFound();
-            return Ok(updated);
+            var updatedSubject = await _service.Update(id, model);
+            return Ok(updatedSubject);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var deleted = await _service.DeleteSubjectAsync(id);
-            if (!deleted) return NotFound();
-            return NoContent();
+            bool deletedSubject = await _service.Delete(id);
+            if (deletedSubject)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
+
     }
 }
