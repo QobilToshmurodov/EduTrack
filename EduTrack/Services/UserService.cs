@@ -19,7 +19,7 @@ namespace EduTrack.Services
             {
                 Id = model.Id,
                 Username = model.Username,
-                PasswordHash = model.PasswordHash,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.PasswordHash),
                 Role = model.Role,
 
             };
@@ -78,7 +78,7 @@ namespace EduTrack.Services
             {
                 Id = model.Id,
                 Username = model.Username,
-                PasswordHash=model.PasswordHash,
+                PasswordHash= BCrypt.Net.BCrypt.HashPassword(model.PasswordHash),
                 Role=model.Role,
             };
             var updadedUsers = await _repository.UpdateUser(id, users);
