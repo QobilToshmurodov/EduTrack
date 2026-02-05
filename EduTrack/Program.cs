@@ -63,6 +63,8 @@ builder.Services.AddScoped<AssignmentService>();
 
 builder.Services.AddScoped<IJWTService, JWTService>();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -80,6 +82,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             )
         };
     });
+builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 

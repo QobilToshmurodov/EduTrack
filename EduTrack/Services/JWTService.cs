@@ -4,12 +4,14 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
 
 namespace EduTrack.Services
 {
     public interface IJWTService
     {
         string GenerateToken(User user);
+        string GenerateRefreshToken();
     }
     public class JWTService : IJWTService
     {
@@ -44,6 +46,11 @@ namespace EduTrack.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        public string GenerateRefreshToken()
+        {
+            var bytes = RandomNumberGenerator.GetBytes(64);
+            return Convert.ToBase64String(bytes);
         }
     }
 }

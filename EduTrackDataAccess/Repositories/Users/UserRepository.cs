@@ -53,5 +53,12 @@ namespace EduTrackDataAccess.Repositories.Users
             await _dbContext.SaveChangesAsync();
             return user;
         }
+
+        public async Task<User> GetByUsernameAsync(string username)
+        {
+            return await _dbContext.Users
+                .FirstOrDefaultAsync(u => u.Username == username);
+        }
+
     }
 }

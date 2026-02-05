@@ -14,5 +14,6 @@ namespace EduTrackDataAccess.Repositories.Users
         Task<User> CreateUser(User user);
         Task<User> UpdateUser(int id, User user);
         Task<bool> DeleteUser(int id);
+        Task<User> GetByUsernameAsync(string username);
     }
 }

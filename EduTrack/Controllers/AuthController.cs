@@ -14,36 +14,14 @@ namespace EduTrack.Controllers
     {
         private readonly EdutrackDbContext _context;
         private readonly IJWTService _jwtService;
+        private readonly IAuthService _authService;
 
-        public AuthController(EdutrackDbContext context, IJWTService jwtService)
+        public AuthController(EdutrackDbContext context, IJWTService jwtService, IAuthService authService)
         {
             _context = context;
             _jwtService = jwtService;
+            _authService = authService;
         }
-
-        // REGISTER
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterModel dto)
-        {
-            var exists = await _context.Users
-                .AnyAsync(x => x.Username == dto.Username);
-
-            if (exists)
-                return BadRequest("Username already exists");
-
-            var user = new User
-            {
-                Username = dto.Username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                Role = "User"
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return Ok("Registered successfully");
-        }
-
         // LOGIN
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel dto)
@@ -69,5 +47,7 @@ namespace EduTrack.Controllers
                 user.Role
             });
         }
+
+
     }
 }
