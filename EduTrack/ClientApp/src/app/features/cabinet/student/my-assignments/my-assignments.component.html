@@ -1,0 +1,81 @@
+<div class="my-assignments-container">
+  <div class="header">
+    <h1>
+      <mat-icon>assignment</mat-icon>
+      Mening topshiriqlarim
+    </h1>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Yuklanmoqda...</p>
+    </div>
+  } @else {
+    @if (assignments().length === 0) {
+      <mat-card class="empty-state">
+        <mat-icon>assignment</mat-icon>
+        <h2>Topshiriqlar yo'q</h2>
+        <p>Hozircha sizga topshiriqlar berilmagan</p>
+      </mat-card>
+    } @else {
+      <div class="assignments-grid">
+        @for (assignment of assignments(); track assignment.id) {
+          <mat-card class="assignment-card">
+            <mat-card-header>
+              <mat-card-title>{{ assignment.title }}</mat-card-title>
+              <mat-card-subtitle>{{ assignment.subjectName }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="description">{{ assignment.description }}</p>
+
+              <div class="assignment-info">
+                <div class="info-item">
+                  <mat-icon>event</mat-icon>
+                  <span>
+                    Muddat: {{ assignment.deadline | date:'dd.MM.yyyy HH:mm' }}
+                    @if (isExpired(assignment.deadline) && assignment.status === 'pending') {
+                      <span class="expired-badge">(Muddati o'tgan)</span>
+                    }
+                  </span>
+                </div>
+
+                <div class="info-item">
+                  <mat-icon>grade</mat-icon>
+                  <span>Maksimal ball: {{ assignment.maxScore }}</span>
+                </div>
+
+                @if (assignment.status === 'graded' && assignment.score !== undefined) {
+                  <div class="info-item score">
+                    <mat-icon>star</mat-icon>
+                    <span>Sizning ballingiz: <strong>{{ assignment.score }}</strong></span>
+                  </div>
+                }
+              </div>
+
+              <div class="status-chip">
+                <mat-chip [color]="getStatusColor(assignment.status)" highlighted>
+                  {{ getStatusText(assignment.status) }}
+                </mat-chip>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-button color="primary" (click)="viewAssignment(assignment.id)">
+                <mat-icon>visibility</mat-icon>
+                Ko'rish
+              </button>
+              @if (assignment.status === 'pending' && !isExpired(assignment.deadline)) {
+                <button mat-raised-button color="primary" (click)="submitAssignment(assignment.id)">
+                  <mat-icon>upload</mat-icon>
+                  Topshirish
+                </button>
+              }
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

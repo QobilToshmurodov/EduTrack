@@ -60,3 +60,9 @@ export interface TSGDto {
   subjectId: number;
   groupId: number;
 }
+export interface  ParentDto {
+  id: number;
+  fullName: string;
+  chatId: string;
+  studentId: number;
+}

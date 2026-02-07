@@ -1,0 +1,181 @@
+.groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header-card {
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin: 0;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+}
+
+.form-card {
+  mat-card-header {
+    padding: 1.5rem 1.5rem 0 1.5rem;
+
+    mat-card-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+  }
+
+  mat-card-content {
+    padding: 1.5rem;
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+
+        mat-form-field {
+          width: 100%;
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+    }
+  }
+}
+
+.table-card {
+  overflow-x: auto;
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+    gap: 1rem;
+
+    p {
+      color: #666;
+      font-size: 1rem;
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    gap: 1rem;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: #ccc;
+    }
+
+    p {
+      color: #666;
+      font-size: 1.125rem;
+      margin: 0;
+    }
+
+    button {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .groups-table {
+    width: 100%;
+
+    th {
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #666;
+    }
+
+    td {
+      font-size: 0.9375rem;
+      color: #333;
+    }
+
+    .mat-column-id {
+      max-width: 80px;
+    }
+
+    .mat-column-actions {
+      width: 120px;
+      text-align: right;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .header-card mat-card-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .form-card {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  .groups-table {
+    font-size: 0.875rem;
+
+    th, td {
+      padding: 0.5rem;
+    }
+  }
+}

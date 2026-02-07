@@ -43,15 +43,33 @@ export class CabinetLayoutComponent {
   menuItems: MenuItem[] = [
     // Director/Admin
     {
-      label: 'Dashboard',
+      label: 'Boshqaruv Paneli',
       icon: 'dashboard',
       route: '/cabinet/director/dashboard',
       roles: [UserRole.Admin, UserRole.Director]
     },
     {
-      label: 'Statistika',
-      icon: 'bar_chart',
-      route: '/cabinet/director/statistics',
+      label: 'O\'quvchilar',
+      icon: 'school',
+      route: '/cabinet/director/students',
+      roles: [UserRole.Admin, UserRole.Director]
+    },
+    {
+      label: 'O\'qituvchilar',
+      icon: 'person',
+      route: '/cabinet/director/teachers',
+      roles: [UserRole.Admin, UserRole.Director]
+    },
+    {
+      label: 'Guruhlar',
+      icon: 'groups',
+      route: '/cabinet/director/groups',
+      roles: [UserRole.Admin, UserRole.Director]
+    },
+    {
+      label: 'Fanlar',
+      icon: 'book',
+      route: '/cabinet/director/subjects',
       roles: [UserRole.Admin, UserRole.Director]
     },
     
@@ -80,12 +98,6 @@ export class CabinetLayoutComponent {
       label: 'Baholarim',
       icon: 'grade',
       route: '/cabinet/student/my-grades',
-      roles: [UserRole.Student]
-    },
-    {
-      label: 'Davomatim',
-      icon: 'event_available',
-      route: '/cabinet/student/my-attendance',
       roles: [UserRole.Student]
     }
   ];

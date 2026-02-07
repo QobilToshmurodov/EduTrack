@@ -1,38 +1,25 @@
 import { Routes } from '@angular/router';
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-director-dashboard',
-  standalone: true,
-  template: `
-    <div style="padding: 2rem;">
-      <h1>Director Dashboard</h1>
-      <p>Dashboard funksiyalari keyinroq qo'shiladi</p>
-    </div>
-  `
-})
-export class DirectorDashboardComponent {}
-
-@Component({
-  selector: 'app-director-statistics',
-  standalone: true,
-  template: `
-    <div style="padding: 2rem;">
-      <h1>Statistika</h1>
-      <p>Statistika funksiyalari keyinroq qo'shiladi</p>
-    </div>
-  `
-})
-export class DirectorStatisticsComponent {}
 
 export const DIRECTOR_ROUTES: Routes = [
   {
     path: 'dashboard',
-    component: DirectorDashboardComponent
+    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
-    path: 'statistics',
-    component: DirectorStatisticsComponent
+    path: 'students',
+    loadComponent: () => import('./students/students.component').then(m => m.StudentsComponent)
+  },
+  {
+    path: 'teachers',
+    loadComponent: () => import('./teachers/teachers.component').then(m => m.TeachersComponent)
+  },
+  {
+    path: 'groups',
+    loadComponent: () => import('./groups/groups.component').then(m => m.GroupsComponent)
+  },
+  {
+    path: 'subjects',
+    loadComponent: () => import('./subjects/subjects.component').then(m => m.SubjectsComponent)
   },
   {
     path: '',

@@ -1,0 +1,114 @@
+<div class="assignment-create-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>{{ editMode() ? 'edit' : 'add' }}</mat-icon>
+        {{ editMode() ? 'Topshiriqni tahrirlash' : 'Yangi topshiriq yaratish' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="assignmentForm" (ngSubmit)="onSubmit()">
+        <div class="form-section">
+          <h3>Asosiy ma'lumotlar</h3>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Topshiriq nomi</mat-label>
+            <input matInput formControlName="title" placeholder="Masalan: Matematika bo'yicha test">
+            @if (assignmentForm.get('title')?.hasError('required')) {
+              <mat-error>Topshiriq nomi majburiy</mat-error>
+            }
+            @if (assignmentForm.get('title')?.hasError('minlength')) {
+              <mat-error>Kamida 3 ta harf</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tavsif</mat-label>
+            <textarea matInput formControlName="description" placeholder="Topshiriq haqida batafsil ma'lumot" rows="4"></textarea>
+            @if (assignmentForm.get('description')?.hasError('required')) {
+              <mat-error>Tavsif majburiy</mat-error>
+            }
+            @if (assignmentForm.get('description')?.hasError('minlength')) {
+              <mat-error>Kamida 10 ta harf</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-section">
+          <h3>Topshiriq parametrlari</h3>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Fan</mat-label>
+              <mat-select formControlName="subjectId" placeholder="Fanni tanlang">
+                @for (subject of subjects(); track subject.id) {
+                  <mat-option [value]="subject.id">{{ subject.name }}</mat-option>
+                }
+              </mat-select>
+              @if (assignmentForm.get('subjectId')?.hasError('required')) {
+                <mat-error>Fan majburiy</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Guruh</mat-label>
+              <mat-select formControlName="groupId" placeholder="Guruhni tanlang">
+                @for (group of groups(); track group.id) {
+                  <mat-option [value]="group.id">{{ group.name }}</mat-option>
+                }
+              </mat-select>
+              @if (assignmentForm.get('groupId')?.hasError('required')) {
+                <mat-error>Guruh majburiy</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Topshirish muddati</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="deadline" [min]="minDate">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              @if (assignmentForm.get('deadline')?.hasError('required')) {
+                <mat-error>Muddat majburiy</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Maksimal ball</mat-label>
+              <input matInput type="number" formControlName="maxScore" placeholder="100">
+              @if (assignmentForm.get('maxScore')?.hasError('required')) {
+                <mat-error>Maksimal ball majburiy</mat-error>
+              }
+              @if (assignmentForm.get('maxScore')?.hasError('min')) {
+                <mat-error>Kamida 1 ball</mat-error>
+              }
+              @if (assignmentForm.get('maxScore')?.hasError('max')) {
+                <mat-error>Ko'pi bilan 1000 ball</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="goBack()" [disabled]="loading()">
+            <mat-icon>arrow_back</mat-icon>
+            Bekor qilish
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="assignmentForm.invalid || loading()">
+            @if (loading()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Yuklanmoqda...</span>
+            } @else {
+              <ng-container>
+                <mat-icon>{{ editMode() ? 'save' : 'add' }}</mat-icon>
+                <span>{{ editMode() ? 'Saqlash' : 'Yaratish' }}</span>
+              </ng-container>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
