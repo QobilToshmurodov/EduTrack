@@ -5,10 +5,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SubjectsService } from '@core/services/subjects.service';
+import { NotificationService } from '@core/services/notification.service';
 import { SubjectDialogComponent, SubjectDialogData } from './subject-dialog/subject-dialog.component';
 
 interface Subject {
@@ -36,7 +37,7 @@ interface Subject {
 })
 export class SubjectsComponent implements OnInit {
   private subjectsService = inject(SubjectsService);
-  private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
   private dialog = inject(MatDialog);
 
   loading = signal(true);
@@ -56,7 +57,7 @@ export class SubjectsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Failed to load subjects:', error);
-        this.snackBar.open('Ma\'lumotlarni yuklashda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Ma\'lumotlarni yuklashda xatolik');
         this.loading.set(false);
       }
     });
@@ -82,12 +83,12 @@ export class SubjectsComponent implements OnInit {
   private createSubject(data: any): void {
     this.subjectsService.create(data).subscribe({
       next: () => {
-        this.snackBar.open('Fan muvaffaqiyatli qo\'shildi', 'Yopish', { duration: 3000 });
+        this.notificationService.showSuccess('Fan muvaffaqiyatli qo\'shildi');
         this.loadData();
       },
       error: (error) => {
         console.error('Failed to create subject:', error);
-        this.snackBar.open('Qo\'shishda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Qo\'shishda xatolik');
       }
     });
   }
@@ -95,12 +96,12 @@ export class SubjectsComponent implements OnInit {
   private updateSubject(id: number, data: any): void {
     this.subjectsService.update(id, data).subscribe({
       next: () => {
-        this.snackBar.open('Fan muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
+        this.notificationService.showSuccess('Fan muvaffaqiyatli yangilandi');
         this.loadData();
       },
       error: (error) => {
         console.error('Failed to update subject:', error);
-        this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Yangilashda xatolik');
       }
     });
   }
@@ -109,12 +110,12 @@ export class SubjectsComponent implements OnInit {
     if (confirm('Rostdan ham bu fanni o\'chirmoqchimisiz?')) {
       this.subjectsService.delete(id).subscribe({
         next: () => {
-          this.snackBar.open('Fan muvaffaqiyatli o\'chirildi', 'Yopish', { duration: 3000 });
+          this.notificationService.showSuccess('Fan muvaffaqiyatli o\'chirildi');
           this.loadData();
         },
         error: (error) => {
           console.error('Failed to delete subject:', error);
-          this.snackBar.open('O\'chirishda xatolik', 'Yopish', { duration: 3000 });
+          this.notificationService.showError('O\'chirishda xatolik');
         }
       });
     }

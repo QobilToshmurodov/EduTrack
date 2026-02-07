@@ -10,11 +10,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AssignmentService } from '../../services/assignment.service';
 import { GroupsService } from '@core/services/groups.service';
 import { SubjectsService } from '@core/services/subjects.service';
+import { NotificationService } from '@core/services/notification.service';
 
 interface Group {
   id: number;
@@ -53,7 +54,7 @@ export class AssignmentCreateComponent implements OnInit {
   private assignmentService = inject(AssignmentService);
   private groupsService = inject(GroupsService);
   private subjectsService = inject(SubjectsService);
-  private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
 
   loading = signal(false);
   groups = signal<Group[]>([]);
@@ -95,7 +96,7 @@ export class AssignmentCreateComponent implements OnInit {
       this.subjects.set(subjects || []);
     }).catch(error => {
       console.error('Failed to load data:', error);
-      this.snackBar.open('Ma\'lumotlarni yuklashda xatolik', 'Yopish', { duration: 3000 });
+      this.notificationService.showError('Ma\'lumotlarni yuklashda xatolik');
     });
   }
 
@@ -115,7 +116,7 @@ export class AssignmentCreateComponent implements OnInit {
       },
       error: (error) => {
         console.error('Failed to load assignment:', error);
-        this.snackBar.open('Topshiriqni yuklashda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Topshiriqni yuklashda xatolik');
         this.loading.set(false);
         this.goBack();
       }
@@ -130,24 +131,24 @@ export class AssignmentCreateComponent implements OnInit {
       if (this.editMode()) {
         this.assignmentService.update(this.assignmentId()!, formData).subscribe({
           next: () => {
-            this.snackBar.open('Topshiriq muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
+            this.notificationService.showSuccess('Topshiriq muvaffaqiyatli yangilandi');
             this.goBack();
           },
           error: (error) => {
             console.error('Failed to update assignment:', error);
-            this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
+            this.notificationService.showError('Yangilashda xatolik');
             this.loading.set(false);
           }
         });
       } else {
         this.assignmentService.create(formData).subscribe({
           next: () => {
-            this.snackBar.open('Topshiriq muvaffaqiyatli yaratildi', 'Yopish', { duration: 3000 });
+            this.notificationService.showSuccess('Topshiriq muvaffaqiyatli yaratildi');
             this.goBack();
           },
           error: (error) => {
             console.error('Failed to create assignment:', error);
-            this.snackBar.open('Yaratishda xatolik', 'Yopish', { duration: 3000 });
+            this.notificationService.showError('Yaratishda xatolik');
             this.loading.set(false);
           }
         });

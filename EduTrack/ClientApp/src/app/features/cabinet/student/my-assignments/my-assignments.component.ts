@@ -6,8 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { StudentService } from '../services/student.service';
+import { NotificationService } from '@core/services/notification.service';
 
 interface Assignment {
   id: number;
@@ -38,7 +39,7 @@ interface Assignment {
 export class MyAssignmentsComponent implements OnInit {
   private router = inject(Router);
   private studentService = inject(StudentService);
-  private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
 
   loading = signal(true);
   assignments = signal<Assignment[]>([]);

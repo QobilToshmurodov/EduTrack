@@ -8,11 +8,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AssignmentService } from '../../services/assignment.service';
 import { Assignment, AssignmentStatus } from '../../models/assignment.model';
 import { LoadingComponent } from '@shared/components/loading/loading.component';
 import { AssignmentDialogComponent, AssignmentDialogData } from '../assignment-dialog/assignment-dialog.component';
+import { NotificationService } from '@core/services/notification.service';
 
 @Component({
   selector: 'app-assignment-list',
@@ -36,7 +37,7 @@ import { AssignmentDialogComponent, AssignmentDialogData } from '../assignment-d
 export class AssignmentListComponent implements OnInit {
   assignmentService = inject(AssignmentService);
   private dialog = inject(MatDialog);
-  private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
 
   displayedColumns: string[] = ['title', 'deadline', 'status', 'actions'];
 
@@ -90,11 +91,11 @@ export class AssignmentListComponent implements OnInit {
   private createAssignment(data: any): void {
     this.assignmentService.create(data).subscribe({
       next: () => {
-        this.snackBar.open('Topshiriq muvaffaqiyatli qo\'shildi', 'Yopish', { duration: 3000 });
+        this.notificationService.showSuccess('Topshiriq muvaffaqiyatli qo\'shildi');
       },
       error: (error) => {
         console.error('Failed to create assignment:', error);
-        this.snackBar.open('Qo\'shishda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Qo\'shishda xatolik');
       }
     });
   }
@@ -102,11 +103,11 @@ export class AssignmentListComponent implements OnInit {
   private updateAssignment(id: number, data: any): void {
     this.assignmentService.update(id, data).subscribe({
       next: () => {
-        this.snackBar.open('Topshiriq muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
+        this.notificationService.showSuccess('Topshiriq muvaffaqiyatli yangilandi');
       },
       error: (error) => {
         console.error('Failed to update assignment:', error);
-        this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Yangilashda xatolik');
       }
     });
   }
@@ -115,11 +116,11 @@ export class AssignmentListComponent implements OnInit {
     if (confirm('Topshiriqni o\'chirmoqchimisiz?')) {
       this.assignmentService.delete(id).subscribe({
         next: () => {
-          this.snackBar.open('Topshiriq o\'chirildi', 'Yopish', { duration: 3000 });
+          this.notificationService.showSuccess('Topshiriq o\'chirildi');
         },
         error: (error) => {
           console.error('Error deleting assignment:', error);
-          this.snackBar.open('O\'chirishda xatolik', 'Yopish', { duration: 3000 });
+          this.notificationService.showError('O\'chirishda xatolik');
         }
       });
     }

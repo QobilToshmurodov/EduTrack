@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { AuthService } from '@core/services/auth.service';
 import { UserRole } from '@core/models/user.model';
+import Swal from 'sweetalert2';
 
 interface MenuItem {
   label: string;
@@ -134,6 +135,19 @@ export class CabinetLayoutComponent {
   }
 
   logout(): void {
-    this.authService.logout();
+    Swal.fire({
+      title: 'Tizimdan chiqmoqchimisiz?',
+      text: "Siz tizimdan chiqib ketasiz!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ha, chiqish!',
+      cancelButtonText: 'Bekor qilish'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.logout();
+      }
+    });
   }
 }

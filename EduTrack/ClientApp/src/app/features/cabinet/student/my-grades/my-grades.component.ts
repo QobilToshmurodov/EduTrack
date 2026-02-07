@@ -4,8 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GradesService } from '@core/services/grades.service';
+import { NotificationService } from '@core/services/notification.service';
 
 interface Grade {
   id: number;
@@ -34,7 +35,7 @@ interface Grade {
 })
 export class MyGradesComponent implements OnInit {
   private gradesService = inject(GradesService);
-  private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
 
   loading = signal(true);
   grades = signal<Grade[]>([]);

@@ -5,11 +5,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { StudentsService } from '@core/services/students.service';
 import { GroupsService } from '@core/services/groups.service';
+import { NotificationService } from '@core/services/notification.service';
 import { StudentDialogComponent, StudentDialogData } from './student-dialog/student-dialog.component';
 
 interface Student {
@@ -46,7 +47,7 @@ interface Group {
 export class StudentsComponent implements OnInit {
   private studentsService = inject(StudentsService);
   private groupsService = inject(GroupsService);
-  private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
   private dialog = inject(MatDialog);
 
   loading = signal(true);
@@ -76,7 +77,7 @@ export class StudentsComponent implements OnInit {
       this.loading.set(false);
     }).catch(error => {
       console.error('Failed to load data:', error);
-      this.snackBar.open('Ma\'lumotlarni yuklashda xatolik', 'Yopish', { duration: 3000 });
+      this.notificationService.showError('Ma\'lumotlarni yuklashda xatolik');
       this.loading.set(false);
     });
   }
@@ -101,12 +102,12 @@ export class StudentsComponent implements OnInit {
   private createStudent(data: any): void {
     this.studentsService.create(data).subscribe({
       next: () => {
-        this.snackBar.open('O\'quvchi muvaffaqiyatli qo\'shildi', 'Yopish', { duration: 3000 });
+        this.notificationService.showSuccess('O\'quvchi muvaffaqiyatli qo\'shildi');
         this.loadData();
       },
       error: (error) => {
         console.error('Failed to create student:', error);
-        this.snackBar.open('Qo\'shishda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Qo\'shishda xatolik');
       }
     });
   }
@@ -114,12 +115,12 @@ export class StudentsComponent implements OnInit {
   private updateStudent(id: number, data: any): void {
     this.studentsService.update(id, data).subscribe({
       next: () => {
-        this.snackBar.open('O\'quvchi muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
+        this.notificationService.showSuccess('O\'quvchi muvaffaqiyatli yangilandi');
         this.loadData();
       },
       error: (error) => {
         console.error('Failed to update student:', error);
-        this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Yangilashda xatolik');
       }
     });
   }
@@ -128,12 +129,12 @@ export class StudentsComponent implements OnInit {
     if (confirm('Rostdan ham bu o\'quvchini o\'chirmoqchimisiz?')) {
       this.studentsService.delete(id).subscribe({
         next: () => {
-          this.snackBar.open('O\'quvchi muvaffaqiyatli o\'chirildi', 'Yopish', { duration: 3000 });
+          this.notificationService.showSuccess('O\'quvchi muvaffaqiyatli o\'chirildi');
           this.loadData();
         },
         error: (error) => {
           console.error('Failed to delete student:', error);
-          this.snackBar.open('O\'chirishda xatolik', 'Yopish', { duration: 3000 });
+          this.notificationService.showError('O\'chirishda xatolik');
         }
       });
     }

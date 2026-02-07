@@ -5,10 +5,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TeachersService } from '@core/services/teachers.service';
+import { NotificationService } from '@core/services/notification.service';
 import { TeacherDialogComponent, TeacherDialogData } from './teacher-dialog/teacher-dialog.component';
 
 interface Teacher {
@@ -38,7 +39,7 @@ interface Teacher {
 })
 export class TeachersComponent implements OnInit {
   private teachersService = inject(TeachersService);
-  private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
   private dialog = inject(MatDialog);
 
   loading = signal(true);
@@ -58,7 +59,7 @@ export class TeachersComponent implements OnInit {
       },
       error: (error) => {
         console.error('Failed to load teachers:', error);
-        this.snackBar.open('Ma\'lumotlarni yuklashda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Ma\'lumotlarni yuklashda xatolik');
         this.loading.set(false);
       }
     });
@@ -84,12 +85,12 @@ export class TeachersComponent implements OnInit {
   private createTeacher(data: any): void {
     this.teachersService.create(data).subscribe({
       next: () => {
-        this.snackBar.open('O\'qituvchi muvaffaqiyatli qo\'shildi', 'Yopish', { duration: 3000 });
+        this.notificationService.showSuccess('O\'qituvchi muvaffaqiyatli qo\'shildi');
         this.loadData();
       },
       error: (error) => {
         console.error('Failed to create teacher:', error);
-        this.snackBar.open('Qo\'shishda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Qo\'shishda xatolik');
       }
     });
   }
@@ -97,12 +98,12 @@ export class TeachersComponent implements OnInit {
   private updateTeacher(id: number, data: any): void {
     this.teachersService.update(id, data).subscribe({
       next: () => {
-        this.snackBar.open('O\'qituvchi muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
+        this.notificationService.showSuccess('O\'qituvchi muvaffaqiyatli yangilandi');
         this.loadData();
       },
       error: (error) => {
         console.error('Failed to update teacher:', error);
-        this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
+        this.notificationService.showError('Yangilashda xatolik');
       }
     });
   }
@@ -111,12 +112,12 @@ export class TeachersComponent implements OnInit {
     if (confirm('Rostdan ham bu o\'qituvchini o\'chirmoqchimisiz?')) {
       this.teachersService.delete(id).subscribe({
         next: () => {
-          this.snackBar.open('O\'qituvchi muvaffaqiyatli o\'chirildi', 'Yopish', { duration: 3000 });
+          this.notificationService.showSuccess('O\'qituvchi muvaffaqiyatli o\'chirildi');
           this.loadData();
         },
         error: (error) => {
           console.error('Failed to delete teacher:', error);
-          this.snackBar.open('O\'chirishda xatolik', 'Yopish', { duration: 3000 });
+          this.notificationService.showError('O\'chirishda xatolik');
         }
       });
     }
