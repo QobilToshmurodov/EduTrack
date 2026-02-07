@@ -1,16 +1,15 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { GroupsService } from '@core/services/groups.service';
+import { GroupDialogComponent, GroupDialogData } from './group-dialog/group-dialog.component';
 
 interface Group {
   id: number;
@@ -23,39 +22,26 @@ interface Group {
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     MatTableModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule
   ],
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.scss'
 })
 export class GroupsComponent implements OnInit {
-  private fb = inject(FormBuilder);
   private groupsService = inject(GroupsService);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   loading = signal(true);
   groups = signal<Group[]>([]);
-  showForm = signal(false);
-  editingId = signal<number | null>(null);
-
-  groupForm: FormGroup;
   displayedColumns = ['id', 'name', 'description', 'actions'];
-
-  constructor() {
-    this.groupForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      description: ['']
-    });
-  }
 
   ngOnInit(): void {
     this.loadData();
@@ -76,55 +62,47 @@ export class GroupsComponent implements OnInit {
     });
   }
 
-  openForm(): void {
-    this.showForm.set(true);
-    this.editingId.set(null);
-    this.groupForm.reset();
-  }
+  openDialog(group?: Group): void {
+    const dialogRef = this.dialog.open(GroupDialogComponent, {
+      width: '500px',
+      data: group || null
+    });
 
-  closeForm(): void {
-    this.showForm.set(false);
-    this.editingId.set(null);
-    this.groupForm.reset();
-  }
-
-  editGroup(group: Group): void {
-    this.editingId.set(group.id);
-    this.groupForm.patchValue(group);
-    this.showForm.set(true);
-  }
-
-  onSubmit(): void {
-    if (this.groupForm.valid) {
-      const formData = this.groupForm.value;
-      const editingId = this.editingId();
-
-      if (editingId) {
-        this.groupsService.update(editingId, formData).subscribe({
-          next: () => {
-            this.snackBar.open('Guruh muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
-            this.loadData();
-            this.closeForm();
-          },
-          error: (error) => {
-            console.error('Failed to update group:', error);
-            this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
-          }
-        });
-      } else {
-        this.groupsService.create(formData).subscribe({
-          next: () => {
-            this.snackBar.open('Guruh muvaffaqiyatli qo\'shildi', 'Yopish', { duration: 3000 });
-            this.loadData();
-            this.closeForm();
-          },
-          error: (error) => {
-            console.error('Failed to create group:', error);
-            this.snackBar.open('Qo\'shishda xatolik', 'Yopish', { duration: 3000 });
-          }
-        });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (group) {
+          this.updateGroup(group.id, result);
+        } else {
+          this.createGroup(result);
+        }
       }
-    }
+    });
+  }
+
+  private createGroup(data: any): void {
+    this.groupsService.create(data).subscribe({
+      next: () => {
+        this.snackBar.open('Guruh muvaffaqiyatli qo\'shildi', 'Yopish', { duration: 3000 });
+        this.loadData();
+      },
+      error: (error) => {
+        console.error('Failed to create group:', error);
+        this.snackBar.open('Qo\'shishda xatolik', 'Yopish', { duration: 3000 });
+      }
+    });
+  }
+
+  private updateGroup(id: number, data: any): void {
+    this.groupsService.update(id, data).subscribe({
+      next: () => {
+        this.snackBar.open('Guruh muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
+        this.loadData();
+      },
+      error: (error) => {
+        console.error('Failed to update group:', error);
+        this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
+      }
+    });
   }
 
   deleteGroup(id: number): void {

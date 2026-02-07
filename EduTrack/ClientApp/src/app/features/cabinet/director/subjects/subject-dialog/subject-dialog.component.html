@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ isEditing ? 'Fanni tahrirlash' : 'Yangi fan qo\'shish' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fan nomi</mat-label>
+      <input matInput formControlName="name" placeholder="Masalan: Matematika">
+      @if (subjectForm.get('name')?.hasError('required')) {
+        <mat-error>Fan nomi majburiy</mat-error>
+      }
+      @if (subjectForm.get('name')?.hasError('minlength')) {
+        <mat-error>Kamida 2 ta harf</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tavsif</mat-label>
+      <textarea matInput formControlName="description" placeholder="Fan haqida qisqacha ma'lumot" rows="3"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="subjectForm.invalid">
+    {{ isEditing ? 'Yangilash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

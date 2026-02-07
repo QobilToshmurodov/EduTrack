@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>{{ isEditing ? 'O\'qituvchini tahrirlash' : 'Yangi o\'qituvchi qo\'shish' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="teacherForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Ism</mat-label>
+        <input matInput formControlName="firstName" placeholder="Ism">
+        @if (teacherForm.get('firstName')?.hasError('required')) {
+          <mat-error>Ism majburiy</mat-error>
+        }
+        @if (teacherForm.get('firstName')?.hasError('minlength')) {
+          <mat-error>Kamida 2 ta harf</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Familiya</mat-label>
+        <input matInput formControlName="lastName" placeholder="Familiya">
+        @if (teacherForm.get('lastName')?.hasError('required')) {
+          <mat-error>Familiya majburiy</mat-error>
+        }
+        @if (teacherForm.get('lastName')?.hasError('minlength')) {
+          <mat-error>Kamida 2 ta harf</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="email@example.com">
+        @if (teacherForm.get('email')?.hasError('required')) {
+          <mat-error>Email majburiy</mat-error>
+        }
+        @if (teacherForm.get('email')?.hasError('email')) {
+          <mat-error>Noto'g'ri email format</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefon</mat-label>
+        <input matInput formControlName="phone" placeholder="+998901234567">
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="teacherForm.invalid">
+    {{ isEditing ? 'Yangilash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

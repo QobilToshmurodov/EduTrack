@@ -9,7 +9,7 @@
       <button 
         mat-raised-button 
         color="primary"
-        routerLink="/cabinet/teacher/assignments/create"
+        (click)="openDialog()"
       >
         <mat-icon>add</mat-icon>
         Yangi topshiriq
@@ -64,6 +64,14 @@
                 [routerLink]="['/cabinet/teacher/assignments', assignment.id]"
               >
                 <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="primary"
+                [matTooltip]="'Tahrirlash'"
+                (click)="openDialog(assignment)"
+              >
+                <mat-icon>edit</mat-icon>
               </button>
               <button 
                 mat-icon-button 

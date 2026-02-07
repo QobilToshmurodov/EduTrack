@@ -1,0 +1,64 @@
+<h2 mat-dialog-title>{{ isEditing ? 'Topshiriqni tahrirlash' : 'Yangi topshiriq qo\'shish' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="assignmentForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Topshiriq nomi</mat-label>
+      <input matInput formControlName="title" placeholder="Masalan: 1-amaliy ish">
+      @if (assignmentForm.get('title')?.hasError('required')) {
+        <mat-error>Topshiriq nomi majburiy</mat-error>
+      }
+      @if (assignmentForm.get('title')?.hasError('minlength')) {
+        <mat-error>Kamida 3 ta harf</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tavsif</mat-label>
+      <textarea matInput formControlName="description" placeholder="Topshiriq haqida batafsil" rows="3"></textarea>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Muddat</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="deadline">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (assignmentForm.get('deadline')?.hasError('required')) {
+          <mat-error>Muddat majburiy</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Guruh</mat-label>
+        <mat-select formControlName="groupId" placeholder="Guruhni tanlang">
+          @for (group of groups(); track group.id) {
+            <mat-option [value]="group.id">{{ group.name }}</mat-option>
+          }
+        </mat-select>
+        @if (assignmentForm.get('groupId')?.hasError('required')) {
+          <mat-error>Guruh majburiy</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fan</mat-label>
+        <mat-select formControlName="subjectId" placeholder="Fanni tanlang">
+          @for (subject of subjects(); track subject.id) {
+            <mat-option [value]="subject.id">{{ subject.name }}</mat-option>
+          }
+        </mat-select>
+        @if (assignmentForm.get('subjectId')?.hasError('required')) {
+          <mat-error>Fan majburiy</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="assignmentForm.invalid">
+    {{ isEditing ? 'Yangilash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

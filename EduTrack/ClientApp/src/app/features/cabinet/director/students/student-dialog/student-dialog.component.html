@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>{{ isEditing ? 'O\'quvchini tahrirlash' : 'Yangi o\'quvchi qo\'shish' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Ism</mat-label>
+        <input matInput formControlName="firstName" placeholder="Ism">
+        @if (studentForm.get('firstName')?.hasError('required')) {
+          <mat-error>Ism majburiy</mat-error>
+        }
+        @if (studentForm.get('firstName')?.hasError('minlength')) {
+          <mat-error>Kamida 2 ta harf</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Familiya</mat-label>
+        <input matInput formControlName="lastName" placeholder="Familiya">
+        @if (studentForm.get('lastName')?.hasError('required')) {
+          <mat-error>Familiya majburiy</mat-error>
+        }
+        @if (studentForm.get('lastName')?.hasError('minlength')) {
+          <mat-error>Kamida 2 ta harf</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="email@example.com">
+        @if (studentForm.get('email')?.hasError('required')) {
+          <mat-error>Email majburiy</mat-error>
+        }
+        @if (studentForm.get('email')?.hasError('email')) {
+          <mat-error>Noto'g'ri email format</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Guruh</mat-label>
+        <mat-select formControlName="groupId" placeholder="Guruhni tanlang">
+          @for (group of groups(); track group.id) {
+            <mat-option [value]="group.id">{{ group.name }}</mat-option>
+          }
+        </mat-select>
+        @if (studentForm.get('groupId')?.hasError('required')) {
+          <mat-error>Guruh majburiy</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Bekor qilish</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="studentForm.invalid">
+    {{ isEditing ? 'Yangilash' : 'Qo\'shish' }}
+  </button>
+</mat-dialog-actions>

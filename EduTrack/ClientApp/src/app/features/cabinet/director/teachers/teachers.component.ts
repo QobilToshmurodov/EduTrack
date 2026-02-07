@@ -1,16 +1,15 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TeachersService } from '@core/services/teachers.service';
+import { TeacherDialogComponent, TeacherDialogData } from './teacher-dialog/teacher-dialog.component';
 
 interface Teacher {
   id: number;
@@ -25,13 +24,11 @@ interface Teacher {
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     MatTableModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
+    MatDialogModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatTooltipModule
@@ -40,26 +37,13 @@ interface Teacher {
   styleUrl: './teachers.component.scss'
 })
 export class TeachersComponent implements OnInit {
-  private fb = inject(FormBuilder);
   private teachersService = inject(TeachersService);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   loading = signal(true);
   teachers = signal<Teacher[]>([]);
-  showForm = signal(false);
-  editingId = signal<number | null>(null);
-
-  teacherForm: FormGroup;
   displayedColumns = ['id', 'firstName', 'lastName', 'email', 'phone', 'actions'];
-
-  constructor() {
-    this.teacherForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['']
-    });
-  }
 
   ngOnInit(): void {
     this.loadData();
@@ -80,55 +64,47 @@ export class TeachersComponent implements OnInit {
     });
   }
 
-  openForm(): void {
-    this.showForm.set(true);
-    this.editingId.set(null);
-    this.teacherForm.reset();
-  }
+  openDialog(teacher?: Teacher): void {
+    const dialogRef = this.dialog.open(TeacherDialogComponent, {
+      width: '600px',
+      data: teacher || null
+    });
 
-  closeForm(): void {
-    this.showForm.set(false);
-    this.editingId.set(null);
-    this.teacherForm.reset();
-  }
-
-  editTeacher(teacher: Teacher): void {
-    this.editingId.set(teacher.id);
-    this.teacherForm.patchValue(teacher);
-    this.showForm.set(true);
-  }
-
-  onSubmit(): void {
-    if (this.teacherForm.valid) {
-      const formData = this.teacherForm.value;
-      const editingId = this.editingId();
-
-      if (editingId) {
-        this.teachersService.update(editingId, formData).subscribe({
-          next: () => {
-            this.snackBar.open('O\'qituvchi muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
-            this.loadData();
-            this.closeForm();
-          },
-          error: (error) => {
-            console.error('Failed to update teacher:', error);
-            this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
-          }
-        });
-      } else {
-        this.teachersService.create(formData).subscribe({
-          next: () => {
-            this.snackBar.open('O\'qituvchi muvaffaqiyatli qo\'shildi', 'Yopish', { duration: 3000 });
-            this.loadData();
-            this.closeForm();
-          },
-          error: (error) => {
-            console.error('Failed to create teacher:', error);
-            this.snackBar.open('Qo\'shishda xatolik', 'Yopish', { duration: 3000 });
-          }
-        });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (teacher) {
+          this.updateTeacher(teacher.id, result);
+        } else {
+          this.createTeacher(result);
+        }
       }
-    }
+    });
+  }
+
+  private createTeacher(data: any): void {
+    this.teachersService.create(data).subscribe({
+      next: () => {
+        this.snackBar.open('O\'qituvchi muvaffaqiyatli qo\'shildi', 'Yopish', { duration: 3000 });
+        this.loadData();
+      },
+      error: (error) => {
+        console.error('Failed to create teacher:', error);
+        this.snackBar.open('Qo\'shishda xatolik', 'Yopish', { duration: 3000 });
+      }
+    });
+  }
+
+  private updateTeacher(id: number, data: any): void {
+    this.teachersService.update(id, data).subscribe({
+      next: () => {
+        this.snackBar.open('O\'qituvchi muvaffaqiyatli yangilandi', 'Yopish', { duration: 3000 });
+        this.loadData();
+      },
+      error: (error) => {
+        console.error('Failed to update teacher:', error);
+        this.snackBar.open('Yangilashda xatolik', 'Yopish', { duration: 3000 });
+      }
+    });
   }
 
   deleteTeacher(id: number): void {
