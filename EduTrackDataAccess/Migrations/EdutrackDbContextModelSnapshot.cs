@@ -73,7 +73,7 @@ namespace EduTrackDataAccess.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TeacherId")
+                    b.Property<int>("TeacherId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Timestamp")
@@ -326,6 +326,15 @@ namespace EduTrackDataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            PasswordHash = "$2a$11$X51/d3djweud2S0KtOn6QO2AG.RSt8MjtglXkTcpyjKnfY4De1t5S",
+                            Role = "Admin",
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Assignment", b =>

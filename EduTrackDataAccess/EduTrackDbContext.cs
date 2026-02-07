@@ -140,6 +140,15 @@ namespace EduTrackDataAccess
                 .HasOne(n => n.Event)
                 .WithMany()
                 .HasForeignKey(n => n.EventId);
+
+            // Seed Admin User
+            modelBuilder.Entity<User>().HasData(new User
+            {
+                Id = 1,
+                Username = "admin",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"), // ✅ Hash qilingan
+                Role = "Admin"
+            });
         }
     }
 }
