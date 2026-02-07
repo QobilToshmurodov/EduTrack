@@ -146,7 +146,7 @@ namespace EduTrackDataAccess
             {
                 Id = 1,
                 Username = "admin",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"), // ✅ Hash qilingan
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"), 
                 Role = "Admin"
             });
         }
