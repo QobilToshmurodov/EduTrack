@@ -188,6 +188,7 @@
         public string AssignmentTitle { get; set; } = string.Empty;
         public int StudentId { get; set; }
         public string StudentName { get; set; } = string.Empty;
+        public string? Description { get; set; }
         public string? FilePath { get; set; }
         public DateTime SubmittedAt { get; set; }
         public GradeDto? Grade { get; set; }

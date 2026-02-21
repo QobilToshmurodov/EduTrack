@@ -20,10 +20,13 @@ export class SubmissionsService {
     return this.http.get<SubmissionDto[]>(`${this.base}/by-student/${studentId}`);
   }
 
-  submit(assignmentId: number, studentId: number, file?: File): Observable<SubmissionDto> {
+  submit(assignmentId: number, studentId: number, description?: string, file?: File): Observable<SubmissionDto> {
     const formData = new FormData();
     formData.append('assignmentId', assignmentId.toString());
     formData.append('studentId', studentId.toString());
+    if (description) {
+      formData.append('description', description);
+    }
     if (file) {
       formData.append('file', file);
     }

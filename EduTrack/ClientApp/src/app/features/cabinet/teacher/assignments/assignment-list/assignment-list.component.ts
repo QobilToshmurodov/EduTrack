@@ -11,6 +11,7 @@ import { NotificationService } from '@core/services/notification.service';
 import { AssignmentDto } from '@shared/models/common.models';
 import { AssignmentDialogComponent } from '../assignment-dialog/assignment-dialog.component';
 import { environment } from '@environments/environment';
+import { switchMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-assignment-list',
@@ -36,7 +37,7 @@ import { environment } from '@environments/environment';
               @if (e.filePath) {
                 <a mat-icon-button [href]="getFileUrl(e.filePath)" target="_blank"><mat-icon>download</mat-icon></a>
               }
-              <button mat-icon-button (click)="uploadFile(e)"><mat-icon>upload_file</mat-icon></button>
+              <button mat-icon-button (click)="openDialog(e)"><mat-icon>edit</mat-icon></button>
               <button mat-icon-button color="warn" (click)="deleteItem(e.id)"><mat-icon>delete</mat-icon></button>
             </td>
           </ng-container>
@@ -45,7 +46,6 @@ import { environment } from '@environments/environment';
         </table>
         @if (items().length === 0) { <p class="empty-state">Ma'lumot topilmadi</p> }
       }
-      <input type="file" #fileInput style="display:none" (change)="onFileSelected($event)" />
     </div>
   `,
   styles: [`
@@ -63,7 +63,6 @@ export class AssignmentListComponent implements OnInit {
   loading = signal(true);
   items = signal<AssignmentDto[]>([]);
   columns = ['title', 'subjectName', 'groupName', 'dueDate', 'submissionsCount', 'actions'];
-  private uploadTargetId: number | null = null;
 
   ngOnInit() { this.load(); }
 
@@ -84,32 +83,30 @@ export class AssignmentListComponent implements OnInit {
 
   openDialog(item?: AssignmentDto) {
     const ref = this.dialog.open(AssignmentDialogComponent, { width: '600px', data: item || null });
-    ref.afterClosed().subscribe(r => {
-      if (r) {
-        const op = item ? this.service.update(item.id, r) : this.service.create(r);
-        op.subscribe({ next: () => { this.notify.showSuccess('Saqlandi'); this.load(); }, error: () => this.notify.showError('Xatolik') });
+    ref.afterClosed().subscribe(result => {
+      if (result) {
+        const { data, file } = result;
+        const op = item ? this.service.update(item.id, data) : this.service.create(data);
+        op.pipe(
+          switchMap(saved => {
+            if (file) {
+              const id = item ? item.id : (saved as AssignmentDto).id;
+              return this.service.uploadFile(id, file);
+            }
+            return of(null);
+          })
+        ).subscribe({
+          next: () => { this.notify.showSuccess('Saqlandi'); this.load(); },
+          error: () => this.notify.showError('Xatolik')
+        });
       }
     });
   }
 
-  uploadFile(item: AssignmentDto) {
-    this.uploadTargetId = item.id;
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
-    input?.click();
-  }
-
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file && this.uploadTargetId) {
-      this.service.uploadFile(this.uploadTargetId, file).subscribe({
-        next: () => { this.notify.showSuccess('Fayl yuklandi'); this.load(); },
-        error: () => this.notify.showError('Xatolik')
-      });
-    }
-    (event.target as HTMLInputElement).value = '';
-  }
-
   deleteItem(id: number) {
-    this.service.delete(id).subscribe({ next: () => { this.notify.showSuccess("O'chirildi"); this.load(); }, error: () => this.notify.showError('Xatolik') });
+    this.service.delete(id).subscribe({
+      next: () => { this.notify.showSuccess("O'chirildi"); this.load(); },
+      error: () => this.notify.showError('Xatolik')
+    });
   }
 }

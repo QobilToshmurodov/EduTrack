@@ -71,6 +71,7 @@ export interface SubmissionDto {
   assignmentTitle: string;
   studentId: number;
   studentName: string;
+  description?: string;
   filePath?: string;
   submittedAt: string;
   grade?: GradeDto;

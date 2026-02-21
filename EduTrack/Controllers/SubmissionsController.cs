@@ -43,7 +43,7 @@ namespace EduTrack.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Student,Admin")]
-        public async Task<IActionResult> Create([FromForm] int assignmentId, [FromForm] int studentId, IFormFile? file)
+        public async Task<IActionResult> Create([FromForm] int assignmentId, [FromForm] int studentId, [FromForm] string? description, IFormFile? file)
         {
             var existing = await _repo.GetByAssignmentAndStudentAsync(assignmentId, studentId);
             if (existing != null) return BadRequest("Already submitted");
@@ -69,6 +69,7 @@ namespace EduTrack.Controllers
             {
                 AssignmentId = assignmentId,
                 StudentId = studentId,
+                Description = description,
                 FilePath = filePath,
                 SubmittedAt = DateTime.UtcNow
             };
@@ -84,6 +85,7 @@ namespace EduTrack.Controllers
             AssignmentTitle = s.Assignment?.Title ?? "",
             StudentId = s.StudentId,
             StudentName = s.Student?.FullName ?? "",
+            Description = s.Description,
             FilePath = s.FilePath,
             SubmittedAt = s.SubmittedAt,
             Grade = s.Grade != null ? new GradeDto

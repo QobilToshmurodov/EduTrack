@@ -268,6 +268,9 @@ namespace EduTrackDataAccess.Migrations
                     b.Property<int>("AssignmentId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("FilePath")
                         .HasColumnType("text");
 
@@ -315,7 +318,7 @@ namespace EduTrackDataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            PasswordHash = "$2a$11$ysMyeog0DjDtJA8XfNjC.uN42CUJ2O.9NvTi/rngnMawwOwRfiu6W",
+                            PasswordHash = "$2a$11$Vm3DbG.hL7FM.dmN1T//EuOKRyn5LXucMaIyGVAmDtQf94ED76RES",
                             Role = "Admin",
                             Username = "admin"
                         });

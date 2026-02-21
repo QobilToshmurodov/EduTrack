@@ -5,18 +5,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AssignmentsService } from '@core/services/assignments.service';
 import { SubmissionsService } from '@core/services/submissions.service';
 import { StudentsService } from '@core/services/students.service';
 import { AuthService } from '@core/services/auth.service';
 import { NotificationService } from '@core/services/notification.service';
 import { AssignmentDto, SubmissionDto } from '@shared/models/common.models';
+import { SubmissionDialogComponent } from './submission-dialog/submission-dialog.component';
 import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-my-assignments',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatChipsModule],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatChipsModule, MatDialogModule],
   template: `
     <div class="page-container">
       <h2>Mening topshiriqlarim</h2>
@@ -41,10 +43,10 @@ import { environment } from '@environments/environment';
             <th mat-header-cell *matHeaderCellDef>Amallar</th>
             <td mat-cell *matCellDef="let e">
               @if (e.filePath) {
-                <a mat-icon-button [href]="getFileUrl(e.filePath)" target="_blank"><mat-icon>download</mat-icon></a>
+                <a mat-icon-button [href]="getFileUrl(e.filePath)" target="_blank" matTooltip="Faylni yuklab olish"><mat-icon>download</mat-icon></a>
               }
               @if (!isSubmitted(e.id)) {
-                <button mat-raised-button color="primary" (click)="submitAssignment(e)">
+                <button mat-raised-button color="primary" (click)="openSubmitDialog(e)">
                   <mat-icon>upload_file</mat-icon> Topshirish
                 </button>
               }
@@ -55,7 +57,6 @@ import { environment } from '@environments/environment';
         </table>
         @if (items().length === 0) { <p class="empty-state">Topshiriqlar topilmadi</p> }
       }
-      <input type="file" #fileInput style="display:none" (change)="onFileSelected($event)" />
     </div>
   `,
   styles: [`
@@ -70,13 +71,13 @@ export class MyAssignmentsComponent implements OnInit {
   private studentsService = inject(StudentsService);
   private authService = inject(AuthService);
   private notify = inject(NotificationService);
+  private dialog = inject(MatDialog);
 
   loading = signal(true);
   items = signal<AssignmentDto[]>([]);
   submissions = signal<SubmissionDto[]>([]);
   columns = ['title', 'subjectName', 'employeeName', 'dueDate', 'status', 'actions'];
   private studentId: number | null = null;
-  private submitTargetId: number | null = null;
 
   ngOnInit() {
     const userId = this.authService.currentUser()?.id;
@@ -115,20 +116,15 @@ export class MyAssignmentsComponent implements OnInit {
     return `${environment.apiUrl}/Files/${filePath}`;
   }
 
-  submitAssignment(assignment: AssignmentDto) {
-    this.submitTargetId = assignment.id;
-    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
-    input?.click();
-  }
-
-  onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file && this.submitTargetId && this.studentId) {
-      this.submissionsService.submit(this.submitTargetId, this.studentId, file).subscribe({
-        next: () => { this.notify.showSuccess('Topshirildi'); this.loadSubmissions(); },
-        error: () => this.notify.showError('Xatolik')
-      });
-    }
-    (event.target as HTMLInputElement).value = '';
+  openSubmitDialog(assignment: AssignmentDto) {
+    const ref = this.dialog.open(SubmissionDialogComponent, { width: '500px', data: assignment });
+    ref.afterClosed().subscribe(result => {
+      if (result && this.studentId) {
+        this.submissionsService.submit(assignment.id, this.studentId, result.description, result.file).subscribe({
+          next: () => { this.notify.showSuccess('Topshirildi'); this.loadSubmissions(); },
+          error: () => this.notify.showError('Xatolik')
+        });
+      }
+    });
   }
 }
