@@ -1,18 +1,17 @@
-﻿using EduTrackDataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using EduTrackDataAccess.Entities;
 
 namespace EduTrackDataAccess.Repositories.Submissions
 {
-    public interface ISubmissionsRepository 
+    public interface ISubmissionsRepository
     {
-        Task<IEnumerable<Submission>> GetAllSubmission();
-        Task<Submission> GetSubmission(int id);
-        Task<Submission> CreateSubmission(Submission submission);
-        Task<Submission> UpdateSubmission(int id, Submission submission);
-        Task<bool> DeleteSubmission(int id);
+        Task<IEnumerable<Submission>> GetAllAsync();
+        Task<Submission?> GetByIdAsync(int id);
+        Task<IEnumerable<Submission>> GetByAssignmentIdAsync(int assignmentId);
+        Task<IEnumerable<Submission>> GetByStudentIdAsync(int studentId);
+        Task<Submission?> GetByAssignmentAndStudentAsync(int assignmentId, int studentId);
+        Task<Submission> CreateAsync(Submission submission);
+        Task<bool> DeleteAsync(int id);
     }
 }

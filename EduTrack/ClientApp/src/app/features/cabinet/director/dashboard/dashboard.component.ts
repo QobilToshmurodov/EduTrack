@@ -1,79 +1,87 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+﻿import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
-import { StudentsService } from '@core/services/students.service';
-import { TeachersService } from '@core/services/teachers.service';
-import { GroupsService } from '@core/services/groups.service';
-import { SubjectsService } from '@core/services/subjects.service';
-
-interface DashboardStats {
-  totalStudents: number;
-  totalTeachers: number;
-  totalGroups: number;
-  totalSubjects: number;
-}
+import { DashboardService } from '@core/services/dashboard.service';
+import { DashboardStatsDto } from '@shared/models/common.models';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatGridListModule,
-    MatProgressSpinnerModule
-  ],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  imports: [CommonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule],
+  template: `
+    <div class="dashboard-container">
+      <h2>Boshqaruv Paneli</h2>
+      @if (loading()) {
+        <mat-spinner></mat-spinner>
+      } @else if (stats()) {
+        <div class="stats-grid">
+          <mat-card class="stat-card">
+            <mat-icon>school</mat-icon>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.professionsCount }}</span>
+              <span class="stat-label">Yo'nalishlar</span>
+            </div>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-icon>people</mat-icon>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.studentsCount }}</span>
+              <span class="stat-label">O'quvchilar</span>
+            </div>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-icon>person</mat-icon>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.employeesCount }}</span>
+              <span class="stat-label">Xodimlar</span>
+            </div>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-icon>groups</mat-icon>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.groupsCount }}</span>
+              <span class="stat-label">Guruhlar</span>
+            </div>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-icon>book</mat-icon>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.subjectsCount }}</span>
+              <span class="stat-label">Fanlar</span>
+            </div>
+          </mat-card>
+          <mat-card class="stat-card">
+            <mat-icon>assignment</mat-icon>
+            <div class="stat-info">
+              <span class="stat-value">{{ stats()!.assignmentsCount }}</span>
+              <span class="stat-label">Topshiriqlar</span>
+            </div>
+          </mat-card>
+        </div>
+      }
+    </div>
+  `,
+  styles: [`
+    .dashboard-container { padding: 20px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+    .stat-card { display: flex; align-items: center; padding: 24px; gap: 16px; }
+    .stat-card mat-icon { font-size: 48px; width: 48px; height: 48px; color: #1976d2; }
+    .stat-info { display: flex; flex-direction: column; }
+    .stat-value { font-size: 28px; font-weight: bold; }
+    .stat-label { color: #666; font-size: 14px; }
+  `]
 })
 export class DashboardComponent implements OnInit {
-  private router = inject(Router);
-  private studentsService = inject(StudentsService);
-  private teachersService = inject(TeachersService);
-  private groupsService = inject(GroupsService);
-  private subjectsService = inject(SubjectsService);
-
+  private dashboardService = inject(DashboardService);
   loading = signal(true);
-  stats = signal<DashboardStats>({
-    totalStudents: 0,
-    totalTeachers: 0,
-    totalGroups: 0,
-    totalSubjects: 0
-  });
+  stats = signal<DashboardStatsDto | null>(null);
 
-  ngOnInit(): void {
-    this.loadStats();
-  }
-
-  private loadStats(): void {
-    this.loading.set(true);
-
-    Promise.all([
-      this.studentsService.getAll().toPromise(),
-      this.teachersService.getAll().toPromise(),
-      this.groupsService.getAll().toPromise(),
-      this.subjectsService.getAll().toPromise()
-    ]).then(([students, teachers, groups, subjects]) => {
-      this.stats.set({
-        totalStudents: students?.length || 0,
-        totalTeachers: teachers?.length || 0,
-        totalGroups: groups?.length || 0,
-        totalSubjects: subjects?.length || 0
-      });
-      this.loading.set(false);
-    }).catch(error => {
-      console.error('Failed to load stats:', error);
-      this.loading.set(false);
+  ngOnInit() {
+    this.dashboardService.getStats().subscribe({
+      next: data => { this.stats.set(data); this.loading.set(false); },
+      error: () => this.loading.set(false)
     });
-  }
-
-  navigateTo(route: string): void {
-    this.router.navigate([`/cabinet/director/${route}`]);
   }
 }

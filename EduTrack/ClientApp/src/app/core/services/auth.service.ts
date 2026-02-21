@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+﻿import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
@@ -13,16 +13,15 @@ export class AuthService {
   private storage = inject(StorageService);
   private router = inject(Router);
 
-  // Signal-based state
   private currentUserSignal = signal<User | null>(this.loadUserFromStorage());
   currentUser = this.currentUserSignal.asReadonly();
 
-  // Computed signals
   isAuthenticated = computed(() => this.currentUserSignal() !== null);
   userRole = computed(() => this.currentUserSignal()?.role ?? null);
-  isAdmin = computed(() => this.userRole() === UserRole.Admin || this.userRole() === UserRole.Director);
+  isAdmin = computed(() => this.userRole() === UserRole.Admin);
   isTeacher = computed(() => this.userRole() === UserRole.Teacher);
   isStudent = computed(() => this.userRole() === UserRole.Student);
+  profileId = computed(() => this.currentUserSignal()?.profileId ?? null);
 
   private loadUserFromStorage(): User | null {
     const user = this.storage.getUser();
@@ -34,13 +33,14 @@ export class AuthService {
     return this.http.post<LoginResponse>('/Auth/login', credentials).pipe(
       tap(response => {
         this.storage.setToken(response.token);
-        
+
         const user: User = {
-          id: response.id,
-          username: response.username,
-          role: response.role as UserRole
+          id: response.userId,
+          username: credentials.username,
+          role: response.role as UserRole,
+          profileId: response.profileId
         };
-        
+
         this.storage.setUser(user);
         this.currentUserSignal.set(user);
       })
@@ -63,10 +63,8 @@ export class AuthService {
 
   navigateToDefaultRoute(): void {
     const role = this.userRole();
-    
     switch (role) {
       case UserRole.Admin:
-      case UserRole.Director:
         this.router.navigate(['/cabinet/director/dashboard']);
         break;
       case UserRole.Teacher:

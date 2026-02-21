@@ -1,55 +1,63 @@
-﻿using EduTrackDataAccess.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using EduTrackDataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EduTrackDataAccess.Repositories.Grades
 {
     public class GradeRepository : IGradeRepository
     {
         private readonly EdutrackDbContext _dbContext;
-        public GradeRepository (EdutrackDbContext dbContext)
+
+        public GradeRepository(EdutrackDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-        public async Task<Grade> CreateGrade(Grade grade)
+
+        public async Task<IEnumerable<Grade>> GetAllAsync()
+        {
+            return await _dbContext.Grades
+                .Include(g => g.Submission)
+                .Include(g => g.Student)
+                .Include(g => g.Employee)
+                .ToListAsync();
+        }
+
+        public async Task<Grade?> GetByIdAsync(int id)
+        {
+            return await _dbContext.Grades
+                .Include(g => g.Submission)
+                .Include(g => g.Student)
+                .Include(g => g.Employee)
+                .FirstOrDefaultAsync(g => g.Id == id);
+        }
+
+        public async Task<Grade> CreateAsync(Grade grade)
         {
             await _dbContext.Grades.AddAsync(grade);
             await _dbContext.SaveChangesAsync();
             return grade;
         }
 
-        public async Task<bool> DeleteGrade(int id)
+        public async Task<Grade> UpdateAsync(int id, Grade grade)
+        {
+            var existing = await _dbContext.Grades.FindAsync(id);
+            if (existing == null) throw new Exception("Grade not found");
+            existing.Value = grade.Value;
+            existing.Comment = grade.Comment;
+            existing.GradedAt = DateTime.UtcNow;
+            await _dbContext.SaveChangesAsync();
+            return existing;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
         {
             var grade = await _dbContext.Grades.FindAsync(id);
-            if (grade != null)
-            {
-                _dbContext.Grades.Remove(grade);
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<IEnumerable<Grade>> GetAllGrade()
-        {
-            return await _dbContext.Grades.ToListAsync();
-        }
-
-        public async Task<Grade> GetGrade(int id)
-        {
-            return await _dbContext.Grades.FindAsync(id);
-        }
-
-        public async Task<Grade> UpdateGrade(int id, Grade grade)
-        {
-            var updategrade = _dbContext.Grades.Attach(grade);
-            updategrade.State = EntityState.Modified;
+            if (grade == null) return false;
+            _dbContext.Grades.Remove(grade);
             await _dbContext.SaveChangesAsync();
-            return grade;
+            return true;
         }
     }
 }

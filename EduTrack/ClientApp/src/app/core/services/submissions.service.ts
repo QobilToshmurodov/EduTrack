@@ -1,29 +1,32 @@
 ﻿import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SubmissionDto, CreateSubmissionDto } from '@features/cabinet/student/models/submission.model';
+import { SubmissionDto } from '@shared/models/common.models';
 
 @Injectable({ providedIn: 'root' })
 export class SubmissionsService {
   private http = inject(HttpClient);
+  private base = '/Submissions';
 
   getAll(): Observable<SubmissionDto[]> {
-    return this.http.get<SubmissionDto[]>('/submissions');
+    return this.http.get<SubmissionDto[]>(this.base);
   }
 
-  getById(id: number): Observable<SubmissionDto> {
-    return this.http.get<SubmissionDto>(`/submissions/${id}`);
+  getByAssignment(assignmentId: number): Observable<SubmissionDto[]> {
+    return this.http.get<SubmissionDto[]>(`${this.base}/by-assignment/${assignmentId}`);
   }
 
-  create(payload: CreateSubmissionDto): Observable<SubmissionDto> {
-    return this.http.post<SubmissionDto>('/submissions', payload);
+  getByStudent(studentId: number): Observable<SubmissionDto[]> {
+    return this.http.get<SubmissionDto[]>(`${this.base}/by-student/${studentId}`);
   }
 
-  update(id: number, payload: Partial<SubmissionDto>): Observable<SubmissionDto> {
-    return this.http.put<SubmissionDto>(`/submissions/${id}`, payload);
-  }
-
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`/submissions/${id}`);
+  submit(assignmentId: number, studentId: number, file?: File): Observable<SubmissionDto> {
+    const formData = new FormData();
+    formData.append('assignmentId', assignmentId.toString());
+    formData.append('studentId', studentId.toString());
+    if (file) {
+      formData.append('file', file);
+    }
+    return this.http.post<SubmissionDto>(this.base, formData);
   }
 }

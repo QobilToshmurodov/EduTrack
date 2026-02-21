@@ -1,71 +1,60 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+﻿import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { GradesService } from '@core/services/grades.service';
-import { NotificationService } from '@core/services/notification.service';
-
-interface Grade {
-  id: number;
-  assignmentTitle: string;
-  subjectName: string;
-  score: number;
-  maxScore: number;
-  percentage: number;
-  gradedDate: Date;
-  feedback?: string;
-}
+import { SubmissionsService } from '@core/services/submissions.service';
+import { StudentsService } from '@core/services/students.service';
+import { AuthService } from '@core/services/auth.service';
+import { SubmissionDto } from '@shared/models/common.models';
 
 @Component({
   selector: 'app-my-grades',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatTableModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule
-  ],
-  templateUrl: './my-grades.component.html',
-  styleUrl: './my-grades.component.scss'
+  imports: [CommonModule, MatTableModule, MatProgressSpinnerModule],
+  template: `
+    <div class="page-container">
+      <h2>Baholarim</h2>
+      @if (loading()) { <mat-spinner></mat-spinner> }
+      @else {
+        <table mat-table [dataSource]="items()" class="full-width">
+          <ng-container matColumnDef="assignmentTitle"><th mat-header-cell *matHeaderCellDef>Topshiriq</th><td mat-cell *matCellDef="let e">{{e.assignmentTitle}}</td></ng-container>
+          <ng-container matColumnDef="submittedAt"><th mat-header-cell *matHeaderCellDef>Topshirilgan sana</th><td mat-cell *matCellDef="let e">{{e.submittedAt | date:'dd.MM.yyyy HH:mm'}}</td></ng-container>
+          <ng-container matColumnDef="grade"><th mat-header-cell *matHeaderCellDef>Baho</th><td mat-cell *matCellDef="let e">{{e.grade?.value ?? 'Baholanmagan'}}</td></ng-container>
+          <ng-container matColumnDef="comment"><th mat-header-cell *matHeaderCellDef>Izoh</th><td mat-cell *matCellDef="let e">{{e.grade?.comment ?? '-'}}</td></ng-container>
+          <ng-container matColumnDef="gradedAt"><th mat-header-cell *matHeaderCellDef>Baholangan sana</th><td mat-cell *matCellDef="let e">{{e.grade?.gradedAt ? (e.grade.gradedAt | date:'dd.MM.yyyy') : '-'}}</td></ng-container>
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+        </table>
+        @if (items().length === 0) { <p class="empty-state">Ma'lumot topilmadi</p> }
+      }
+    </div>
+  `,
+  styles: [`
+    .page-container { padding: 20px; }
+    .full-width { width: 100%; }
+    .empty-state { text-align: center; padding: 40px; color: #666; }
+  `]
 })
 export class MyGradesComponent implements OnInit {
-  private gradesService = inject(GradesService);
-  private notificationService = inject(NotificationService);
-
+  private submissionsService = inject(SubmissionsService);
+  private studentsService = inject(StudentsService);
+  private authService = inject(AuthService);
   loading = signal(true);
-  grades = signal<Grade[]>([]);
-  displayedColumns = ['assignmentTitle', 'subjectName', 'score', 'percentage', 'gradedDate'];
+  items = signal<SubmissionDto[]>([]);
+  columns = ['assignmentTitle', 'submittedAt', 'grade', 'comment', 'gradedAt'];
 
-  ngOnInit(): void {
-    this.loadGrades();
-  }
-
-  private loadGrades(): void {
-    this.loading.set(true);
-    // TODO: Implement getMyGrades in GradesService
-    // Mock data for now
-    setTimeout(() => {
-      this.grades.set([]);
-      this.loading.set(false);
-    }, 500);
-  }
-
-  getAverageScore(): number {
-    const grades = this.grades();
-    if (grades.length === 0) return 0;
-    const sum = grades.reduce((acc, grade) => acc + grade.percentage, 0);
-    return Math.round(sum / grades.length);
-  }
-
-  getGradeColor(percentage: number): string {
-    if (percentage >= 90) return 'excellent';
-    if (percentage >= 70) return 'good';
-    if (percentage >= 50) return 'average';
-    return 'poor';
+  ngOnInit() {
+    const userId = this.authService.currentUser()?.id;
+    if (userId) {
+      this.studentsService.getByUserId(userId).subscribe({
+        next: student => {
+          this.submissionsService.getByStudent(student.id).subscribe({
+            next: subs => { this.items.set(subs); this.loading.set(false); },
+            error: () => this.loading.set(false)
+          });
+        },
+        error: () => this.loading.set(false)
+      });
+    }
   }
 }

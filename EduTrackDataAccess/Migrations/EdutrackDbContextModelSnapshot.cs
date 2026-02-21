@@ -30,8 +30,20 @@ namespace EduTrackDataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Deadline")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("text");
 
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
@@ -39,24 +51,21 @@ namespace EduTrackDataAccess.Migrations
                     b.Property<int>("SubjectId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmployeeId");
+
                     b.HasIndex("GroupId");
 
                     b.HasIndex("SubjectId");
 
-                    b.HasIndex("TeacherId");
-
                     b.ToTable("Assignments");
                 });
 
-            modelBuilder.Entity("EduTrackDataAccess.Entities.AttendanceEvent", b =>
+            modelBuilder.Entity("EduTrackDataAccess.Entities.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,28 +73,58 @@ namespace EduTrackDataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("EventType")
+                    b.Property<string>("Email")
                         .HasColumnType("text");
 
-                    b.Property<string>("Sourse")
+                    b.Property<string>("FullName")
                         .HasColumnType("text");
 
-                    b.Property<int>("StudentId")
+                    b.Property<string>("Phone")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ProfessionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TeacherId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("ProfessionId");
 
-                    b.HasIndex("TeacherId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                    b.ToTable("AttendanceEvents");
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("EduTrackDataAccess.Entities.EmployeeSubjectGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("EmployeeId", "SubjectId", "GroupId")
+                        .IsUnique();
+
+                    b.ToTable("EmployeeSubjectGroups");
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Grade", b =>
@@ -96,21 +135,32 @@ namespace EduTrackDataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Score")
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("GradedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
                     b.Property<int>("SubmissionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("StudentId");
+
                     b.HasIndex("SubmissionId")
                         .IsUnique();
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("Grades");
                 });
@@ -126,12 +176,17 @@ namespace EduTrackDataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
+                    b.Property<int?>("ProfessionId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ProfessionId");
 
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("EduTrackDataAccess.Entities.NotificationLog", b =>
+            modelBuilder.Entity("EduTrackDataAccess.Entities.Profession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -139,49 +194,21 @@ namespace EduTrackDataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("EventId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
 
-                    b.Property<int>("ParentId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("NotificationLogs");
-                });
-
-            modelBuilder.Entity("EduTrackDataAccess.Entities.Parent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ChatId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("text");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId")
+                    b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("Parents");
+                    b.ToTable("Professions");
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Student", b =>
@@ -192,10 +219,10 @@ namespace EduTrackDataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("integer");
+                    b.Property<string>("FullName")
+                        .HasColumnType("text");
 
-                    b.Property<int?>("ParentId")
+                    b.Property<int?>("GroupId")
                         .HasColumnType("integer");
 
                     b.Property<int>("UserId")
@@ -219,6 +246,9 @@ namespace EduTrackDataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -238,69 +268,23 @@ namespace EduTrackDataAccess.Migrations
                     b.Property<int>("AssignmentId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("FileUrl")
+                    b.Property<string>("FilePath")
                         .HasColumnType("text");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.HasIndex("AssignmentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Submissions");
-                });
-
-            modelBuilder.Entity("EduTrackDataAccess.Entities.Teacher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Fullname")
-                        .HasColumnType("text");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
+                    b.HasIndex("AssignmentId", "StudentId")
                         .IsUnique();
 
-                    b.ToTable("Teachers");
-                });
-
-            modelBuilder.Entity("EduTrackDataAccess.Entities.TeacherSubjectGroup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TeacherSubjectGroups");
+                    b.ToTable("Submissions");
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.User", b =>
@@ -331,7 +315,7 @@ namespace EduTrackDataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            PasswordHash = "$2a$11$X51/d3djweud2S0KtOn6QO2AG.RSt8MjtglXkTcpyjKnfY4De1t5S",
+                            PasswordHash = "$2a$11$ysMyeog0DjDtJA8XfNjC.uN42CUJ2O.9NvTi/rngnMawwOwRfiu6W",
                             Role = "Admin",
                             Username = "admin"
                         });
@@ -339,110 +323,119 @@ namespace EduTrackDataAccess.Migrations
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Assignment", b =>
                 {
-                    b.HasOne("EduTrackDataAccess.Entities.Group", "Group")
+                    b.HasOne("EduTrackDataAccess.Entities.Employee", "Employee")
                         .WithMany("Assignments")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduTrackDataAccess.Entities.Group", "Group")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EduTrackDataAccess.Entities.Subject", "Subject")
-                        .WithMany("Assignments")
+                        .WithMany()
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EduTrackDataAccess.Entities.Teacher", "Teacher")
-                        .WithMany("Assignments")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Employee");
 
                     b.Navigation("Group");
 
                     b.Navigation("Subject");
-
-                    b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("EduTrackDataAccess.Entities.AttendanceEvent", b =>
+            modelBuilder.Entity("EduTrackDataAccess.Entities.Employee", b =>
                 {
-                    b.HasOne("EduTrackDataAccess.Entities.Student", "Student")
-                        .WithMany("AttendanceEvents")
-                        .HasForeignKey("StudentId")
+                    b.HasOne("EduTrackDataAccess.Entities.Profession", "Profession")
+                        .WithMany()
+                        .HasForeignKey("ProfessionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("EduTrackDataAccess.Entities.User", "User")
+                        .WithOne("Employee")
+                        .HasForeignKey("EduTrackDataAccess.Entities.Employee", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EduTrackDataAccess.Entities.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId");
+                    b.Navigation("Profession");
 
-                    b.Navigation("Student");
+                    b.Navigation("User");
+                });
 
-                    b.Navigation("Teacher");
+            modelBuilder.Entity("EduTrackDataAccess.Entities.EmployeeSubjectGroup", b =>
+                {
+                    b.HasOne("EduTrackDataAccess.Entities.Employee", "Employee")
+                        .WithMany("EmployeeSubjectGroups")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduTrackDataAccess.Entities.Group", "Group")
+                        .WithMany("EmployeeSubjectGroups")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduTrackDataAccess.Entities.Subject", "Subject")
+                        .WithMany("EmployeeSubjectGroups")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Grade", b =>
                 {
+                    b.HasOne("EduTrackDataAccess.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EduTrackDataAccess.Entities.Student", "Student")
+                        .WithMany("Grades")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EduTrackDataAccess.Entities.Submission", "Submission")
                         .WithOne("Grade")
                         .HasForeignKey("EduTrackDataAccess.Entities.Grade", "SubmissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EduTrackDataAccess.Entities.Teacher", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Employee");
+
+                    b.Navigation("Student");
 
                     b.Navigation("Submission");
-
-                    b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("EduTrackDataAccess.Entities.NotificationLog", b =>
+            modelBuilder.Entity("EduTrackDataAccess.Entities.Group", b =>
                 {
-                    b.HasOne("EduTrackDataAccess.Entities.AttendanceEvent", "Event")
-                        .WithMany()
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("EduTrackDataAccess.Entities.Profession", "Profession")
+                        .WithMany("Groups")
+                        .HasForeignKey("ProfessionId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("EduTrackDataAccess.Entities.Parent", "Parent")
-                        .WithMany("NotificationLogs")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EduTrackDataAccess.Entities.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("Parent");
-
-                    b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("EduTrackDataAccess.Entities.Parent", b =>
-                {
-                    b.HasOne("EduTrackDataAccess.Entities.Student", "Student")
-                        .WithOne("Parent")
-                        .HasForeignKey("EduTrackDataAccess.Entities.Parent", "StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
+                    b.Navigation("Profession");
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Student", b =>
                 {
                     b.HasOne("EduTrackDataAccess.Entities.Group", "Group")
                         .WithMany("Students")
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("EduTrackDataAccess.Entities.User", "User")
                         .WithOne("Student")
@@ -474,77 +467,40 @@ namespace EduTrackDataAccess.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("EduTrackDataAccess.Entities.Teacher", b =>
-                {
-                    b.HasOne("EduTrackDataAccess.Entities.User", "User")
-                        .WithOne("Teacher")
-                        .HasForeignKey("EduTrackDataAccess.Entities.Teacher", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("EduTrackDataAccess.Entities.TeacherSubjectGroup", b =>
-                {
-                    b.HasOne("EduTrackDataAccess.Entities.Group", "Group")
-                        .WithMany("TeacherSubjectGroups")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EduTrackDataAccess.Entities.Subject", "Subject")
-                        .WithMany("TeacherSubjectGroups")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EduTrackDataAccess.Entities.Teacher", "Teacher")
-                        .WithMany("TeacherSubjectGroups")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("Subject");
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("EduTrackDataAccess.Entities.Assignment", b =>
                 {
                     b.Navigation("Submissions");
                 });
 
-            modelBuilder.Entity("EduTrackDataAccess.Entities.Group", b =>
+            modelBuilder.Entity("EduTrackDataAccess.Entities.Employee", b =>
                 {
                     b.Navigation("Assignments");
 
-                    b.Navigation("Students");
-
-                    b.Navigation("TeacherSubjectGroups");
+                    b.Navigation("EmployeeSubjectGroups");
                 });
 
-            modelBuilder.Entity("EduTrackDataAccess.Entities.Parent", b =>
+            modelBuilder.Entity("EduTrackDataAccess.Entities.Group", b =>
                 {
-                    b.Navigation("NotificationLogs");
+                    b.Navigation("EmployeeSubjectGroups");
+
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("EduTrackDataAccess.Entities.Profession", b =>
+                {
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Student", b =>
                 {
-                    b.Navigation("AttendanceEvents");
-
-                    b.Navigation("Parent");
+                    b.Navigation("Grades");
 
                     b.Navigation("Submissions");
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Subject", b =>
                 {
-                    b.Navigation("Assignments");
-
-                    b.Navigation("TeacherSubjectGroups");
+                    b.Navigation("EmployeeSubjectGroups");
                 });
 
             modelBuilder.Entity("EduTrackDataAccess.Entities.Submission", b =>
@@ -552,18 +508,11 @@ namespace EduTrackDataAccess.Migrations
                     b.Navigation("Grade");
                 });
 
-            modelBuilder.Entity("EduTrackDataAccess.Entities.Teacher", b =>
-                {
-                    b.Navigation("Assignments");
-
-                    b.Navigation("TeacherSubjectGroups");
-                });
-
             modelBuilder.Entity("EduTrackDataAccess.Entities.User", b =>
                 {
-                    b.Navigation("Student");
+                    b.Navigation("Employee");
 
-                    b.Navigation("Teacher");
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }

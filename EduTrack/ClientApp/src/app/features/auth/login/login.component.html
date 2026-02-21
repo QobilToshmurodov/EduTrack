@@ -16,7 +16,6 @@
             formControlName="username"
             placeholder="Username"
             autocomplete="username"
-            [disabled]="loading()"
           >
           <mat-icon matPrefix>person</mat-icon>
           @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
@@ -32,7 +31,6 @@
             formControlName="password"
             placeholder="Password"
             autocomplete="current-password"
-            [disabled]="loading()"
           >
           <mat-icon matPrefix>lock</mat-icon>
           <button 

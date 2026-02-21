@@ -1,12 +1,12 @@
-export interface User {
+﻿export interface User {
   id: number;
   username: string;
   role: UserRole;
+  profileId?: number;
 }
 
 export enum UserRole {
   Admin = 'Admin',
-  Director = 'Director',
   Teacher = 'Teacher',
   Student = 'Student'
 }
@@ -18,7 +18,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  id: number;
-  username: string;
   role: string;
+  userId: number;
+  profileId?: number;
 }

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+﻿import { Routes } from '@angular/router';
 import { CabinetLayoutComponent } from './layout/cabinet-layout.component';
 import { roleGuard } from '@core/guards/role.guard';
 import { UserRole } from '@core/models/user.model';
@@ -10,7 +10,7 @@ export const CABINET_ROUTES: Routes = [
     children: [
       {
         path: 'director',
-        canActivate: [roleGuard([UserRole.Admin, UserRole.Director])],
+        canActivate: [roleGuard([UserRole.Admin])],
         loadChildren: () => import('./director/director.routes').then(m => m.DIRECTOR_ROUTES)
       },
       {
@@ -25,7 +25,7 @@ export const CABINET_ROUTES: Routes = [
       },
       {
         path: '',
-        redirectTo: 'teacher',
+        redirectTo: 'director/dashboard',
         pathMatch: 'full'
       }
     ]

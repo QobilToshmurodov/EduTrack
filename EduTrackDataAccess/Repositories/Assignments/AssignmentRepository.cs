@@ -1,10 +1,9 @@
-﻿using EduTrackDataAccess.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using EduTrackDataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EduTrackDataAccess.Repositories.Assignments
 {
@@ -13,46 +12,66 @@ namespace EduTrackDataAccess.Repositories.Assignments
         private readonly EdutrackDbContext _dbContext;
 
         public AssignmentRepository(EdutrackDbContext dbContext)
-        { 
-            _dbContext = dbContext; 
-        
-        }
-        public async Task<Assignment> GetAssignment(int id)
         {
-            return await _dbContext.Assignments.FindAsync(id);
+            _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Assignment>> GetAllAssignments()
+        private IQueryable<Assignment> IncludeAll()
         {
-            return await _dbContext.Assignments.ToListAsync();
+            return _dbContext.Assignments
+                .Include(a => a.Subject)
+                .Include(a => a.Group)
+                .Include(a => a.Employee)
+                .Include(a => a.Submissions);
         }
 
-        public async Task<Assignment> CreateAssignment(Assignment assignment)
+        public async Task<IEnumerable<Assignment>> GetAllAsync()
+        {
+            return await IncludeAll().ToListAsync();
+        }
+
+        public async Task<Assignment?> GetByIdAsync(int id)
+        {
+            return await IncludeAll().FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<IEnumerable<Assignment>> GetByEmployeeIdAsync(int employeeId)
+        {
+            return await IncludeAll().Where(a => a.EmployeeId == employeeId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Assignment>> GetByGroupIdAsync(int groupId)
+        {
+            return await IncludeAll().Where(a => a.GroupId == groupId).ToListAsync();
+        }
+
+        public async Task<Assignment> CreateAsync(Assignment assignment)
         {
             await _dbContext.Assignments.AddAsync(assignment);
             await _dbContext.SaveChangesAsync();
-
             return assignment;
         }
 
-        public async Task<Assignment> UpdateAssignment(int id, Assignment assignment)
+        public async Task<Assignment> UpdateAsync(int id, Assignment assignment)
         {
-            var updateassignment = _dbContext.Assignments.Attach(assignment);
-            updateassignment.State = EntityState.Modified;
+            var existing = await _dbContext.Assignments.FindAsync(id);
+            if (existing == null) throw new Exception("Assignment not found");
+            existing.Title = assignment.Title;
+            existing.Description = assignment.Description;
+            existing.DueDate = assignment.DueDate;
+            existing.SubjectId = assignment.SubjectId;
+            existing.GroupId = assignment.GroupId;
             await _dbContext.SaveChangesAsync();
-            return assignment;
+            return existing;
         }
 
-        public async Task<bool> DeleteAssignment(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var assignment = await _dbContext.Assignments.FindAsync(id);
-            if (assignment != null)
-            {
-                _dbContext.Assignments.Remove(assignment);
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
-            return false;
+            if (assignment == null) return false;
+            _dbContext.Assignments.Remove(assignment);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
     }
 }

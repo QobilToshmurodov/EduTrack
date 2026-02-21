@@ -6,24 +6,25 @@ import { SubjectDto } from '@shared/models/common.models';
 @Injectable({ providedIn: 'root' })
 export class SubjectsService {
   private http = inject(HttpClient);
+  private base = '/Subjects';
 
   getAll(): Observable<SubjectDto[]> {
-    return this.http.get<SubjectDto[]>('/subjects');
+    return this.http.get<SubjectDto[]>(this.base);
   }
 
   getById(id: number): Observable<SubjectDto> {
-    return this.http.get<SubjectDto>(`/subjects/${id}`);
+    return this.http.get<SubjectDto>(`${this.base}/${id}`);
   }
 
-  create(payload: Partial<SubjectDto>): Observable<SubjectDto> {
-    return this.http.post<SubjectDto>('/subjects', payload);
+  create(data: { name: string; description?: string }): Observable<SubjectDto> {
+    return this.http.post<SubjectDto>(this.base, data);
   }
 
-  update(id: number, payload: Partial<SubjectDto>): Observable<SubjectDto> {
-    return this.http.put<SubjectDto>(`/subjects/${id}`, payload);
+  update(id: number, data: { name: string; description?: string }): Observable<SubjectDto> {
+    return this.http.put<SubjectDto>(`${this.base}/${id}`, data);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`/subjects/${id}`);
+    return this.http.delete<void>(`${this.base}/${id}`);
   }
 }

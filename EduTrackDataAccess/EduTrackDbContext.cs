@@ -12,20 +12,18 @@ namespace EduTrackDataAccess
 
         public DbSet<User> Users { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<Parent> Parents { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Profession> Professions { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Subject> Subjects { get; set; }
-        public DbSet<TeacherSubjectGroup> TeacherSubjectGroups { get; set; }
+        public DbSet<EmployeeSubjectGroup> EmployeeSubjectGroups { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Submission> Submissions { get; set; }
         public DbSet<Grade> Grades { get; set; }
-        public DbSet<AttendanceEvent> AttendanceEvents { get; set; }
-        public DbSet<NotificationLog> NotificationLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // USERS
+            // USER
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
 
@@ -33,65 +31,85 @@ namespace EduTrackDataAccess
                 .HasIndex(u => u.Username)
                 .IsUnique();
 
+            // PROFESSION
+            modelBuilder.Entity<Profession>()
+                .HasIndex(p => p.Code)
+                .IsUnique();
 
-            //  TEACHER 
-            modelBuilder.Entity<Teacher>()
-                .HasOne(t => t.User)
-                .WithOne(u => u.Teacher)
-                .HasForeignKey<Teacher>(t => t.UserId)
+            // EMPLOYEE
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.User)
+                .WithOne(u => u.Employee)
+                .HasForeignKey<Employee>(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //  STUDENT
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.Profession)
+                .WithMany()
+                .HasForeignKey(e => e.ProfessionId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // STUDENT
+            modelBuilder.Entity<Student>()
+                .HasOne(s => s.User)
+                .WithOne(u => u.Student)
+                .HasForeignKey<Student>(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Student>()
                 .HasOne(s => s.Group)
                 .WithMany(g => g.Students)
-                .HasForeignKey(s => s.GroupId);
+                .HasForeignKey(s => s.GroupId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Student>()
-               .HasOne(s => s.User)
-               .WithOne(u => u.Student)
-               .HasForeignKey<Student>(s => s.UserId)
-               .OnDelete(DeleteBehavior.Cascade);
+            // GROUP
+            modelBuilder.Entity<Group>()
+                .HasOne(g => g.Profession)
+                .WithMany(p => p.Groups)
+                .HasForeignKey(g => g.ProfessionId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-            // PARENT 
-            modelBuilder.Entity<Parent>()
-                .HasOne(p => p.Student)
-                .WithOne(s => s.Parent)
-                .HasForeignKey<Parent>(p => p.StudentId);
+            // EMPLOYEE-SUBJECT-GROUP
+            modelBuilder.Entity<EmployeeSubjectGroup>()
+                .HasIndex(esg => new { esg.EmployeeId, esg.SubjectId, esg.GroupId })
+                .IsUnique();
 
-            // TEACHER-SUBJECT-GROUP 
-            modelBuilder.Entity<TeacherSubjectGroup>()
-                .HasOne(tsg => tsg.Teacher)
-                .WithMany(t => t.TeacherSubjectGroups)
-                .HasForeignKey(tsg => tsg.TeacherId);
+            modelBuilder.Entity<EmployeeSubjectGroup>()
+                .HasOne(esg => esg.Employee)
+                .WithMany(e => e.EmployeeSubjectGroups)
+                .HasForeignKey(esg => esg.EmployeeId);
 
-            modelBuilder.Entity<TeacherSubjectGroup>()
-                .HasOne(tsg => tsg.Subject)
-                .WithMany(s => s.TeacherSubjectGroups)
-                .HasForeignKey(tsg => tsg.SubjectId);
+            modelBuilder.Entity<EmployeeSubjectGroup>()
+                .HasOne(esg => esg.Subject)
+                .WithMany(s => s.EmployeeSubjectGroups)
+                .HasForeignKey(esg => esg.SubjectId);
 
-            modelBuilder.Entity<TeacherSubjectGroup>()
-                .HasOne(tsg => tsg.Group)
-                .WithMany(g => g.TeacherSubjectGroups)
-                .HasForeignKey(tsg => tsg.GroupId);
+            modelBuilder.Entity<EmployeeSubjectGroup>()
+                .HasOne(esg => esg.Group)
+                .WithMany(g => g.EmployeeSubjectGroups)
+                .HasForeignKey(esg => esg.GroupId);
 
             // ASSIGNMENT
             modelBuilder.Entity<Assignment>()
                 .HasOne(a => a.Subject)
-                .WithMany(s => s.Assignments)
+                .WithMany()
                 .HasForeignKey(a => a.SubjectId);
 
             modelBuilder.Entity<Assignment>()
                 .HasOne(a => a.Group)
-                .WithMany(g => g.Assignments)
+                .WithMany()
                 .HasForeignKey(a => a.GroupId);
 
             modelBuilder.Entity<Assignment>()
-                .HasOne(a => a.Teacher)
-                .WithMany(t => t.Assignments)
-                .HasForeignKey(a => a.TeacherId);
+                .HasOne(a => a.Employee)
+                .WithMany(e => e.Assignments)
+                .HasForeignKey(a => a.EmployeeId);
 
-            // SUBMISSION 
+            // SUBMISSION
+            modelBuilder.Entity<Submission>()
+                .HasIndex(s => new { s.AssignmentId, s.StudentId })
+                .IsUnique();
+
             modelBuilder.Entity<Submission>()
                 .HasOne(s => s.Assignment)
                 .WithMany(a => a.Submissions)
@@ -102,51 +120,28 @@ namespace EduTrackDataAccess
                 .WithMany(st => st.Submissions)
                 .HasForeignKey(s => s.StudentId);
 
-            //  GRADE 
+            // GRADE
             modelBuilder.Entity<Grade>()
                 .HasOne(g => g.Submission)
                 .WithOne(s => s.Grade)
                 .HasForeignKey<Grade>(g => g.SubmissionId);
 
             modelBuilder.Entity<Grade>()
-                .HasOne(g => g.Teacher)
+                .HasOne(g => g.Student)
+                .WithMany(s => s.Grades)
+                .HasForeignKey(g => g.StudentId);
+
+            modelBuilder.Entity<Grade>()
+                .HasOne(g => g.Employee)
                 .WithMany()
-                .HasForeignKey(g => g.TeacherId);
-
-            // ATTENDANCE EVENT
-            modelBuilder.Entity<AttendanceEvent>()
-                .HasOne(ae => ae.Student)
-                .WithMany(s => s.AttendanceEvents)
-                .HasForeignKey(ae => ae.StudentId);
-
-            modelBuilder.Entity<AttendanceEvent>()
-                .HasOne(ae => ae.Teacher)
-                .WithMany()
-                .HasForeignKey(ae => ae.TeacherId)
-                .IsRequired(false);
-
-            // NOTIFICATION LOG
-            modelBuilder.Entity<NotificationLog>()
-                .HasOne(n => n.Parent)
-                .WithMany(p => p.NotificationLogs)
-                .HasForeignKey(n => n.ParentId);
-
-            modelBuilder.Entity<NotificationLog>()
-                .HasOne(n => n.Student)
-                .WithMany()
-                .HasForeignKey(n => n.StudentId);
-
-            modelBuilder.Entity<NotificationLog>()
-                .HasOne(n => n.Event)
-                .WithMany()
-                .HasForeignKey(n => n.EventId);
+                .HasForeignKey(g => g.EmployeeId);
 
             // Seed Admin User
             modelBuilder.Entity<User>().HasData(new User
             {
                 Id = 1,
                 Username = "admin",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"), 
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
                 Role = "Admin"
             });
         }

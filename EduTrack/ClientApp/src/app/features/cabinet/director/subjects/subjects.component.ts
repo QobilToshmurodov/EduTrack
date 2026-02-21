@@ -1,123 +1,72 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+﻿import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { SubjectsService } from '@core/services/subjects.service';
 import { NotificationService } from '@core/services/notification.service';
-import { SubjectDialogComponent, SubjectDialogData } from './subject-dialog/subject-dialog.component';
-
-interface Subject {
-  id: number;
-  name: string;
-  description?: string;
-}
+import { SubjectDto } from '@shared/models/common.models';
+import { SubjectDialogComponent } from './subject-dialog/subject-dialog.component';
 
 @Component({
   selector: 'app-subjects',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule
-  ],
-  templateUrl: './subjects.component.html',
-  styleUrl: './subjects.component.scss'
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule],
+  template: `
+    <div class="page-container">
+      <div class="page-header">
+        <h2>Fanlar</h2>
+        <button mat-raised-button color="primary" (click)="openDialog()"><mat-icon>add</mat-icon> Qo'shish</button>
+      </div>
+      @if (loading()) { <mat-spinner></mat-spinner> }
+      @else {
+        <table mat-table [dataSource]="items()" class="full-width">
+          <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>ID</th><td mat-cell *matCellDef="let e">{{e.id}}</td></ng-container>
+          <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Nomi</th><td mat-cell *matCellDef="let e">{{e.name}}</td></ng-container>
+          <ng-container matColumnDef="description"><th mat-header-cell *matHeaderCellDef>Tavsif</th><td mat-cell *matCellDef="let e">{{e.description}}</td></ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Amallar</th>
+            <td mat-cell *matCellDef="let e">
+              <button mat-icon-button (click)="openDialog(e)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button color="warn" (click)="deleteItem(e.id)"><mat-icon>delete</mat-icon></button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+        </table>
+        @if (items().length === 0) { <p class="empty-state">Ma'lumot topilmadi</p> }
+      }
+    </div>
+  `,
+  styles: [`
+    .page-container { padding: 20px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .full-width { width: 100%; }
+    .empty-state { text-align: center; padding: 40px; color: #666; }
+  `]
 })
 export class SubjectsComponent implements OnInit {
-  private subjectsService = inject(SubjectsService);
-  private notificationService = inject(NotificationService);
+  private service = inject(SubjectsService);
   private dialog = inject(MatDialog);
-
+  private notify = inject(NotificationService);
   loading = signal(true);
-  subjects = signal<Subject[]>([]);
-  displayedColumns = ['id', 'name', 'description', 'actions'];
+  items = signal<SubjectDto[]>([]);
+  columns = ['id', 'name', 'description', 'actions'];
 
-  ngOnInit(): void {
-    this.loadData();
-  }
-
-  private loadData(): void {
+  ngOnInit() { this.load(); }
+  load() {
     this.loading.set(true);
-    this.subjectsService.getAll().subscribe({
-      next: (subjects) => {
-        this.subjects.set(subjects || []);
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Failed to load subjects:', error);
-        this.notificationService.showError('Ma\'lumotlarni yuklashda xatolik');
-        this.loading.set(false);
-      }
+    this.service.getAll().subscribe({ next: d => { this.items.set(d); this.loading.set(false); }, error: () => this.loading.set(false) });
+  }
+  openDialog(item?: SubjectDto) {
+    const ref = this.dialog.open(SubjectDialogComponent, { width: '500px', data: item || null });
+    ref.afterClosed().subscribe(r => {
+      if (r) { const op = item ? this.service.update(item.id, r) : this.service.create(r); op.subscribe({ next: () => { this.notify.showSuccess('Saqlandi'); this.load(); }, error: () => this.notify.showError('Xatolik') }); }
     });
   }
-
-  openDialog(subject?: Subject): void {
-    const dialogRef = this.dialog.open(SubjectDialogComponent, {
-      width: '500px',
-      data: subject || null
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (subject) {
-          this.updateSubject(subject.id, result);
-        } else {
-          this.createSubject(result);
-        }
-      }
-    });
-  }
-
-  private createSubject(data: any): void {
-    this.subjectsService.create(data).subscribe({
-      next: () => {
-        this.notificationService.showSuccess('Fan muvaffaqiyatli qo\'shildi');
-        this.loadData();
-      },
-      error: (error) => {
-        console.error('Failed to create subject:', error);
-        this.notificationService.showError('Qo\'shishda xatolik');
-      }
-    });
-  }
-
-  private updateSubject(id: number, data: any): void {
-    this.subjectsService.update(id, data).subscribe({
-      next: () => {
-        this.notificationService.showSuccess('Fan muvaffaqiyatli yangilandi');
-        this.loadData();
-      },
-      error: (error) => {
-        console.error('Failed to update subject:', error);
-        this.notificationService.showError('Yangilashda xatolik');
-      }
-    });
-  }
-
-  deleteSubject(id: number): void {
-    if (confirm('Rostdan ham bu fanni o\'chirmoqchimisiz?')) {
-      this.subjectsService.delete(id).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('Fan muvaffaqiyatli o\'chirildi');
-          this.loadData();
-        },
-        error: (error) => {
-          console.error('Failed to delete subject:', error);
-          this.notificationService.showError('O\'chirishda xatolik');
-        }
-      });
-    }
+  deleteItem(id: number) {
+    this.service.delete(id).subscribe({ next: () => { this.notify.showSuccess("O'chirildi"); this.load(); }, error: () => this.notify.showError('Xatolik') });
   }
 }

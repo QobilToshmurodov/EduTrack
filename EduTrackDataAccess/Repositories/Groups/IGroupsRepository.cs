@@ -1,18 +1,15 @@
-﻿using EduTrackDataAccess.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using EduTrackDataAccess.Entities;
 
 namespace EduTrackDataAccess.Repositories.Groups
 {
-    public interface IGroupsRepository 
+    public interface IGroupsRepository
     {
-        Task<IEnumerable<Group>> GetAllGroup();
-        Task<Group> GetGroup(int id);
-        Task<Group> CreateGroup(Group group);
-        Task<Group> UpdateGroup(int id, Group group);
-        Task<bool> DeleteGroup(int id);
+        Task<IEnumerable<Group>> GetAllAsync();
+        Task<Group?> GetByIdAsync(int id);
+        Task<Group> CreateAsync(Group group);
+        Task<Group> UpdateAsync(int id, Group group);
+        Task<bool> DeleteAsync(int id);
     }
 }

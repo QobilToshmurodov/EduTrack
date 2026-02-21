@@ -1,65 +1,80 @@
 ﻿using EduTrack.Models;
-using EduTrack.Services;
+using EduTrackDataAccess.Entities;
+using EduTrackDataAccess.Repositories.Groups;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class GroupsController : ControllerBase
     {
-        private readonly GroupService _service;
-        public GroupsController(GroupService service)
+        private readonly IGroupsRepository _repo;
+
+        public GroupsController(IGroupsRepository repo)
         {
-            _service = service;
+            _repo = repo;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-
-            return Ok(await _service.GetAll());
+            var items = await _repo.GetAllAsync();
+            var result = items.Select(g => MapToDto(g));
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            if (id == 0)
-                return NotFound($"Data with the given ID: {id} was not found.");
-
-            else if (id < 0)
-                return BadRequest("Wrong data.");
-
-            return Ok(await _service.Get(id));
+            var g = await _repo.GetByIdAsync(id);
+            if (g == null) return NotFound();
+            return Ok(MapToDto(g));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] GroupModel model)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(CreateGroupDto dto)
         {
-            var createdGroup = await _service.Create(model);
-            var routeValue = new { id = createdGroup.Id };
-            return CreatedAtRoute(routeValue, createdGroup);
+            var entity = new Group { Name = dto.Name, ProfessionId = dto.ProfessionId };
+            var created = await _repo.CreateAsync(entity);
+            return Ok(MapToDto(created));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] GroupModel model)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, CreateGroupDto dto)
         {
-            var updatedGroup = await _service.Update(id, model);
-            return Ok(updatedGroup);
+            try
+            {
+                var entity = new Group { Name = dto.Name, ProfessionId = dto.ProfessionId };
+                var updated = await _repo.UpdateAsync(id, entity);
+                return Ok(MapToDto(updated));
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            bool deletedGroup = await _service.Delete(id);
-            if (deletedGroup)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return NotFound();
-            }
+            var result = await _repo.DeleteAsync(id);
+            if (!result) return NotFound();
+            return NoContent();
         }
+
+        private static GroupDto MapToDto(Group g) => new()
+        {
+            Id = g.Id,
+            Name = g.Name,
+            ProfessionId = g.ProfessionId,
+            ProfessionName = g.Profession?.Name,
+            StudentsCount = g.Students?.Count ?? 0
+        };
     }
 }

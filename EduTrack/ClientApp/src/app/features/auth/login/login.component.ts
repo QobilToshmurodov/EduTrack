@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -43,6 +43,14 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(4)]]
+    });
+
+    effect(() => {
+      if (this.loading()) {
+        this.loginForm.disable();
+      } else {
+        this.loginForm.enable();
+      }
     });
   }
 

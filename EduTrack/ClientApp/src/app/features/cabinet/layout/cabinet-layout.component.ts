@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+﻿import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -7,10 +7,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatBadgeModule } from '@angular/material/badge';
 import { AuthService } from '@core/services/auth.service';
 import { UserRole } from '@core/models/user.model';
-import Swal from 'sweetalert2';
 
 interface MenuItem {
   label: string;
@@ -30,8 +28,7 @@ interface MenuItem {
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule,
-    MatBadgeModule
+    MatMenuModule
   ],
   templateUrl: './cabinet-layout.component.html',
   styleUrl: './cabinet-layout.component.scss'
@@ -42,36 +39,48 @@ export class CabinetLayoutComponent {
   sidenavOpened = signal(true);
 
   menuItems: MenuItem[] = [
-    // Director/Admin
+    // Admin
     {
       label: 'Boshqaruv Paneli',
       icon: 'dashboard',
       route: '/cabinet/director/dashboard',
-      roles: [UserRole.Admin, UserRole.Director]
+      roles: [UserRole.Admin]
+    },
+    {
+      label: 'Yo\'nalishlar',
+      icon: 'school',
+      route: '/cabinet/director/professions',
+      roles: [UserRole.Admin]
+    },
+    {
+      label: 'Xodimlar',
+      icon: 'person',
+      route: '/cabinet/director/employees',
+      roles: [UserRole.Admin]
     },
     {
       label: 'O\'quvchilar',
-      icon: 'school',
+      icon: 'people',
       route: '/cabinet/director/students',
-      roles: [UserRole.Admin, UserRole.Director]
-    },
-    {
-      label: 'O\'qituvchilar',
-      icon: 'person',
-      route: '/cabinet/director/teachers',
-      roles: [UserRole.Admin, UserRole.Director]
+      roles: [UserRole.Admin]
     },
     {
       label: 'Guruhlar',
       icon: 'groups',
       route: '/cabinet/director/groups',
-      roles: [UserRole.Admin, UserRole.Director]
+      roles: [UserRole.Admin]
     },
     {
       label: 'Fanlar',
       icon: 'book',
       route: '/cabinet/director/subjects',
-      roles: [UserRole.Admin, UserRole.Director]
+      roles: [UserRole.Admin]
+    },
+    {
+      label: 'Fan tayinlash',
+      icon: 'assignment_ind',
+      route: '/cabinet/director/esg',
+      roles: [UserRole.Admin]
     },
     
     // Teacher
@@ -82,9 +91,9 @@ export class CabinetLayoutComponent {
       roles: [UserRole.Teacher]
     },
     {
-      label: 'Davomat',
+      label: 'Javoblar',
       icon: 'fact_check',
-      route: '/cabinet/teacher/attendance',
+      route: '/cabinet/teacher/submissions',
       roles: [UserRole.Teacher]
     },
     
@@ -106,7 +115,6 @@ export class CabinetLayoutComponent {
   get filteredMenuItems(): MenuItem[] {
     const userRole = this.authService.userRole();
     if (!userRole) return [];
-    
     return this.menuItems.filter(item => item.roles.includes(userRole));
   }
 
@@ -119,8 +127,6 @@ export class CabinetLayoutComponent {
     switch (role) {
       case UserRole.Admin:
         return 'Administrator';
-      case UserRole.Director:
-        return 'Direktor';
       case UserRole.Teacher:
         return 'O\'qituvchi';
       case UserRole.Student:
@@ -135,19 +141,6 @@ export class CabinetLayoutComponent {
   }
 
   logout(): void {
-    Swal.fire({
-      title: 'Tizimdan chiqmoqchimisiz?',
-      text: "Siz tizimdan chiqib ketasiz!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ha, chiqish!',
-      cancelButtonText: 'Bekor qilish'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.authService.logout();
-      }
-    });
+    this.authService.logout();
   }
 }

@@ -1,66 +1,71 @@
 ﻿using EduTrack.Models;
-using EduTrack.Services;
+using EduTrackDataAccess.Entities;
+using EduTrackDataAccess.Repositories.Subjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class SubjectsController : ControllerBase
     {
-        private readonly SubjectService _service;
-        public SubjectsController(SubjectService service)
+        private readonly ISubjectRepository _repo;
+
+        public SubjectsController(ISubjectRepository repo)
         {
-            _service = service;
+            _repo = repo;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-
-            return Ok(await _service.GetAll());
+            var items = await _repo.GetAllAsync();
+            var result = items.Select(s => new SubjectDto { Id = s.Id, Name = s.Name, Description = s.Description });
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            if (id == 0)
-                return NotFound($"Data with the given ID: {id} was not found.");
-
-            else if (id < 0)
-                return BadRequest("Wrong data.");
-
-            return Ok(await _service.Get(id));
+            var s = await _repo.GetByIdAsync(id);
+            if (s == null) return NotFound();
+            return Ok(new SubjectDto { Id = s.Id, Name = s.Name, Description = s.Description });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] SubjectModel model)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(CreateSubjectDto dto)
         {
-            var createdSubject = await _service.Create(model);
-            var routeValue = new { id = createdSubject.Id };
-            return CreatedAtRoute(routeValue, createdSubject);
+            var entity = new Subject { Name = dto.Name, Description = dto.Description };
+            var created = await _repo.CreateAsync(entity);
+            return Ok(new SubjectDto { Id = created.Id, Name = created.Name, Description = created.Description });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] SubjectModel model)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, CreateSubjectDto dto)
         {
-            var updatedSubject = await _service.Update(id, model);
-            return Ok(updatedSubject);
+            try
+            {
+                var entity = new Subject { Name = dto.Name, Description = dto.Description };
+                var updated = await _repo.UpdateAsync(id, entity);
+                return Ok(new SubjectDto { Id = updated.Id, Name = updated.Name, Description = updated.Description });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            bool deletedSubject = await _service.Delete(id);
-            if (deletedSubject)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return NotFound();
-            }
+            var result = await _repo.DeleteAsync(id);
+            if (!result) return NotFound();
+            return NoContent();
         }
-
     }
 }

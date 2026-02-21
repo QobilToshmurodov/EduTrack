@@ -1,68 +1,97 @@
-// Group
-export interface GroupDto {
+﻿export interface ProfessionDto {
   id: number;
   name: string;
+  code: string;
+  description?: string;
+  groupsCount: number;
 }
 
-export interface Group {
+export interface EmployeeDto {
   id: number;
-  name: string;
-  studentsCount?: number;
+  userId: number;
+  fullName: string;
+  phone?: string;
+  email?: string;
+  professionId?: number;
+  professionName?: string;
 }
 
-// Subject
-export interface SubjectDto {
-  id: number;
-  name: string;
-}
-
-export interface Subject {
-  id: number;
-  name: string;
-}
-
-// Student
 export interface StudentDto {
   id: number;
   userId: number;
-  groupId?: number;
-  parentId?: number;
-}
-
-export interface Student {
-  id: number;
-  userId: number;
-  username: string;
+  fullName: string;
   groupId?: number;
   groupName?: string;
-  parentId?: number;
+  username?: string;
 }
 
-// Teacher
-export interface TeacherDto {
+export interface GroupDto {
   id: number;
-  userId: number;
-  fullname: string;
+  name: string;
+  professionId?: number;
+  professionName?: string;
+  studentsCount: number;
 }
 
-export interface Teacher {
+export interface SubjectDto {
   id: number;
-  userId: number;
-  fullname: string;
-  subjects?: Subject[];
-  groups?: Group[];
+  name: string;
+  description?: string;
 }
 
-// Teacher-Subject-Group
-export interface TSGDto {
+export interface ESGDto {
   id: number;
-  teacherId: number;
+  employeeId: number;
+  employeeName: string;
   subjectId: number;
+  subjectName: string;
   groupId: number;
+  groupName: string;
 }
-export interface  ParentDto {
+
+export interface AssignmentDto {
   id: number;
-  fullName: string;
-  chatId: string;
+  title: string;
+  description?: string;
+  filePath?: string;
+  dueDate: string;
+  subjectId: number;
+  subjectName: string;
+  groupId: number;
+  groupName: string;
+  employeeId: number;
+  employeeName: string;
+  createdAt: string;
+  submissionsCount: number;
+}
+
+export interface SubmissionDto {
+  id: number;
+  assignmentId: number;
+  assignmentTitle: string;
   studentId: number;
+  studentName: string;
+  filePath?: string;
+  submittedAt: string;
+  grade?: GradeDto;
+}
+
+export interface GradeDto {
+  id: number;
+  submissionId: number;
+  studentId: number;
+  studentName: string;
+  employeeId: number;
+  value: number;
+  comment?: string;
+  gradedAt: string;
+}
+
+export interface DashboardStatsDto {
+  professionsCount: number;
+  studentsCount: number;
+  employeesCount: number;
+  groupsCount: number;
+  subjectsCount: number;
+  assignmentsCount: number;
 }

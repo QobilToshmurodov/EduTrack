@@ -1,66 +1,102 @@
 ﻿using EduTrack.Models;
-using EduTrack.Services;
+using EduTrackDataAccess.Entities;
+using EduTrackDataAccess.Repositories.Submissions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SubmissionsController : Controller
+    [Authorize]
+    public class SubmissionsController : ControllerBase
     {
-      private readonly SubmissionService _service;
+        private readonly ISubmissionsRepository _repo;
+        private readonly IWebHostEnvironment _env;
 
-        public SubmissionsController(SubmissionService service )
+        public SubmissionsController(ISubmissionsRepository repo, IWebHostEnvironment env)
         {
-            _service = service;
+            _repo = repo;
+            _env = env;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-
-            return Ok(await _service.GetAll());
+            var items = await _repo.GetAllAsync();
+            return Ok(items.Select(MapToDto));
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("by-assignment/{assignmentId}")]
+        public async Task<IActionResult> GetByAssignment(int assignmentId)
         {
-            if (id == 0)
-                return NotFound($"Data with the given ID: {id} was not found.");
+            var items = await _repo.GetByAssignmentIdAsync(assignmentId);
+            return Ok(items.Select(MapToDto));
+        }
 
-            else if (id < 0)
-                return BadRequest("Wrong data.");
-
-            return Ok(await _service.Get(id));
+        [HttpGet("by-student/{studentId}")]
+        public async Task<IActionResult> GetByStudent(int studentId)
+        {
+            var items = await _repo.GetByStudentIdAsync(studentId);
+            return Ok(items.Select(MapToDto));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] SubmissionModel model)
+        [Authorize(Roles = "Student,Admin")]
+        public async Task<IActionResult> Create([FromForm] int assignmentId, [FromForm] int studentId, IFormFile? file)
         {
-            var createdSubmission = await _service.Create(model);
-            var routeValue = new { id = createdSubmission.Id };
-            return CreatedAtRoute(routeValue, createdSubmission);
+            var existing = await _repo.GetByAssignmentAndStudentAsync(assignmentId, studentId);
+            if (existing != null) return BadRequest("Already submitted");
+
+            string? filePath = null;
+            if (file != null && file.Length > 0)
+            {
+                var uploadsDir = Path.Combine(_env.ContentRootPath, "Uploads", "Submissions");
+                Directory.CreateDirectory(uploadsDir);
+
+                var ext = Path.GetExtension(file.FileName);
+                var fileName = $"{assignmentId}_{studentId}_{Guid.NewGuid()}{ext}";
+                var fullPath = Path.Combine(uploadsDir, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                filePath = $"Submissions/{fileName}";
+            }
+
+            var submission = new Submission
+            {
+                AssignmentId = assignmentId,
+                StudentId = studentId,
+                FilePath = filePath,
+                SubmittedAt = DateTime.UtcNow
+            };
+            var created = await _repo.CreateAsync(submission);
+            var loaded = await _repo.GetByIdAsync(created.Id);
+            return Ok(MapToDto(loaded!));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] SubmissionModel model)
+        private static SubmissionDto MapToDto(Submission s) => new()
         {
-            var updatedSubmission = await _service.Update(id, model);
-            return Ok(updatedSubmission);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            bool deletedSubmission = await _service.Delete(id);
-            if (deletedSubmission)
+            Id = s.Id,
+            AssignmentId = s.AssignmentId,
+            AssignmentTitle = s.Assignment?.Title ?? "",
+            StudentId = s.StudentId,
+            StudentName = s.Student?.FullName ?? "",
+            FilePath = s.FilePath,
+            SubmittedAt = s.SubmittedAt,
+            Grade = s.Grade != null ? new GradeDto
             {
-                return NoContent();
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
+                Id = s.Grade.Id,
+                SubmissionId = s.Grade.SubmissionId,
+                StudentId = s.Grade.StudentId,
+                StudentName = s.Student?.FullName ?? "",
+                EmployeeId = s.Grade.EmployeeId,
+                Value = s.Grade.Value,
+                Comment = s.Grade.Comment,
+                GradedAt = s.Grade.GradedAt
+            } : null
+        };
     }
 }

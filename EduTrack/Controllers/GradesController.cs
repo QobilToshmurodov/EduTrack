@@ -1,65 +1,91 @@
 ﻿using EduTrack.Models;
-using EduTrack.Services;
+using EduTrackDataAccess.Entities;
+using EduTrackDataAccess.Repositories.Grades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class GradesController : ControllerBase
     {
-        private readonly GradeService _service;
-        public GradesController(GradeService service)
+        private readonly IGradeRepository _repo;
+
+        public GradesController(IGradeRepository repo)
         {
-            _service = service;
+            _repo = repo;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-
-            return Ok(await _service.GetAll());
+            var items = await _repo.GetAllAsync();
+            return Ok(items.Select(MapToDto));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            if (id == 0)
-                return NotFound($"Data with the given ID: {id} was not found.");
-
-            else if (id < 0)
-                return BadRequest("Wrong data.");
-
-            return Ok(await _service.Get(id));
+            var g = await _repo.GetByIdAsync(id);
+            if (g == null) return NotFound();
+            return Ok(MapToDto(g));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] GradeModel model)
+        [Authorize(Roles = "Teacher,Admin")]
+        public async Task<IActionResult> Create(CreateGradeDto dto)
         {
-            var createdGrade = await _service.Create(model);
-            var routeValue = new { id = createdGrade.Id };
-            return CreatedAtRoute(routeValue, createdGrade);
+            var entity = new Grade
+            {
+                SubmissionId = dto.SubmissionId,
+                StudentId = dto.StudentId,
+                EmployeeId = dto.EmployeeId,
+                Value = dto.Value,
+                Comment = dto.Comment,
+                GradedAt = DateTime.UtcNow
+            };
+            var created = await _repo.CreateAsync(entity);
+            var loaded = await _repo.GetByIdAsync(created.Id);
+            return Ok(MapToDto(loaded!));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] GradeModel model)
+        [Authorize(Roles = "Teacher,Admin")]
+        public async Task<IActionResult> Update(int id, UpdateGradeDto dto)
         {
-            var updatedGrade = await _service.Update(id, model);
-            return Ok(updatedGrade);
+            try
+            {
+                var entity = new Grade { Value = dto.Value, Comment = dto.Comment };
+                var updated = await _repo.UpdateAsync(id, entity);
+                return Ok(MapToDto(updated));
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Teacher,Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            bool deletedGrade = await _service.Delete(id);
-            if (deletedGrade)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return NotFound();
-            }
+            var result = await _repo.DeleteAsync(id);
+            if (!result) return NotFound();
+            return NoContent();
         }
+
+        private static GradeDto MapToDto(Grade g) => new()
+        {
+            Id = g.Id,
+            SubmissionId = g.SubmissionId,
+            StudentId = g.StudentId,
+            StudentName = g.Student?.FullName ?? "",
+            EmployeeId = g.EmployeeId,
+            Value = g.Value,
+            Comment = g.Comment,
+            GradedAt = g.GradedAt
+        };
     }
 }

@@ -1,142 +1,85 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+﻿import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { StudentsService } from '@core/services/students.service';
-import { GroupsService } from '@core/services/groups.service';
 import { NotificationService } from '@core/services/notification.service';
-import { StudentDialogComponent, StudentDialogData } from './student-dialog/student-dialog.component';
-
-interface Student {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  groupId: number;
-  groupName?: string;
-}
-
-interface Group {
-  id: number;
-  name: string;
-}
+import { StudentDto } from '@shared/models/common.models';
+import { StudentDialogComponent } from './student-dialog/student-dialog.component';
 
 @Component({
   selector: 'app-students',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule
-  ],
-  templateUrl: './students.component.html',
-  styleUrl: './students.component.scss'
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule, MatProgressSpinnerModule],
+  template: `
+    <div class="page-container">
+      <div class="page-header">
+        <h2>O'quvchilar</h2>
+        <button mat-raised-button color="primary" (click)="openDialog()"><mat-icon>add</mat-icon> Qo'shish</button>
+      </div>
+      @if (loading()) { <mat-spinner></mat-spinner> }
+      @else {
+        <table mat-table [dataSource]="items()" class="full-width">
+          <ng-container matColumnDef="id"><th mat-header-cell *matHeaderCellDef>ID</th><td mat-cell *matCellDef="let e">{{e.id}}</td></ng-container>
+          <ng-container matColumnDef="fullName"><th mat-header-cell *matHeaderCellDef>To'liq ism</th><td mat-cell *matCellDef="let e">{{e.fullName}}</td></ng-container>
+          <ng-container matColumnDef="username"><th mat-header-cell *matHeaderCellDef>Username</th><td mat-cell *matCellDef="let e">{{e.username}}</td></ng-container>
+          <ng-container matColumnDef="groupName"><th mat-header-cell *matHeaderCellDef>Guruh</th><td mat-cell *matCellDef="let e">{{e.groupName}}</td></ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Amallar</th>
+            <td mat-cell *matCellDef="let e">
+              <button mat-icon-button (click)="openDialog(e)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button color="warn" (click)="deleteItem(e.id)"><mat-icon>delete</mat-icon></button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+        </table>
+        @if (items().length === 0) { <p class="empty-state">Ma'lumot topilmadi</p> }
+      }
+    </div>
+  `,
+  styles: [`
+    .page-container { padding: 20px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .full-width { width: 100%; }
+    .empty-state { text-align: center; padding: 40px; color: #666; }
+  `]
 })
 export class StudentsComponent implements OnInit {
-  private studentsService = inject(StudentsService);
-  private groupsService = inject(GroupsService);
-  private notificationService = inject(NotificationService);
+  private service = inject(StudentsService);
   private dialog = inject(MatDialog);
-
+  private notify = inject(NotificationService);
   loading = signal(true);
-  students = signal<Student[]>([]);
-  groups = signal<Group[]>([]);
-  displayedColumns = ['id', 'firstName', 'lastName', 'email', 'groupName', 'actions'];
+  items = signal<StudentDto[]>([]);
+  columns = ['id', 'fullName', 'username', 'groupName', 'actions'];
 
-  ngOnInit(): void {
-    this.loadData();
-  }
+  ngOnInit() { this.load(); }
 
-  private loadData(): void {
+  load() {
     this.loading.set(true);
-
-    Promise.all([
-      this.studentsService.getAll().toPromise(),
-      this.groupsService.getAll().toPromise()
-    ]).then(([students, groups]) => {
-      this.groups.set(groups || []);
-      
-      const studentsWithGroups = (students || []).map(student => ({
-        ...student,
-        groupName: groups?.find(g => g.id === student.groupId)?.name || 'N/A'
-      })) as unknown as Student[];
-      
-      this.students.set(studentsWithGroups);
-      this.loading.set(false);
-    }).catch(error => {
-      console.error('Failed to load data:', error);
-      this.notificationService.showError('Ma\'lumotlarni yuklashda xatolik');
-      this.loading.set(false);
+    this.service.getAll().subscribe({
+      next: data => { this.items.set(data); this.loading.set(false); },
+      error: () => this.loading.set(false)
     });
   }
 
-  openDialog(student?: Student): void {
-    const dialogRef = this.dialog.open(StudentDialogComponent, {
-      width: '600px',
-      data: student || null
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
+  openDialog(item?: StudentDto) {
+    const ref = this.dialog.open(StudentDialogComponent, { width: '500px', data: item || null });
+    ref.afterClosed().subscribe(result => {
       if (result) {
-        if (student) {
-          this.updateStudent(student.id, result);
-        } else {
-          this.createStudent(result);
-        }
+        const op = item ? this.service.update(item.id, result) : this.service.create(result);
+        op.subscribe({ next: () => { this.notify.showSuccess('Saqlandi'); this.load(); }, error: () => this.notify.showError('Xatolik') });
       }
     });
   }
 
-  private createStudent(data: any): void {
-    this.studentsService.create(data).subscribe({
-      next: () => {
-        this.notificationService.showSuccess('O\'quvchi muvaffaqiyatli qo\'shildi');
-        this.loadData();
-      },
-      error: (error) => {
-        console.error('Failed to create student:', error);
-        this.notificationService.showError('Qo\'shishda xatolik');
-      }
+  deleteItem(id: number) {
+    this.service.delete(id).subscribe({
+      next: () => { this.notify.showSuccess("O'chirildi"); this.load(); },
+      error: () => this.notify.showError('Xatolik')
     });
-  }
-
-  private updateStudent(id: number, data: any): void {
-    this.studentsService.update(id, data).subscribe({
-      next: () => {
-        this.notificationService.showSuccess('O\'quvchi muvaffaqiyatli yangilandi');
-        this.loadData();
-      },
-      error: (error) => {
-        console.error('Failed to update student:', error);
-        this.notificationService.showError('Yangilashda xatolik');
-      }
-    });
-  }
-
-  deleteStudent(id: number): void {
-    if (confirm('Rostdan ham bu o\'quvchini o\'chirmoqchimisiz?')) {
-      this.studentsService.delete(id).subscribe({
-        next: () => {
-          this.notificationService.showSuccess('O\'quvchi muvaffaqiyatli o\'chirildi');
-          this.loadData();
-        },
-        error: (error) => {
-          console.error('Failed to delete student:', error);
-          this.notificationService.showError('O\'chirishda xatolik');
-        }
-      });
-    }
   }
 }

@@ -1,15 +1,15 @@
-import { Routes } from '@angular/router';
+﻿import { Routes } from '@angular/router';
 
 export const TEACHER_ROUTES: Routes = [
   {
     path: 'assignments',
-    loadComponent: () => 
+    loadComponent: () =>
       import('./assignments/assignment-list/assignment-list.component').then(m => m.AssignmentListComponent)
   },
   {
-    path: 'attendance',
-    loadComponent: () => 
-      import('./attendance/attendance-mark/attendance-mark.component').then(m => m.AttendanceMarkComponent)
+    path: 'submissions',
+    loadComponent: () =>
+      import('./submissions/submissions.component').then(m => m.SubmissionsComponent)
   },
   {
     path: '',
