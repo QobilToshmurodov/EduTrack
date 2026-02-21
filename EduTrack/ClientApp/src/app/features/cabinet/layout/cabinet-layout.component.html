@@ -1,63 +1,130 @@
-<div class="cabinet-container">
-  <!-- Toolbar -->
-  <mat-toolbar color="primary" class="cabinet-toolbar">
-    <button mat-icon-button (click)="toggleSidenav()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    
-    <span class="app-title">EduTrack</span>
-    
-    <span class="spacer"></span>
-    
-    <!-- User Menu -->
-    <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
-      <mat-icon>account_circle</mat-icon>
-      <span class="user-name">{{ userDisplayName }}</span>
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-    
-    <mat-menu #userMenu="matMenu">
-      <div class="user-menu-header">
-        <div class="user-info">
-          <strong>{{ userDisplayName }}</strong>
-          <span class="user-role">{{ userRoleDisplay }}</span>
-        </div>
-      </div>
-      <mat-divider></mat-divider>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        <span>Chiqish</span>
-      </button>
-    </mat-menu>
-  </mat-toolbar>
+<div class="cabinet-layout">
 
-  <!-- Sidenav -->
-  <mat-sidenav-container class="cabinet-sidenav-container">
-    <mat-sidenav 
-      [opened]="sidenavOpened()"
-      mode="side"
-      class="cabinet-sidenav"
-    >
+  <!-- Sidebar Overlay (mobile) -->
+  <div
+    class="sidebar-overlay"
+    [class.visible]="sidenavOpened()"
+    (click)="toggleSidenav()"
+  ></div>
+
+  <!-- Sidebar -->
+  <aside class="cabinet-sidebar" [class.open]="sidenavOpened()">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <mat-icon class="logo-icon">school</mat-icon>
+        <span class="logo-text">EduTrack</span>
+      </div>
+      <button mat-icon-button class="sidebar-close-btn" (click)="toggleSidenav()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- User Profile -->
+    <div class="sidebar-profile">
+      <div class="profile-avatar">
+        <mat-icon>account_circle</mat-icon>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name">{{ userDisplayName }}</span>
+        <span class="profile-role">{{ userRoleDisplay }}</span>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
       <mat-nav-list>
         @for (item of filteredMenuItems; track item.route) {
-          <a 
-            mat-list-item 
+          <a
+            mat-list-item
             [routerLink]="item.route"
             routerLinkActive="active-link"
             class="nav-item"
+            (click)="onNavItemClick()"
           >
             <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
             <span matListItemTitle>{{ item.label }}</span>
           </a>
         }
       </mat-nav-list>
-    </mat-sidenav>
+    </nav>
 
-    <!-- Main Content -->
-    <mat-sidenav-content class="cabinet-content">
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-divider"></div>
+      <button mat-list-item class="logout-btn" (click)="openLogoutModal()">
+        <mat-icon>logout</mat-icon>
+        <span>Chiqish</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="cabinet-main" [class.sidebar-open]="sidenavOpened()">
+
+    <!-- Toolbar -->
+    <mat-toolbar class="cabinet-toolbar">
+      <button mat-icon-button class="burger-btn" (click)="toggleSidenav()">
+        <mat-icon>{{ sidenavOpened() ? 'menu_open' : 'menu' }}</mat-icon>
+      </button>
+
+      <span class="toolbar-title">EduTrack</span>
+
+      <span class="spacer"></span>
+
+      <!-- User Menu -->
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+        <mat-icon>account_circle</mat-icon>
+        <span class="user-name">{{ userDisplayName }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu" class="user-dropdown">
+        <div class="user-menu-header" (click)="$event.stopPropagation()">
+          <mat-icon class="menu-avatar-icon">account_circle</mat-icon>
+          <div class="user-info">
+            <strong>{{ userDisplayName }}</strong>
+            <span class="user-role-badge">{{ userRoleDisplay }}</span>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="openLogoutModal()">
+          <mat-icon>logout</mat-icon>
+          <span>Chiqish</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <!-- Content -->
+    <main class="cabinet-content">
       <div class="content-wrapper">
         <router-outlet></router-outlet>
       </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+    </main>
+
+  </div>
 </div>
+
+<!-- Logout Confirmation Modal -->
+@if (showLogoutModal()) {
+  <div class="modal-backdrop" (click)="closeLogoutModal()">
+    <div class="logout-modal" (click)="$event.stopPropagation()">
+      <div class="modal-icon-wrap">
+        <mat-icon class="modal-icon">logout</mat-icon>
+      </div>
+      <h2 class="modal-title">Chiqishni tasdiqlang</h2>
+      <p class="modal-desc">Haqiqatan ham tizimdan chiqmoqchimisiz?</p>
+      <div class="modal-actions">
+        <button mat-stroked-button class="modal-cancel-btn" (click)="closeLogoutModal()">
+          Bekor qilish
+        </button>
+        <button mat-flat-button class="modal-confirm-btn" (click)="confirmLogout()">
+          <mat-icon>logout</mat-icon>
+          Chiqish
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '@core/services/auth.service';
 import { UserRole } from '@core/models/user.model';
 
@@ -28,15 +29,17 @@ interface MenuItem {
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDividerModule
   ],
   templateUrl: './cabinet-layout.component.html',
   styleUrl: './cabinet-layout.component.scss'
 })
 export class CabinetLayoutComponent {
   authService = inject(AuthService);
-  
+
   sidenavOpened = signal(true);
+  showLogoutModal = signal(false);
 
   menuItems: MenuItem[] = [
     // Admin
@@ -82,7 +85,7 @@ export class CabinetLayoutComponent {
       route: '/cabinet/director/esg',
       roles: [UserRole.Admin]
     },
-    
+
     // Teacher
     {
       label: 'Topshiriqlar',
@@ -96,7 +99,7 @@ export class CabinetLayoutComponent {
       route: '/cabinet/teacher/submissions',
       roles: [UserRole.Teacher]
     },
-    
+
     // Student
     {
       label: 'Mening topshiriqlarim',
@@ -140,7 +143,22 @@ export class CabinetLayoutComponent {
     this.sidenavOpened.update(value => !value);
   }
 
-  logout(): void {
+  onNavItemClick(): void {
+    if (window.innerWidth <= 1024) {
+      this.sidenavOpened.set(false);
+    }
+  }
+
+  openLogoutModal(): void {
+    this.showLogoutModal.set(true);
+  }
+
+  closeLogoutModal(): void {
+    this.showLogoutModal.set(false);
+  }
+
+  confirmLogout(): void {
+    this.showLogoutModal.set(false);
     this.authService.logout();
   }
 }

@@ -7,8 +7,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+
+import { provideNativeDateAdapter } from '@angular/material/core';
+
 import { ESGService } from '@core/services/esg.service';
 import { AuthService } from '@core/services/auth.service';
 import { ESGDto, AssignmentDto } from '@shared/models/common.models';
@@ -16,7 +18,18 @@ import { ESGDto, AssignmentDto } from '@shared/models/common.models';
 @Component({
   selector: 'app-assignment-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatIconModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatIconModule
+  ],
+  providers: [provideNativeDateAdapter()],
   template: `
     <h2 mat-dialog-title>{{ data ? "Tahrirlash" : "Yangi topshiriq" }}</h2>
     <mat-dialog-content>
@@ -25,10 +38,12 @@ import { ESGDto, AssignmentDto } from '@shared/models/common.models';
           <mat-label>Sarlavha</mat-label>
           <input matInput formControlName="title" />
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Tavsif</mat-label>
           <textarea matInput formControlName="description" rows="3"></textarea>
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Fan</mat-label>
           <mat-select formControlName="subjectId">
@@ -37,6 +52,7 @@ import { ESGDto, AssignmentDto } from '@shared/models/common.models';
             }
           </mat-select>
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Guruh</mat-label>
           <mat-select formControlName="groupId">
@@ -45,17 +61,20 @@ import { ESGDto, AssignmentDto } from '@shared/models/common.models';
             }
           </mat-select>
         </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Muddat</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="dueDate" />
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+
         <div class="file-upload-section">
           <button mat-stroked-button type="button" (click)="fileInput.click()">
             <mat-icon>attach_file</mat-icon> Fayl biriktirish
           </button>
           <input type="file" #fileInput style="display:none" (change)="onFileSelected($event)" />
+
           @if (selectedFile()) {
             <span class="file-name">{{ selectedFile()!.name }}</span>
             <button mat-icon-button type="button" (click)="removeFile()"><mat-icon>close</mat-icon></button>
@@ -65,6 +84,7 @@ import { ESGDto, AssignmentDto } from '@shared/models/common.models';
         </div>
       </form>
     </mat-dialog-content>
+
     <mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>Bekor qilish</button>
       <button mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid">Saqlash</button>
@@ -82,6 +102,7 @@ export class AssignmentDialogComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<AssignmentDialogComponent>);
   private esgService = inject(ESGService);
   private authService = inject(AuthService);
+
   esgItems = signal<ESGDto[]>([]);
   selectedFile = signal<File | null>(null);
 
@@ -103,9 +124,7 @@ export class AssignmentDialogComponent implements OnInit {
 
   onFileSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.selectedFile.set(file);
-    }
+    if (file) this.selectedFile.set(file);
   }
 
   removeFile() {
