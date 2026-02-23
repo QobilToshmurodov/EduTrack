@@ -88,6 +88,15 @@ export interface GradeDto {
   gradedAt: string;
 }
 
+export interface NewsDto {
+  id: number;
+  title: string;
+  content: string;
+  imageUrl?: string;
+  createdDate: string;
+  isPublished: boolean;
+}
+
 export interface DashboardStatsDto {
   professionsCount: number;
   studentsCount: number;

@@ -4,8 +4,13 @@ import { authGuard } from '@core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/cabinet',
+    redirectTo: '/home',
     pathMatch: 'full'
+  },
+  {
+    // Landing: /home  and  /news/:id (all public, no auth guard)
+    path: '',
+    loadChildren: () => import('./features/landing/landing.routes').then(m => m.LANDING_ROUTES)
   },
   {
     path: 'auth',
@@ -18,6 +23,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/cabinet'
+    redirectTo: '/home'
   }
 ];

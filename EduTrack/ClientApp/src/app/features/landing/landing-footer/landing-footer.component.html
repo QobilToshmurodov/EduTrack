@@ -1,0 +1,72 @@
+<footer class="bg-gray-900 text-gray-300 pt-12 pb-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 pb-8 border-b border-gray-700">
+
+      <!-- Brand -->
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0121 15c0 4.97-4.03 9-9 9s-9-4.03-9-9c0-1.07.175-2.1.49-3.06L12 14z"/>
+            </svg>
+          </div>
+          <div class="leading-none">
+            <div class="text-lg font-bold text-white">Texnicum</div>
+            <div class="text-xs text-gray-400">Ta'lim boshqaruv tizimi</div>
+          </div>
+        </div>
+        <p class="text-sm text-gray-400 leading-relaxed">
+          O'zbekistondagi texnik ta'lim muassasalarini raqamlashtirish va boshqarishni osonlashtirish uchun yaratilgan zamonaviy platforma.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Havolalar</h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a routerLink="/home" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Bosh sahifa</a>
+          </li>
+          <li>
+            <a href="#about" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Haqida</a>
+          </li>
+          <li>
+            <a href="#institutions" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Muassasalar</a>
+          </li>
+          <li>
+            <a href="#news" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Yangiliklar</a>
+          </li>
+          <li>
+            <a routerLink="/auth/login" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Kirish</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h3 class="text-white font-semibold mb-4">Aloqa</h3>
+        <ul class="space-y-3 text-sm">
+          <li class="flex items-start gap-2 text-gray-400">
+            <span class="mt-0.5">📍</span>
+            <span>Toshkent shahri, O'zbekiston</span>
+          </li>
+          <li class="flex items-center gap-2 text-gray-400">
+            <span>📧</span>
+            <a href="mailto:info@texnicum.uz" class="hover:text-white transition-colors" style="text-decoration:none">info&#64;texnicum.uz</a>
+          </li>
+          <li class="flex items-center gap-2 text-gray-400">
+            <span>📞</span>
+            <a href="tel:+998710000000" class="hover:text-white transition-colors" style="text-decoration:none">+998 71 000-00-00</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-gray-500">
+      <span>© {{ currentYear }} Texnicum. Barcha huquqlar himoyalangan.</span>
+      <span>O'zbekiston Respublikasi, Toshkent</span>
+    </div>
+  </div>
+</footer>

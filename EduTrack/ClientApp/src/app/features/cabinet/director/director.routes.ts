@@ -30,6 +30,10 @@ export const DIRECTOR_ROUTES: Routes = [
     loadComponent: () => import('./esg/esg.component').then(m => m.ESGComponent)
   },
   {
+    path: 'news',
+    loadComponent: () => import('./news/news.component').then(m => m.NewsComponent)
+  },
+  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'

@@ -1,0 +1,91 @@
+<div mat-dialog-title class="dialog-title">
+  <mat-icon>{{ isEdit ? 'edit' : 'add_circle' }}</mat-icon>
+  {{ isEdit ? 'Yangilikni tahrirlash' : 'Yangilik qo\'shish' }}
+</div>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="form" class="news-form">
+
+    <!-- Title -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Sarlavha</mat-label>
+      <input matInput formControlName="title" placeholder="Yangilik sarlavhasini kiriting">
+      @if (form.get('title')?.hasError('required') && form.get('title')?.touched) {
+        <mat-error>Sarlavha majburiy</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Image upload -->
+    <div class="image-section">
+      <label class="image-label">Rasm (ixtiyoriy)</label>
+      <div class="image-upload-area">
+        @if (imagePreview()) {
+          <div class="image-preview">
+            <img [src]="imagePreview()" alt="Preview">
+            <button mat-icon-button class="remove-img-btn" (click)="removeImage()" type="button">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        } @else {
+          <label class="upload-placeholder" for="news-image-input">
+            @if (uploadingImage()) {
+              <mat-spinner diameter="32"></mat-spinner>
+              <span>Yuklanmoqda...</span>
+            } @else {
+              <mat-icon class="upload-icon">cloud_upload</mat-icon>
+              <span>Rasm yuklash uchun bosing</span>
+              <span class="upload-hint">JPG, PNG, WEBP (max 5MB)</span>
+            }
+          </label>
+          <input id="news-image-input" type="file" accept="image/*"
+                 (change)="onImageFileSelected($event)" hidden>
+        }
+      </div>
+      @if (form.value.imageUrl) {
+        <div class="image-url-preview">
+          <mat-icon>link</mat-icon>
+          <span>{{ form.value.imageUrl }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Content (Rich Text Editor) -->
+    <div class="editor-section">
+      <label class="editor-label">Mazmun <span class="required">*</span></label>
+      <quill-editor
+        formControlName="content"
+        [modules]="quillModules"
+        placeholder="Yangilik mazmunini kiriting..."
+        class="quill-editor">
+      </quill-editor>
+      @if (form.get('content')?.hasError('required') && form.get('content')?.touched) {
+        <mat-error class="editor-error">Mazmun majburiy</mat-error>
+      }
+    </div>
+
+    <!-- Published toggle -->
+    <div class="publish-section">
+      <mat-checkbox formControlName="isPublished" color="primary">
+        Nashr etilgan holda saqlash
+      </mat-checkbox>
+      <p class="publish-hint">
+        @if (form.value.isPublished) {
+          Yangilik bosh sahifada ko'rinadi
+        } @else {
+          Yangilik qoralama sifatida saqlanadi va ko'rinmaydi
+        }
+      </p>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-stroked-button (click)="close()" [disabled]="saving()">Bekor qilish</button>
+  <button mat-flat-button color="primary" (click)="submit()" [disabled]="form.invalid || saving()">
+    @if (saving()) {
+      <mat-spinner diameter="18" style="display:inline-block;margin-right:8px"></mat-spinner>
+    }
+    {{ isEdit ? 'Saqlash' : 'Yaratish' }}
+  </button>
+</mat-dialog-actions>

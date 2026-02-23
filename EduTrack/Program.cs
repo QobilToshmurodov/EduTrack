@@ -11,6 +11,7 @@ using EduTrackDataAccess.Repositories.Subjects;
 using EduTrackDataAccess.Repositories.Professions;
 using EduTrackDataAccess.Repositories.Employees;
 using EduTrackDataAccess.Repositories.EmployeeSubjectGroups;
+using EduTrackDataAccess.Repositories.News;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -46,6 +47,7 @@ builder.Services.AddScoped<IEmployeeSubjectGroupRepository, EmployeeSubjectGroup
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<ISubmissionsRepository, SubmissionRepository>();
 builder.Services.AddScoped<IGradeRepository, GradeRepository>();
+builder.Services.AddScoped<INewsRepository, NewsRepository>();
 
 // Services
 builder.Services.AddScoped<IJWTService, JWTService>();

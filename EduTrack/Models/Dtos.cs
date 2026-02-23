@@ -228,6 +228,25 @@
         public string? Comment { get; set; }
     }
 
+    // News
+    public class NewsDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public bool IsPublished { get; set; }
+    }
+
+    public class CreateNewsDto
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
+        public bool IsPublished { get; set; } = true;
+    }
+
     // Dashboard
     public class DashboardStatsDto
     {

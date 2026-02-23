@@ -1,3 +1,6 @@
+/* Tailwind Utilities (no preflight/base to avoid conflicts with Angular Material) */
+@tailwind utilities;
+
 /* Global Styles */
 * {
   margin: 0;

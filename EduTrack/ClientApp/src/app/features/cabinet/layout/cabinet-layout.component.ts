@@ -85,6 +85,12 @@ export class CabinetLayoutComponent {
       route: '/cabinet/director/esg',
       roles: [UserRole.Admin]
     },
+    {
+      label: 'Yangiliklar',
+      icon: 'newspaper',
+      route: '/cabinet/director/news',
+      roles: [UserRole.Admin]
+    },
 
     // Teacher
     {

@@ -1,0 +1,98 @@
+<div class="min-h-screen bg-gray-50 py-12">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Back button -->
+    <button
+      (click)="goBack()"
+      class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium text-sm mb-8 transition-colors border-0 bg-transparent cursor-pointer p-0">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+      Orqaga qaytish
+    </button>
+
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
+        <div class="h-64 bg-gray-200"></div>
+        <div class="p-8">
+          <div class="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div class="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div class="space-y-3">
+            <div class="h-4 bg-gray-200 rounded"></div>
+            <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+            <div class="h-4 bg-gray-200 rounded w-4/6"></div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="text-center py-20">
+        <div class="text-6xl mb-4">😔</div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Yangilik topilmadi</h2>
+        <p class="text-gray-500 mb-6">Ushbu yangilik mavjud emas yoki o'chirilgan.</p>
+        <button (click)="goBack()"
+                class="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors border-0 cursor-pointer">
+          Bosh sahifaga qaytish
+        </button>
+      </div>
+    }
+
+    <!-- Article -->
+    @if (!loading() && !error() && news(); as article) {
+      <article class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+        <!-- Hero image -->
+        @if (article.imageUrl) {
+          <div class="h-72 sm:h-96 overflow-hidden">
+            <img [src]="getFullImageUrl(article.imageUrl)" [alt]="article.title"
+                 class="w-full h-full object-cover">
+          </div>
+        } @else {
+          <div class="h-48 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+            <span class="text-6xl">📰</span>
+          </div>
+        }
+
+        <!-- Content -->
+        <div class="p-8 sm:p-12">
+          <!-- Date -->
+          <div class="flex items-center gap-3 mb-4">
+            <time class="text-sm text-indigo-600 font-medium">
+              {{ formatDate(article.createdDate) }}
+            </time>
+            @if (article.isPublished) {
+              <span class="inline-flex items-center gap-1 text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                Nashr etilgan
+              </span>
+            }
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-8 leading-tight">
+            {{ article.title }}
+          </h1>
+
+          <!-- Rich text content from Quill -->
+          <div class="news-content prose prose-lg max-w-none text-gray-700 leading-relaxed"
+               [innerHTML]="article.content">
+          </div>
+        </div>
+      </article>
+
+      <!-- Footer nav -->
+      <div class="mt-8 flex items-center justify-center">
+        <button (click)="goBack()"
+                class="inline-flex items-center gap-2 text-gray-600 hover:text-indigo-600 font-medium text-sm transition-colors border-0 bg-transparent cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+          Barcha yangiliklarга qaytish
+        </button>
+      </div>
+    }
+  </div>
+</div>
