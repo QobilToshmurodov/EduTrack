@@ -1,72 +1,115 @@
-<footer class="bg-gray-900 text-gray-300 pt-12 pb-6">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<footer class="bg-slate-900 text-slate-400 pb-8">
+    <!-- Top accent line -->
+    <div class="h-1 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 mb-16"></div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 pb-8 border-b border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <!-- Brand -->
-      <div>
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0121 15c0 4.97-4.03 9-9 9s-9-4.03-9-9c0-1.07.175-2.1.49-3.06L12 14z"/>
-            </svg>
-          </div>
-          <div class="leading-none">
-            <div class="text-lg font-bold text-white">Texnicum</div>
-            <div class="text-xs text-gray-400">Ta'lim boshqaruv tizimi</div>
-          </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 pb-10 border-b border-slate-800">
+
+            <!-- Brand -->
+            <div>
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 shadow-lg shadow-amber-900/40">
+                        <img src="img/logo.png" alt="Logo" class="w-full h-full object-cover">
+                    </div>
+                    <div class="leading-tight">
+                        <div class="text-[17px] font-bold text-white">Bo'ka Pedagogika</div>
+                        <div class="text-[11px] text-amber-400 font-semibold tracking-[0.12em] uppercase mt-0.5">Texnikumi</div>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-500 leading-relaxed max-w-xs">
+                    2005-yildan buyon kelajak avlod ustozlarini tayyorlab kelmoqda.
+                    Zamonaviy ta'lim, malakali kadrlar va sifatli bilim bir joyda.
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-white font-semibold mb-5 text-xs uppercase tracking-[0.15em]">Havolalar</h3>
+                <ul class="space-y-3 text-sm">
+                    <li>
+                        <a routerLink="/home" class="flex items-center gap-2 text-slate-500 hover:text-amber-400 transition-colors" style="text-decoration:none">
+                            <mat-icon class="!w-4 !h-4 !text-[16px]">home</mat-icon>
+                            Bosh sahifa
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#about" class="flex items-center gap-2 text-slate-500 hover:text-amber-400 transition-colors" style="text-decoration:none">
+                            <mat-icon class="!w-4 !h-4 !text-[16px]">info</mat-icon>
+                            Haqida
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#directions" class="flex items-center gap-2 text-slate-500 hover:text-amber-400 transition-colors" style="text-decoration:none">
+                            <mat-icon class="!w-4 !h-4 !text-[16px]">school</mat-icon>
+                            Yo'nalishlar
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#news" class="flex items-center gap-2 text-slate-500 hover:text-amber-400 transition-colors" style="text-decoration:none">
+                            <mat-icon class="!w-4 !h-4 !text-[16px]">newspaper</mat-icon>
+                            Yangiliklar
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/auth/login" class="flex items-center gap-2 text-slate-500 hover:text-amber-400 transition-colors" style="text-decoration:none">
+                            <mat-icon class="!w-4 !h-4 !text-[16px]">login</mat-icon>
+                            Kirish
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h3 class="text-white font-semibold mb-5 text-xs uppercase tracking-[0.15em]">Aloqa</h3>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <mat-icon class="!w-4 !h-4 !text-[16px] text-amber-400">location_on</mat-icon>
+                        </div>
+                        <span class="text-slate-500 leading-relaxed">Toshkent viloyati, Bo'ka tumani,<br>Xo'jaqo'rg'on MFY, Minor ko'cha 20-uy</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0">
+                            <mat-icon class="!w-4 !h-4 !text-[16px] text-amber-400">phone</mat-icon>
+                        </div>
+                        <a href="tel:+998939253433" class="text-slate-500 hover:text-amber-400 transition-colors" style="text-decoration:none">+998 93 925-34-33</a>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0">
+                            <mat-icon class="!w-4 !h-4 !text-[16px] text-amber-400">share</mat-icon>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <a href="https://t.me/" target="_blank"
+                               class="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5"
+                               style="text-decoration:none">
+                                <mat-icon class="!w-5 !h-5 !text-[20px]">send</mat-icon>
+                                <span>Telegram</span>
+                            </a>
+                            <span class="text-slate-700">·</span>
+                            <a href="https://instagram.com/" target="_blank"
+                               class="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5"
+                               style="text-decoration:none">
+                                <mat-icon class="!w-5 !h-5 !text-[20px]">photo_camera</mat-icon>
+                                <span>Instagram</span>
+                            </a>
+                            <span class="text-slate-700">·</span>
+                            <a href="https://youtube.com/" target="_blank"
+                               class="text-slate-500 hover:text-amber-400 transition-colors flex items-center gap-1.5"
+                               style="text-decoration:none">
+                                <mat-icon class="!w-5 !h-5 !text-[20px]">play_circle</mat-icon>
+                                <span>YouTube</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <p class="text-sm text-gray-400 leading-relaxed">
-          O'zbekistondagi texnik ta'lim muassasalarini raqamlashtirish va boshqarishni osonlashtirish uchun yaratilgan zamonaviy platforma.
-        </p>
-      </div>
 
-      <!-- Quick Links -->
-      <div>
-        <h3 class="text-white font-semibold mb-4">Havolalar</h3>
-        <ul class="space-y-2 text-sm">
-          <li>
-            <a routerLink="/home" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Bosh sahifa</a>
-          </li>
-          <li>
-            <a href="#about" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Haqida</a>
-          </li>
-          <li>
-            <a href="#institutions" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Muassasalar</a>
-          </li>
-          <li>
-            <a href="#news" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Yangiliklar</a>
-          </li>
-          <li>
-            <a routerLink="/auth/login" class="text-gray-400 hover:text-white transition-colors" style="text-decoration:none">Kirish</a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Contact -->
-      <div>
-        <h3 class="text-white font-semibold mb-4">Aloqa</h3>
-        <ul class="space-y-3 text-sm">
-          <li class="flex items-start gap-2 text-gray-400">
-            <span class="mt-0.5">📍</span>
-            <span>Toshkent shahri, O'zbekiston</span>
-          </li>
-          <li class="flex items-center gap-2 text-gray-400">
-            <span>📧</span>
-            <a href="mailto:info@texnicum.uz" class="hover:text-white transition-colors" style="text-decoration:none">info&#64;texnicum.uz</a>
-          </li>
-          <li class="flex items-center gap-2 text-gray-400">
-            <span>📞</span>
-            <a href="tel:+998710000000" class="hover:text-white transition-colors" style="text-decoration:none">+998 71 000-00-00</a>
-          </li>
-        </ul>
-      </div>
+        <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+            <span>© {{ currentYear }} Bo'ka Pedagogika Texnikumi. Barcha huquqlar himoyalangan.</span>
+            <span>Toshkent viloyati, O'zbekiston Respublikasi</span>
+        </div>
     </div>
-
-    <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-gray-500">
-      <span>© {{ currentYear }} Texnicum. Barcha huquqlar himoyalangan.</span>
-      <span>O'zbekiston Respublikasi, Toshkent</span>
-    </div>
-  </div>
 </footer>

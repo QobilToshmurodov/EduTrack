@@ -1,297 +1,321 @@
 <!-- ===== HERO SECTION ===== -->
-<section class="relative bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 text-white overflow-hidden">
-  <!-- Background decoration -->
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute -top-40 -right-40 w-96 h-96 bg-indigo-500 rounded-full opacity-10"></div>
-    <div class="absolute -bottom-20 -left-20 w-72 h-72 bg-purple-500 rounded-full opacity-10"></div>
-    <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-blue-400 rounded-full opacity-5"></div>
-  </div>
+<section class="relative bg-gradient-to-br from-sky-50 via-white to-amber-50 overflow-hidden">
+    <!-- Decorative blobs -->
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-100/40 rounded-full blur-3xl -translate-y-1/3 translate-x-1/3 pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-100/50 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3 pointer-events-none"></div>
 
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-    <div class="max-w-3xl">
-      <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium text-indigo-200 mb-6">
-        <span class="w-2 h-2 bg-emerald-400 rounded-full"></span>
-        O'zbekiston Respublikasi ta'lim tizimi
-      </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-        Zamonaviy texnikumlar uchun
-        <span class="text-indigo-300"> raqamli ta'lim tizimi</span>
-      </h1>
+            <!-- LEFT: Image Column -->
+            <div class="relative order-2 lg:order-1 animate-fade-in">
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl shadow-slate-300/40">
+                    <img src="img/technicum.png" alt="Bo'ka Pedagogika Texnikumi"
+                         class="w-full h-[420px] sm:h-[480px] object-cover">
+                    <!-- Subtle gradient overlay at bottom -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/30 via-transparent to-transparent"></div>
+                </div>
 
-      <p class="text-lg sm:text-xl text-indigo-200 leading-relaxed mb-10 max-w-2xl">
-        "Texnicum" — O'zbekistondagi texnik ta'lim muassasalarini raqamlashtirish va
-        boshqarishni osonlashtirish uchun yaratilgan eng zamonaviy platforma.
-      </p>
+                <!-- Floating badge — established year (TEPAGA) -->
+                <div class="absolute -top-4 -left-4 bg-white rounded-2xl shadow-xl px-5 py-4 border border-slate-100 animate-float-up">
+                    <div class="text-2xl font-extrabold text-slate-900">2005</div>
+                    <div class="text-[11px] text-slate-500 font-medium uppercase tracking-wide">Tashkil etilgan</div>
+                </div>
 
-      <div class="flex flex-wrap gap-4">
-        <a routerLink="/auth/login"
-           class="inline-flex items-center gap-2 bg-white text-indigo-700 font-semibold px-8 py-3 rounded-xl hover:bg-indigo-50 transition-colors shadow-lg"
-           style="text-decoration:none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14"/>
-          </svg>
-          Tizimga kirish
-        </a>
-        <a href="#about"
-           class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-xl border border-white/30 transition-colors"
-           style="text-decoration:none">
-          Batafsil ma'lumot
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+                <!-- Floating badge — students (PASTGA) -->
+                <div class="absolute -bottom-4 -right-4 bg-amber-400 rounded-2xl shadow-xl px-5 py-4 animate-float-down">
+                    <div class="text-2xl font-extrabold text-slate-900">222+</div>
+                    <div class="text-[11px] text-slate-900/70 font-semibold uppercase tracking-wide">O'quvchilar</div>
+                </div>
+            </div>
 
-<!-- ===== STATS SECTION ===== -->
-<section class="bg-white border-b border-gray-100">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-      @for (stat of stats; track stat.label) {
-        <div class="text-center">
-          <div class="text-3xl mb-2">{{ stat.icon }}</div>
-          <div class="text-3xl font-bold text-indigo-700 mb-1">{{ stat.value }}</div>
-          <div class="text-sm text-gray-500 font-medium">{{ stat.label }}</div>
+            <!-- RIGHT: Text Column -->
+            <div class="order-1 lg:order-2">
+                <!-- Overline -->
+                <div class="flex items-center gap-3 mb-6 animate-fade-in">
+                    <div class="h-px w-10 bg-amber-400"></div>
+                    <span class="text-amber-600 text-sm font-bold tracking-[0.18em] uppercase">Toshkent viloyati · Bo'ka tumani</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.08] mb-6 animate-fade-in-up text-slate-900">
+                    Bo'ka
+                    <span class="text-amber-500">Pedagogika</span>
+                    <br>Texnikumi
+                </h1>
+
+                <p class="text-lg text-slate-500 leading-relaxed mb-8 max-w-lg animate-fade-in-up-delay">
+                    2005-yildan buyon kelajak avlod ustozlarini tayyorlab kelmoqda.
+                    Zamonaviy ta'lim, malakali kadrlar va sifatli bilim bir joyda.
+                </p>
+
+                <!-- Stats row -->
+                <div class="grid grid-cols-3 gap-4 mb-10 animate-fade-in-up-delay">
+                    @for (stat of stats.slice(1); track stat.label) {
+                        <div class="bg-white rounded-2xl p-4 text-center shadow-sm border border-slate-100">
+                            <div class="text-xl font-extrabold text-slate-900">{{ stat.value }}</div>
+                            <div class="text-[11px] text-slate-400 font-medium mt-0.5 uppercase tracking-wide leading-tight">{{ stat.label }}</div>
+                        </div>
+                    }
+                </div>
+
+                <div class="flex flex-wrap gap-4 animate-fade-in-up-delay-2">
+                    <a routerLink="/auth/login"
+                       class="inline-flex items-center gap-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-8 py-3.5 rounded-xl transition-all hover:-translate-y-0.5 shadow-lg shadow-amber-200/60"
+                       style="text-decoration:none">
+                        Tizimga kirish
+                        <mat-icon class="!w-5 !h-5 !text-[20px]">east</mat-icon>
+                    </a>
+                    <a href="#about"
+                       class="inline-flex items-center gap-2.5 text-slate-700 hover:text-slate-900 font-semibold px-8 py-3.5 rounded-xl border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 transition-all"
+                       style="text-decoration:none">
+                        Batafsil
+                        <mat-icon class="!w-4 !h-4 !text-[18px]">expand_more</mat-icon>
+                    </a>
+                </div>
+            </div>
         </div>
-      }
     </div>
-  </div>
 </section>
 
 <!-- ===== ABOUT SECTION ===== -->
-<section id="about" class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<section id="about" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-      <!-- Text -->
-      <div>
-        <div class="inline-block bg-indigo-100 text-indigo-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
-          Tizim haqida
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-          Ta'limni yangi darajaga olib chiqamiz
-        </h2>
-        <p class="text-gray-600 text-lg leading-relaxed mb-6">
-          "Texnicum" tizimi O'zbekistondagi barcha texnik ta'lim muassasalarini yagona raqamli
-          muhitda birlashtiradi. Director, o'qituvchilar va o'quvchilar uchun qulay interfeys
-          orqali ta'lim jarayonini boshqarish imkoni yaratilgan.
-        </p>
-        <ul class="space-y-4">
-          <li class="flex items-start gap-3">
-            <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-              </svg>
+            <!-- Image side -->
+            <div class="relative">
+                <div class="rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50">
+                    <img src="img/technicum2.png" alt="Bo'ka Pedagogika Texnikumi binosi" class="w-full h-80 sm:h-96 object-cover">
+                </div>
+                <!-- Floating stats card -->
+                <div class="absolute -bottom-6 -right-4 sm:right-6 bg-white rounded-2xl shadow-xl p-5 border border-slate-100">
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="text-center">
+                            <div class="text-2xl font-extrabold text-slate-900">2005</div>
+                            <div class="text-[11px] text-slate-500 font-medium">Tashkil etilgan</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-extrabold text-slate-900">3.7 <span class="text-sm text-slate-400">ga</span></div>
+                            <div class="text-[11px] text-slate-500 font-medium">Maydon</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <span class="text-gray-700">O'qituvchilar topshiriqlar beradi va baholar qo'yadi</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-              </svg>
-            </div>
-            <span class="text-gray-700">O'quvchilar topshiriqlarni onlayn topshiradi</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-              </svg>
-            </div>
-            <span class="text-gray-700">Administrator barcha jarayonlarni nazorat qiladi</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-              </svg>
-            </div>
-            <span class="text-gray-700">Real vaqt rejimida statistika va hisobotlar</span>
-          </li>
-        </ul>
-      </div>
 
-      <!-- Feature Cards -->
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-1">Xavfsizlik</h3>
-          <p class="text-sm text-gray-500">JWT asosida himoyalangan kirish tizimi</p>
+            <!-- Text side -->
+            <div class="lg:pl-4">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="h-px w-10 bg-amber-400"></div>
+                    <span class="text-amber-600 text-sm font-bold tracking-[0.15em] uppercase">Texnikum haqida</span>
+                </div>
+
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-6 leading-tight">
+                    Kelajak ustozlarini tarbiyalaymiz
+                </h2>
+
+                <p class="text-slate-500 text-lg leading-relaxed mb-8">
+                    Bo'ka Pedagogika Texnikumi — zamonaviy ta'lim va pedagogik kadrlar tayyorlash markazi.
+                    Kelajak avlod ustoz va tarbiyachilarini tayyorlash, ularga bilim va ko'nikmalarga
+                    ega bo'lishda barcha sharoitlar yaratilgan.
+                </p>
+
+                <div class="space-y-5 mb-8">
+                    @for (feature of aboutFeatures; track feature.title) {
+                        <div class="flex items-start gap-4">
+                            <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <mat-icon class="!w-5 !h-5 !text-[20px] text-amber-500">check_circle</mat-icon>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-0.5 text-[15px]">{{ feature.title }}</h4>
+                                <p class="text-sm text-slate-500 leading-relaxed">{{ feature.desc }}</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <a href="tel:+998939253433"
+                   class="inline-flex items-center gap-2.5 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-colors"
+                   style="text-decoration:none">
+                    <mat-icon class="!w-4 !h-4 !text-[18px]">phone</mat-icon>
+                    +998 93 925-34-33
+                </a>
+            </div>
         </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-1">Tezkor</h3>
-          <p class="text-sm text-gray-500">Zamonaviy Angular va .NET texnologiyalari</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-1">Moslashuvchan</h3>
-          <p class="text-sm text-gray-500">Barcha qurilmalarda ishlaydi</p>
-        </div>
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-1">Tahlil</h3>
-          <p class="text-sm text-gray-500">Kengaytirilgan statistika va hisobotlar</p>
-        </div>
-      </div>
     </div>
-  </div>
 </section>
 
-<!-- ===== INSTITUTIONS SECTION ===== -->
-<section id="institutions" class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12">
-      <div class="inline-block bg-indigo-100 text-indigo-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
-        Muassasalar
-      </div>
-      <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-        Bizning texnikumlar
-      </h2>
-      <p class="text-gray-500 text-lg max-w-2xl mx-auto">
-        O'zbekistonning turli viloyatlarida joylashgan texnik ta'lim muassasalari
-        "Texnicum" tizimi orqali boshqariladi.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (inst of institutions; track inst.name) {
-        <div class="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-md transition-shadow group">
-          <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" [ngClass]="inst.color">
-              {{ inst.icon }}
+<!-- ===== INFRASTRUCTURE ===== -->
+<section class="py-20 bg-gradient-to-br from-sky-50 to-amber-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <div class="h-px w-10 bg-amber-400"></div>
+                <span class="text-amber-600 text-sm font-bold tracking-[0.15em] uppercase">Infratuzilma</span>
+                <div class="h-px w-10 bg-amber-400"></div>
             </div>
-            <div class="flex-1 min-w-0">
-              <h3 class="font-semibold text-gray-900 mb-1 leading-snug group-hover:text-indigo-700 transition-colors">
-                {{ inst.name }}
-              </h3>
-              <p class="text-sm text-gray-500 mb-2 flex items-center gap-1">
-                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                {{ inst.location }}
-              </p>
-              <span class="inline-block text-xs font-medium px-2.5 py-1 rounded-full" [ngClass]="inst.color">
-                {{ inst.type }}
-              </span>
-            </div>
-          </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">
+                Zamonaviy sharoitlar
+            </h2>
         </div>
-      }
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            @for (item of infrastructure; track item.label) {
+                <div class="bg-white rounded-2xl p-6 text-center border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">{{ item.icon }}</div>
+                    <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1">{{ item.value }}</div>
+                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wide">{{ item.label }}</div>
+                </div>
+            }
+        </div>
     </div>
-  </div>
+</section>
+
+<!-- ===== DIRECTIONS / YO'NALISHLAR ===== -->
+<section id="directions" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+            <div class="flex items-center justify-center gap-3 mb-5">
+                <div class="h-px w-10 bg-amber-400"></div>
+                <span class="text-amber-600 text-sm font-bold tracking-[0.15em] uppercase">Qabul 2025</span>
+                <div class="h-px w-10 bg-amber-400"></div>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">
+                Ta'lim yo'nalishlari
+            </h2>
+            <p class="text-slate-400 text-lg max-w-xl mx-auto">
+                Sizlarni bo'ka pedagogika texnikumiga o'qishga taklif etamiz
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            @for (inst of institutions; track inst.name) {
+                <div class="bg-white rounded-2xl p-6 border border-slate-100 hover:shadow-lg hover:shadow-slate-200/50 hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" [ngClass]="inst.cardBg">
+                            {{ inst.icon }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-slate-900 mb-1 leading-snug text-[15px] group-hover:text-amber-600 transition-colors">
+                                {{ inst.name }}
+                            </h3>
+                            <p class="text-xs text-slate-400 mb-2.5 flex items-center gap-1.5">
+                                <mat-icon class="!w-3.5 !h-3.5 !text-[14px]">schedule</mat-icon>
+                                {{ inst.location }}
+                            </p>
+                            <span class="inline-block text-[11px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wide" [ngClass]="inst.tagStyle">
+                                {{ inst.type }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </section>
 
 <!-- ===== NEWS SECTION ===== -->
-<section id="news" class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
-      <div>
-        <div class="inline-block bg-indigo-100 text-indigo-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
-          Yangiliklar
+<section id="news" class="py-24 bg-gradient-to-br from-sky-50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+            <div>
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="h-px w-10 bg-amber-400"></div>
+                    <span class="text-amber-600 text-sm font-bold tracking-[0.15em] uppercase">Yangiliklar</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">
+                    So'nggi yangiliklar
+                </h2>
+            </div>
         </div>
-        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
-          So'nggi yangiliklar
-        </h2>
-      </div>
+
+        @if (newsLoading()) {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @for (i of [1,2,3]; track i) {
+                    <div class="bg-white rounded-2xl overflow-hidden animate-pulse border border-slate-100">
+                        <div class="h-52 bg-slate-100"></div>
+                        <div class="p-6">
+                            <div class="h-3 bg-slate-100 rounded-full w-1/3 mb-4"></div>
+                            <div class="h-5 bg-slate-100 rounded-full w-full mb-3"></div>
+                            <div class="h-4 bg-slate-100 rounded-full w-5/6"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        } @else if (latestNews().length === 0) {
+            <div class="text-center py-20 bg-white rounded-2xl border border-slate-100">
+                <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+                    <mat-icon class="!w-7 !h-7 !text-[28px] text-slate-400">article</mat-icon>
+                </div>
+                <p class="text-slate-500 text-lg font-semibold">Hozircha yangiliklar yo'q</p>
+                <p class="text-slate-400 text-sm mt-1">Tez orada yangiliklar paydo bo'ladi</p>
+            </div>
+        } @else {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @for (news of latestNews(); track news.id) {
+                    <article class="group flex flex-col rounded-2xl overflow-hidden bg-white border border-slate-100 hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 hover:-translate-y-1">
+                        <!-- Image -->
+                        <div class="h-52 bg-slate-100 overflow-hidden">
+                            @if (news.imageUrl) {
+                                <img [src]="getNewsImageUrl(news.imageUrl)" [alt]="news.title"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            } @else {
+                                <div class="w-full h-full bg-gradient-to-br from-sky-100 to-amber-50 flex items-center justify-center">
+                                    <mat-icon class="!w-10 !h-10 !text-[40px] text-slate-300">article</mat-icon>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-6 flex flex-col flex-1">
+                            <time class="text-[11px] text-amber-600 font-bold mb-2 tracking-[0.1em] uppercase">{{ formatDate(news.createdDate) }}</time>
+                            <h3 class="font-bold text-slate-900 text-lg mb-2 leading-snug group-hover:text-amber-600 transition-colors line-clamp-2">
+                                {{ news.title }}
+                            </h3>
+                            <p class="text-slate-400 text-sm leading-relaxed flex-1 mb-4 line-clamp-3">
+                                {{ stripHtml(news.content) }}
+                            </p>
+                            <button
+                                    (click)="navigateToNews(news.id)"
+                                    class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-bold text-sm transition-all mt-auto border-0 bg-transparent cursor-pointer p-0 group/btn">
+                                Batafsil o'qish
+                                <mat-icon class="!w-3.5 !h-3.5 !text-[14px] transition-transform group-hover/btn:translate-x-1">chevron_right</mat-icon>
+                            </button>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
     </div>
-
-    @if (newsLoading()) {
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @for (i of [1,2,3]; track i) {
-          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 animate-pulse">
-            <div class="h-48 bg-gray-200"></div>
-            <div class="p-6">
-              <div class="h-4 bg-gray-200 rounded w-1/3 mb-3"></div>
-              <div class="h-5 bg-gray-200 rounded w-full mb-2"></div>
-              <div class="h-4 bg-gray-200 rounded w-5/6 mb-4"></div>
-              <div class="h-10 bg-gray-200 rounded-xl w-28"></div>
-            </div>
-          </div>
-        }
-      </div>
-    } @else if (latestNews().length === 0) {
-      <div class="text-center py-16">
-        <div class="text-5xl mb-4">📰</div>
-        <p class="text-gray-500 text-lg">Hozircha yangiliklar yo'q</p>
-      </div>
-    } @else {
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @for (news of latestNews(); track news.id) {
-          <article class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-md transition-shadow group flex flex-col">
-            <!-- Image -->
-            <div class="h-48 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center overflow-hidden">
-              @if (news.imageUrl) {
-                <img [src]="getNewsImageUrl(news.imageUrl)" [alt]="news.title"
-                     class="w-full h-full object-cover">
-              } @else {
-                <div class="text-5xl">📰</div>
-              }
-            </div>
-
-            <!-- Content -->
-            <div class="p-6 flex flex-col flex-1">
-              <time class="text-xs text-indigo-600 font-medium mb-2">{{ formatDate(news.createdDate) }}</time>
-              <h3 class="font-bold text-gray-900 text-lg mb-2 leading-snug group-hover:text-indigo-700 transition-colors line-clamp-2">
-                {{ news.title }}
-              </h3>
-              <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-4 line-clamp-3">
-                {{ stripHtml(news.content) }}
-              </p>
-              <button
-                (click)="navigateToNews(news.id)"
-                class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-semibold text-sm transition-colors mt-auto border-0 bg-transparent cursor-pointer p-0">
-                Batafsil o'qish
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </button>
-            </div>
-          </article>
-        }
-      </div>
-    }
-  </div>
 </section>
 
 <!-- ===== CTA SECTION ===== -->
-<section class="py-20 bg-gradient-to-r from-indigo-600 to-purple-700 text-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <h2 class="text-3xl sm:text-4xl font-bold mb-4">
-      Tizimdan foydalanishni boshlang
-    </h2>
-    <p class="text-indigo-200 text-lg mb-8 max-w-xl mx-auto">
-      O'qituvchi, o'quvchi yoki administrator sifatida tizimga kiring va
-      zamonaviy ta'lim boshqaruvini boshdan kechiring.
-    </p>
-    <a routerLink="/auth/login"
-       class="inline-flex items-center gap-2 bg-white text-indigo-700 font-semibold px-10 py-4 rounded-xl hover:bg-indigo-50 transition-colors shadow-xl text-lg"
-       style="text-decoration:none">
-      Kirish
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-      </svg>
-    </a>
-  </div>
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+            <!-- Decorative accent -->
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400"></div>
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-sky-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative text-center py-20 sm:py-24 px-6">
+                <div class="flex items-center justify-center gap-3 mb-5">
+                    <div class="h-px w-10 bg-amber-400/60"></div>
+                    <span class="text-amber-400 text-sm font-bold tracking-[0.15em] uppercase">EduTrack tizimi</span>
+                    <div class="h-px w-10 bg-amber-400/60"></div>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-dark mb-4">
+                    Tizimdan foydalanishni boshlang
+                </h2>
+                <p class="text-slate-400 text-lg mb-10 max-w-lg mx-auto leading-relaxed">
+                    O'qituvchi, o'quvchi yoki administrator sifatida tizimga kiring
+                </p>
+                <a routerLink="/auth/login"
+                   class="inline-flex items-center gap-3 bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-10 py-4 rounded-xl transition-all text-lg hover:-translate-y-0.5 shadow-lg shadow-amber-400/20"
+                   style="text-decoration:none">
+                    Kirish
+                    <mat-icon class="!w-5 !h-5 !text-[20px]">east</mat-icon>
+                </a>
+            </div>
+        </div>
+    </div>
 </section>

@@ -54,6 +54,10 @@
     <!-- Sidebar Footer -->
     <div class="sidebar-footer">
       <div class="sidebar-divider"></div>
+      <a mat-list-item routerLink="/home" class="logout-btn" style="text-decoration:none" (click)="onNavItemClick()">
+        <mat-icon>home</mat-icon>
+        <span>Bosh sahifa</span>
+      </a>
       <button mat-list-item class="logout-btn" (click)="openLogoutModal()">
         <mat-icon>logout</mat-icon>
         <span>Chiqish</span>
@@ -90,6 +94,10 @@
           </div>
         </div>
         <mat-divider></mat-divider>
+        <a mat-menu-item routerLink="/home" style="text-decoration:none">
+          <mat-icon>home</mat-icon>
+          <span>Bosh sahifa</span>
+        </a>
         <button mat-menu-item (click)="openLogoutModal()">
           <mat-icon>logout</mat-icon>
           <span>Chiqish</span>

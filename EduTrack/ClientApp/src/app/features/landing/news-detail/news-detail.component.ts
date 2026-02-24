@@ -7,7 +7,7 @@ import { NewsDto } from '@shared/models/common.models';
 @Component({
   selector: 'app-news-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './news-detail.component.html',
   styleUrl: './news-detail.component.scss'
 })

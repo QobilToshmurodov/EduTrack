@@ -2,13 +2,12 @@
   display: block;
 }
 
-/* Quill-rendered HTML content styles */
 .news-content {
   line-height: 1.8;
 
   h1, h2, h3 {
     font-weight: 700;
-    color: #1f2937;
+    color: #1e293b; // slate-800
     margin-top: 1.5em;
     margin-bottom: 0.5em;
   }
@@ -27,9 +26,9 @@
   }
 
   blockquote {
-    border-left: 4px solid #6366f1;
+    border-left: 4px solid #f59e0b; // amber-500
     padding-left: 1rem;
-    color: #6b7280;
+    color: #64748b; // slate-500
     font-style: italic;
     margin: 1.5rem 0;
   }
@@ -41,7 +40,7 @@
   }
 
   a {
-    color: #4f46e5;
+    color: #d97706; // amber-600
     &:hover { text-decoration: underline; }
   }
 
@@ -51,9 +50,9 @@
   s { text-decoration: line-through; }
 
   pre {
-    background: #f3f4f6;
+    background: #f1f5f9; // slate-100
     padding: 1rem;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     overflow-x: auto;
     font-family: monospace;
     font-size: 0.875rem;
