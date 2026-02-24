@@ -20,8 +20,14 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// SQLite database path
+var dbPath = Path.Combine(AppContext.BaseDirectory, "edutrack.db");
 builder.Services.AddDbContext<EdutrackDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite($"Data Source={dbPath}"));
+
+// Allow port configuration via command line or environment variable
+var port = args.FirstOrDefault(a => a.StartsWith("--port="))?.Split('=')[1] ?? "5001";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
@@ -104,10 +110,23 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Auto-migrate database on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<EdutrackDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseCors("AllowFrontend");
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors("AllowFrontend");
+}
 
 app.UseHttpsRedirection();
 
@@ -116,8 +135,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Serve uploaded files
-var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
-Directory.CreateDirectory(uploadsPath);
+var uploadsPath = Path.Combine(AppContext.BaseDirectory, "Uploads");
+if (!Directory.Exists(uploadsPath))
+    Directory.CreateDirectory(uploadsPath);
+
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(uploadsPath),
@@ -125,5 +146,6 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();

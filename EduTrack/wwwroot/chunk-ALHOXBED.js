@@ -1,0 +1,1 @@
+import"./chunk-GAL4ENT6.js";var n=[{path:"my-assignments",loadComponent:()=>import("./chunk-WMGCWEC6.js").then(t=>t.MyAssignmentsComponent)},{path:"my-grades",loadComponent:()=>import("./chunk-ZXQG2L7F.js").then(t=>t.MyGradesComponent)},{path:"",redirectTo:"my-assignments",pathMatch:"full"}];export{n as STUDENT_ROUTES};

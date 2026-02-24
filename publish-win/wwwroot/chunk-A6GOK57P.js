@@ -1,0 +1,1 @@
+import"./chunk-GAL4ENT6.js";var n=[{path:"assignments",loadComponent:()=>import("./chunk-RQS5VGO6.js").then(t=>t.AssignmentListComponent)},{path:"submissions",loadComponent:()=>import("./chunk-2VHCCUJ2.js").then(t=>t.SubmissionsComponent)},{path:"",redirectTo:"assignments",pathMatch:"full"}];export{n as TEACHER_ROUTES};
