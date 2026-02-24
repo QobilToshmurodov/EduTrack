@@ -21,13 +21,23 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // SQLite database path
-var dbPath = Path.Combine(AppContext.BaseDirectory, "edutrack.db");
+string dbPath;
+if (builder.Environment.IsDevelopment())
+{
+    // In development, put it in the project root
+    dbPath = Path.Combine(Directory.GetCurrentDirectory(), "edutrack.db");
+}
+else
+{
+    // In production, put it next to the executable
+    dbPath = Path.Combine(AppContext.BaseDirectory, "edutrack.db");
+}
+
 builder.Services.AddDbContext<EdutrackDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
-// Allow port configuration via command line or environment variable
-var port = args.FirstOrDefault(a => a.StartsWith("--port="))?.Split('=')[1] ?? "5001";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+// builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+builder.WebHost.UseUrls("http://localhost:7000");
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
