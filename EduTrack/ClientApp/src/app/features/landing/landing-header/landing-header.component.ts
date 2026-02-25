@@ -3,10 +3,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {MatIcon} from "@angular/material/icon";
 import { AuthService } from '@core/services/auth.service';
+import {MatButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
 @Component({
   selector: 'app-landing-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIcon],
+  imports: [CommonModule, RouterLink, MatIcon, MatButton, MatTooltip],
   templateUrl: './landing-header.component.html',
   styleUrl: './landing-header.component.scss'
 })

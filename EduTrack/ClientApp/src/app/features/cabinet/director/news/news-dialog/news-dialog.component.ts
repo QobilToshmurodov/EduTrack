@@ -71,10 +71,24 @@ export class NewsDialogComponent implements OnInit {
     }
   }
 
+  readonly allowedImageTypes = ['image/jpeg', 'image/png', 'image/jfif', 'image/webp'];
+  readonly maxImageSize = 2 * 1024 * 1024; // 2MB
+
   onImageFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
+
+    if (!this.allowedImageTypes.includes(file.type)) {
+      this.notification.showError('Faqat JPG, PNG, JFIF yoki WEBP formatdagi rasmlar yuklanishi mumkin');
+      input.value = '';
+      return;
+    }
+    if (file.size > this.maxImageSize) {
+      this.notification.showError('Rasm hajmi 2MB dan oshmasligi kerak');
+      input.value = '';
+      return;
+    }
 
     this.uploadingImage.set(true);
     this.newsService.uploadImage(file).subscribe({

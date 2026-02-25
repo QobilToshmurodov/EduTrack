@@ -34,10 +34,10 @@
             } @else {
               <mat-icon class="upload-icon">cloud_upload</mat-icon>
               <span>Rasm yuklash uchun bosing</span>
-              <span class="upload-hint">JPG, PNG, WEBP (max 5MB)</span>
+              <span class="upload-hint">JPG, PNG, JFIF, WEBP (max 2MB)</span>
             }
           </label>
-          <input id="news-image-input" type="file" accept="image/*"
+          <input id="news-image-input" type="file" accept=".jpg,.jpeg,.png,.jfif,.webp"
                  (change)="onImageFileSelected($event)" hidden>
         }
       </div>

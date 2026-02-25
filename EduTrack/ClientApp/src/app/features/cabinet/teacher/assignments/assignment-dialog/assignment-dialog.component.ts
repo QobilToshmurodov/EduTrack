@@ -13,6 +13,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { ESGService } from '@core/services/esg.service';
 import { AuthService } from '@core/services/auth.service';
+import { NotificationService } from '@core/services/notification.service';
 import { ESGDto, AssignmentDto } from '@shared/models/common.models';
 
 @Component({
@@ -73,7 +74,7 @@ import { ESGDto, AssignmentDto } from '@shared/models/common.models';
           <button mat-stroked-button type="button" (click)="fileInput.click()">
             <mat-icon>attach_file</mat-icon> Fayl biriktirish
           </button>
-          <input type="file" #fileInput style="display:none" (change)="onFileSelected($event)" />
+          <input type="file" #fileInput style="display:none" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" (change)="onFileSelected($event)" />
 
           @if (selectedFile()) {
             <span class="file-name">{{ selectedFile()!.name }}</span>
@@ -102,9 +103,21 @@ export class AssignmentDialogComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<AssignmentDialogComponent>);
   private esgService = inject(ESGService);
   private authService = inject(AuthService);
+  private notification = inject(NotificationService);
 
   esgItems = signal<ESGDto[]>([]);
   selectedFile = signal<File | null>(null);
+
+  readonly allowedFileTypes = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  ];
+  readonly maxFileSize = 5 * 1024 * 1024; // 5MB
 
   form: FormGroup = this.fb.group({
     title: [this.data?.title || '', Validators.required],
@@ -123,8 +136,21 @@ export class AssignmentDialogComponent implements OnInit {
   }
 
   onFileSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) this.selectedFile.set(file);
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    if (!this.allowedFileTypes.includes(file.type)) {
+      this.notification.showError('Faqat PDF, Word, Excel yoki PowerPoint fayllar yuklanishi mumkin');
+      input.value = '';
+      return;
+    }
+    if (file.size > this.maxFileSize) {
+      this.notification.showError('Fayl hajmi 5MB dan oshmasligi kerak');
+      input.value = '';
+      return;
+    }
+    this.selectedFile.set(file);
   }
 
   removeFile() {
