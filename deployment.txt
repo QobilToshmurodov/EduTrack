@@ -1,0 +1,86 @@
+45.138.158.200
+
+
+sudo systemctl stop edutrack-api.service
+sudo systemctl status edutrack-api.service
+sudo systemctl start edutrack-api.service
+sudo systemctl restart nginx 
+
+
+🚀 LINUX SERVER DEPLOYMENT & MANAGEMENT CHEATSHEET
+1. .NET API XIZMATLARINI BOSHQARISH (Systemd)
+Ushbu buyruqlar .service fayli orqali dasturni fonda yurgizish uchun:
+
+Xizmatni ishga tushirish:
+sudo systemctl start loyiha-api.service
+
+Xizmatni to'xtatish:
+sudo systemctl stop loyiha-api.service
+
+Xizmatni qayta ishga tushirish (Kod yangilanganda):
+sudo systemctl restart loyiha-api.service
+
+Xizmat holatini tekshirish (Yashil "active" ni ko'rish):
+sudo systemctl status loyiha-api.service
+
+Xizmat fayli tahrirlanganda (Reload):
+sudo systemctl daemon-reload
+
+Xatoliklarni ko'rish (Logs):
+journalctl -u loyiha-api.service -f
+
+2. NGINX SOZLAMALARI VA NAZORATI
+Veb-serverni domenlarga bog'lash uchun:
+
+Nginx holatini ko'rish:
+sudo systemctl status nginx
+
+Konfiguratsiyani tekshirish (Eng muhimi!):
+sudo nginx -t
+
+Nginx'ni yangilash (Restart):
+sudo systemctl restart nginx
+
+Yangi saytni faollashtirish (Link yaratish):
+sudo ln -s /etc/nginx/sites-available/loyiha /etc/nginx/sites-enabled/
+
+Buzuq ulanishni o'chirish:
+sudo rm /etc/nginx/sites-enabled/loyiha
+
+3. TARMOQ VA PORTLARNI TOZALASH
+"Address already in use" xatosi chiqqanda:
+
+Portni band qilgan dasturni topish:
+sudo ss -tulpn | grep :PORT_RAQAMI (masalan, :80)
+
+Jarayonni PID orqali o'ldirish:
+sudo kill -9 PID_RAQAMI
+
+4. MUHIM FAYL YO'LLARI (PATHS)
+Nginx asosiy konfig: /etc/nginx/nginx.conf
+
+NGNX faylni ochish
+sudo nano /etc/nginx/sites-available/edutrack
+
+Domenlar sozlamalari: /etc/nginx/sites-available/
+
+Systemd xizmat fayllari: /etc/systemd/system/
+
+Loyihalar joylashuvi: /var/www/
+
+
+5. DEPLOY ALGORITMI (KADAM-BA-KADAM)
+Build: Loyihani publish qilib, /var/www/loyiha_nomi papkasiga tashlash.
+
+Service: /etc/systemd/system/ ichida .service fayl yaratish.
+
+ExecStart qismida portni ko'rsatish: --urls http://0.0.0.0:PORT.
+
+Enable: systemctl enable va systemctl start buyruqlarini berish.
+
+Nginx: sites-available ichida domen faylini ochib, proxy_pass ga o'sha portni yozish.
+
+Hash Bucket: Agar domen uzun bo'lsa, nginx.conf ichida server_names_hash_bucket_size 64; qatorini yoqish.
+
+Finish: nginx -t tekshirib, systemctl restart nginx berish.
+

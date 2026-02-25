@@ -37,7 +37,7 @@ builder.Services.AddDbContext<EdutrackDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
 // builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
-builder.WebHost.UseUrls("http://localhost:7000");
+// builder.WebHost.UseUrls("http://localhost:7000");
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
@@ -45,7 +45,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200", "https://localhost:7010", "http://localhost:7010")
+            policy.WithOrigins("http://localhost:4200",
+                    "https://localhost:7010",
+                    "http://localhost:7010",
+                    "http://edutrack.warehouse-system.uz",
+                    "https://edutrack.warehouse-system.uz")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
@@ -128,15 +132,16 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseSwagger();
-app.UseSwaggerUI();
-
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-if (app.Environment.IsDevelopment())
+app.UseSwaggerUI(options =>
 {
-    app.UseCors("AllowFrontend");
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
+
+// app.UseDefaultFiles();
+// app.UseStaticFiles();
+
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 
@@ -156,6 +161,6 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.MapControllers();
-app.MapFallbackToFile("index.html");
+// app.MapFallbackToFile("index.html");
 
 app.Run();
