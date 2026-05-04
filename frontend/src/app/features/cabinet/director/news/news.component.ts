@@ -1,11 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NewsService } from '@core/services/news.service';
@@ -18,14 +15,11 @@ import { NewsDialogComponent } from './news-dialog/news-dialog.component';
   standalone: true,
   imports: [
     CommonModule,
-    MatTableModule,
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    MatChipsModule,
     MatTooltipModule,
-    MatProgressSpinnerModule,
-    MatCardModule
+    MatProgressSpinnerModule
   ],
   templateUrl: './news.component.html',
   styleUrl: './news.component.scss'
@@ -37,8 +31,6 @@ export class NewsComponent implements OnInit {
 
   news = signal<NewsDto[]>([]);
   loading = signal(true);
-
-  displayedColumns = ['image', 'title', 'createdDate', 'status', 'actions'];
 
   ngOnInit(): void {
     this.load();

@@ -1,0 +1,235 @@
+<!--
+  Home — yangilangan HTML
+  - Tailwind utilita class'lari saqlanadi (loyiha Tailwind ishlatadi)
+  - Lekin asosiy stilistika SCSS class'lar orqali (lp-*)
+  - Eski class'lardan farqli, yangi class'lar qo'shilgan
+-->
+
+<!-- ===== HERO ===== -->
+<section class="lp-hero">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+      <div class="relative order-2 lg:order-1 animate-fade-in">
+        <div class="lp-hero-image-wrap">
+          <div class="lp-hero-image">
+            <img src="img/technicum.png" alt="Bo'ka Pedagogika Texnikumi"/>
+          </div>
+          <div class="lp-floating-badge --top-left animate-float-up">
+            <div class="num">2005</div>
+            <div class="lbl">Tashkil etilgan</div>
+          </div>
+          <div class="lp-floating-badge --bottom-right animate-float-down">
+            <div class="num">222+</div>
+            <div class="lbl">O'quvchilar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-1 lg:order-2">
+        <div class="lp-overline animate-fade-in">Toshkent viloyati · Bo'ka tumani</div>
+
+        <h1 class="lp-h1 animate-fade-in-up">
+          Bo'ka <em>Pedagogika</em><br>Texnikumi
+        </h1>
+
+        <p class="lp-lead animate-fade-in-up-delay">
+          2005-yildan buyon kelajak avlod ustozlarini tayyorlab kelmoqda.
+          Zamonaviy ta'lim, malakali kadrlar va sifatli bilim bir joyda.
+        </p>
+
+        <div class="lp-hero-stats animate-fade-in-up-delay">
+          @for (stat of stats.slice(1); track stat.label) {
+            <div class="lp-stat-card">
+              <div class="lp-stat-num">{{ stat.value }}</div>
+              <div class="lp-stat-label">{{ stat.label }}</div>
+            </div>
+          }
+        </div>
+
+        <div class="flex flex-wrap gap-3 animate-fade-in-up-delay-2">
+          <a routerLink="/auth/login" class="lp-btn lp-btn-primary">
+            Tizimga kirish
+            <mat-icon>east</mat-icon>
+          </a>
+          <a href="#about" class="lp-btn lp-btn-ghost">
+            Batafsil
+            <mat-icon>expand_more</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about" class="lp-section lp-section-bg-alt">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div class="relative">
+        <div class="lp-hero-image-wrap">
+          <div class="lp-hero-image">
+            <img src="img/technicum2.png" alt="Bo'ka Pedagogika Texnikumi binosi"/>
+          </div>
+          <div class="lp-floating-badge --bottom-right" style="background:var(--lp-surface); color:var(--lp-ink); box-shadow:var(--lp-shadow-3); padding:18px 22px;">
+            <div style="display:flex; gap:24px;">
+              <div style="text-align:center;">
+                <div class="num">2005</div>
+                <div class="lbl">Tashkil etilgan</div>
+              </div>
+              <div style="width:1px; background:var(--lp-line);"></div>
+              <div style="text-align:center;">
+                <div class="num">3.7 <span style="font-size:14px; color:var(--lp-ink-3);">ga</span></div>
+                <div class="lbl">Maydon</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:pl-4">
+        <div class="lp-overline">Texnikum haqida</div>
+        <h2 style="font-family:var(--lp-font-display); font-weight:500; font-size:clamp(28px, 3.5vw, 40px); letter-spacing:-0.025em; line-height:1.15; margin-bottom:20px;">
+          Kelajak ustozlarini tarbiyalaymiz
+        </h2>
+        <p class="lp-lead" style="margin-bottom:28px;">
+          Bo'ka Pedagogika Texnikumi — zamonaviy ta'lim va pedagogik kadrlar tayyorlash markazi.
+          Kelajak avlod ustoz va tarbiyachilarini tayyorlash, ularga bilim va ko'nikmalarga ega bo'lishda barcha sharoitlar yaratilgan.
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:18px; margin-bottom:32px;">
+          @for (feature of aboutFeatures; track feature.title) {
+            <div class="lp-feature">
+              <div class="ico"><mat-icon>check_circle</mat-icon></div>
+              <div>
+                <h4>{{ feature.title }}</h4>
+                <p>{{ feature.desc }}</p>
+              </div>
+            </div>
+          }
+        </div>
+
+        <a href="tel:+998939253433" class="lp-btn lp-btn-primary">
+          <mat-icon>phone</mat-icon>
+          +998 93 925-34-33
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INFRASTRUCTURE ===== -->
+<section class="lp-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="lp-section-head">
+      <div class="lp-eyebrow">Infratuzilma</div>
+      <h2>Zamonaviy sharoitlar</h2>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      @for (item of infrastructure; track item.label) {
+        <div class="lp-infra-card">
+          <div class="icon">{{ item.icon }}</div>
+          <div class="num">{{ item.value }}</div>
+          <div class="lbl">{{ item.label }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== DIRECTIONS ===== -->
+<section id="directions" class="lp-section lp-section-bg-alt">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="lp-section-head">
+      <div class="lp-eyebrow">Qabul 2025</div>
+      <h2>Ta'lim yo'nalishlari</h2>
+      <p>Sizlarni Bo'ka Pedagogika Texnikumiga o'qishga taklif etamiz</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (inst of institutions; track inst.name) {
+        <div class="lp-direction-card">
+          <div class="ico">{{ inst.icon }}</div>
+          <div class="flex-1 min-w-0">
+            <h3 class="name">{{ inst.name }}</h3>
+            <div class="meta">
+              <mat-icon style="font-size:14px; width:14px; height:14px;">schedule</mat-icon>
+              {{ inst.location }}
+            </div>
+            <span class="tag">{{ inst.type }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== NEWS ===== -->
+<section id="news" class="lp-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="lp-section-head" style="text-align:left;">
+      <div class="lp-eyebrow" style="justify-content:flex-start;">Yangiliklar</div>
+      <h2>So'nggi yangiliklar</h2>
+    </div>
+
+    @if (newsLoading()) {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @for (i of [1,2,3]; track i) {
+          <div class="lp-news-card" style="opacity:0.6;">
+            <div class="lp-news-image" style="background:var(--lp-bg-2);"></div>
+            <div class="lp-news-body">
+              <div style="height:11px; background:var(--lp-bg-2); border-radius:6px; width:30%; margin-bottom:14px;"></div>
+              <div style="height:18px; background:var(--lp-bg-2); border-radius:6px; margin-bottom:10px;"></div>
+              <div style="height:14px; background:var(--lp-bg-2); border-radius:6px; width:80%;"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (latestNews().length === 0) {
+      <div style="text-align:center; padding:80px 20px; background:var(--lp-surface); border:1px solid var(--lp-line); border-radius:var(--lp-r-xl);">
+        <div style="font-size:64px; margin-bottom:14px;">📰</div>
+        <p style="font:600 17px/1 var(--lp-font-sans); color:var(--lp-ink-2);">Hozircha yangiliklar yo'q</p>
+        <p style="font:500 14px/1.4 var(--lp-font-sans); color:var(--lp-ink-3); margin-top:8px;">Tez orada yangiliklar paydo bo'ladi</p>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @for (news of latestNews(); track news.id) {
+          <article class="lp-news-card" (click)="navigateToNews(news.id)" style="cursor:pointer;">
+            <div class="lp-news-image">
+              @if (news.imageUrl) {
+                <img [src]="getNewsImageUrl(news.imageUrl)" [alt]="news.title"/>
+              } @else {
+                <div class="placeholder"><mat-icon style="font-size:40px; width:40px; height:40px;">article</mat-icon></div>
+              }
+            </div>
+            <div class="lp-news-body">
+              <time class="lp-news-date">{{ formatDate(news.createdDate) }}</time>
+              <h3 class="lp-news-title line-clamp-2">{{ news.title }}</h3>
+              <p class="lp-news-excerpt line-clamp-3">{{ stripHtml(news.content) }}</p>
+              <button class="lp-news-link" (click)="navigateToNews(news.id); $event.stopPropagation()">
+                Batafsil o'qish
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="lp-cta-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="lp-cta-card">
+      <div class="eyebrow">EduTrack tizimi</div>
+      <h2>Tizimdan foydalanishni boshlang</h2>
+      <p>O'qituvchi, o'quvchi yoki administrator sifatida tizimga kiring</p>
+      <a routerLink="/auth/login" class="lp-btn lp-btn-amber">
+        Kirish
+        <mat-icon>east</mat-icon>
+      </a>
+    </div>
+  </div>
+</section>

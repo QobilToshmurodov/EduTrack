@@ -1,0 +1,138 @@
+// EduTrack v2 — Material 3 theme
+// Note: Angular Material 21's `mat.define-theme()` expects M3 built-in palettes
+// (e.g. `mat.$violet-palette`) — the older M2-style palette map (50–900 keys)
+// is no longer accepted. Our actual visual identity is driven by the `--et-*`
+// CSS variables defined in `_tokens.scss`; the Material theme just needs SOMETHING
+// valid to wire ripple/state-layer/typography. We pick `violet` and `cyan` because
+// they're tonally closest to our indigo/teal, then override actual colors via
+// component-level token overrides below.
+
+@use '@angular/material' as mat;
+
+$et-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$violet-palette,
+    tertiary: mat.$cyan-palette,
+  ),
+  typography: (
+    plain-family: "Plus Jakarta Sans, Inter, system-ui, sans-serif",
+    brand-family: "Fraunces, serif",
+    bold-weight: 700,
+    medium-weight: 600,
+    regular-weight: 500,
+  ),
+  density: (scale: 0),
+));
+
+$et-theme-dark: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$violet-palette,
+    tertiary: mat.$cyan-palette,
+  ),
+  typography: (
+    plain-family: "Plus Jakarta Sans, Inter, system-ui, sans-serif",
+    brand-family: "Fraunces, serif",
+  ),
+));
+
+html {
+  @include mat.all-component-themes($et-theme);
+}
+[data-theme="dark"] {
+  @include mat.all-component-colors($et-theme-dark);
+}
+
+// =========== Component-level Material overrides ===========
+// Brings Material into our token system regardless of which built-in palette
+// `define-theme` was given.
+
+.mat-mdc-card {
+  --mdc-elevated-card-container-color: var(--et-surface);
+  --mdc-elevated-card-container-shape: var(--et-r-lg);
+  --mdc-elevated-card-container-elevation: var(--et-shadow-1);
+  border: 1px solid var(--et-line);
+}
+
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary {
+  --mdc-protected-button-container-color: var(--et-ink);
+  --mdc-protected-button-label-text-color: #FFFFFF;
+  --mdc-filled-button-container-color: var(--et-ink);
+  --mdc-filled-button-label-text-color: #FFFFFF;
+  border-radius: var(--et-r-md) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: var(--et-r-md);
+  --mdc-outlined-text-field-outline-color: var(--et-line);
+  --mdc-outlined-text-field-hover-outline-color: var(--et-line-2);
+  --mdc-outlined-text-field-focus-outline-color: var(--et-primary-500);
+  --mdc-outlined-text-field-caret-color: var(--et-primary-500);
+  --mdc-outlined-text-field-focus-label-text-color: var(--et-primary-600);
+}
+
+.mat-mdc-table {
+  --mat-table-background-color: var(--et-surface);
+  --mat-table-header-headline-color: var(--et-ink-3);
+  --mat-table-row-item-outline-color: var(--et-line);
+}
+.mat-mdc-header-cell {
+  font: 600 11px/1 var(--et-font-sans) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--et-surface-2);
+}
+
+.mat-toolbar.mat-primary {
+  --mat-toolbar-container-background-color: var(--et-surface);
+  --mat-toolbar-container-text-color: var(--et-ink);
+  border-bottom: 1px solid var(--et-line);
+}
+
+.mat-mdc-snack-bar-container {
+  &.error-snackbar {
+    --mdc-snackbar-container-color: var(--et-danger);
+  }
+  &.success-snackbar {
+    --mdc-snackbar-container-color: var(--et-success);
+  }
+}
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: var(--et-r-lg);
+  --mdc-dialog-container-color: var(--et-surface);
+}
+
+.mat-mdc-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 24px !important;
+  color: var(--et-ink-2);
+}
+
+.mat-mdc-dialog-actions {
+  padding: 14px 24px !important;
+  gap: 8px;
+  border-top: 1px solid var(--et-line);
+  background: var(--et-surface-2);
+  min-height: 0 !important;
+}
+
+.mat-mdc-dialog-title {
+  font-family: var(--et-font-display) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--et-ink) !important;
+  padding: 18px 24px !important;
+}
+
+// Sidebar (mat-sidenav) ergonomics — for any pages still using mat-sidenav
+.mat-drawer {
+  background: var(--et-surface) !important;
+  border-right: 1px solid var(--et-line) !important;
+}

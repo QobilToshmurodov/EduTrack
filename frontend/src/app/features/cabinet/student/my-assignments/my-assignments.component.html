@@ -1,0 +1,94 @@
+@if (loading()) {
+  <div class="et-loading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <span>Yuklanmoqda...</span>
+  </div>
+} @else {
+  <div class="assignments">
+    <div class="summary-row">
+      <div class="pill due-soon">
+        <div class="ic"><mat-icon>schedule</mat-icon></div>
+        <div class="meta">
+          <div class="num">{{ dueSoonCount() }}</div>
+          <div class="lbl">Tez orada</div>
+        </div>
+      </div>
+      <div class="pill in-prog">
+        <div class="ic"><mat-icon>warning_amber</mat-icon></div>
+        <div class="meta">
+          <div class="num">{{ inProgressCount() }}</div>
+          <div class="lbl">Muddati o'tgan</div>
+        </div>
+      </div>
+      <div class="pill done">
+        <div class="ic"><mat-icon>check_circle</mat-icon></div>
+        <div class="meta">
+          <div class="num">{{ doneCount() }}</div>
+          <div class="lbl">Bajarilgan</div>
+        </div>
+      </div>
+    </div>
+
+    @if (items().length === 0) {
+      <div class="et-empty">
+        <mat-icon>assignment_late</mat-icon>
+        <h3>Topshiriqlar topilmadi</h3>
+        <p>Hozircha sizga biriktirilgan topshiriqlar yo'q.</p>
+      </div>
+    } @else {
+      <div class="assignment-list">
+        @for (e of items(); track e.id) {
+          <div class="assignment-card">
+            <div class="left">
+              <div class="top-row">
+                <span class="subject-tag" [class]="subjectTone(e.subjectName)">{{ e.subjectName }}</span>
+                @if (isSubmitted(e.id)) {
+                  <span class="status submitted">Topshirilgan</span>
+                } @else if (isOverdue(e.dueDate)) {
+                  <span class="status late">Muddat o'tdi</span>
+                } @else {
+                  <span class="status pending">Topshirilmagan</span>
+                }
+              </div>
+              <h3>{{ e.title }}</h3>
+              @if (e.description) {
+                <p class="desc">{{ e.description }}</p>
+              }
+              <div class="meta-row">
+                <span class="meta"><mat-icon>person</mat-icon> {{ e.employeeName }}</span>
+                <span class="meta"><mat-icon>folder_shared</mat-icon> {{ e.groupName }}</span>
+              </div>
+            </div>
+            <div class="right">
+              <div class="due">
+                <div class="lbl">Muddat</div>
+                <div class="date">{{ e.dueDate | date:'dd.MM.yyyy' }}</div>
+                @if (isSubmitted(e.id)) {
+                  <div class="left-time done">Topshirilgan</div>
+                } @else if (isOverdue(e.dueDate)) {
+                  <div class="left-time overdue">Muddat o'tdi</div>
+                } @else {
+                  <div class="left-time">{{ timeLeft(e.dueDate) }} qoldi</div>
+                }
+              </div>
+              <div class="actions">
+                @if (e.filePath) {
+                  <a [href]="getFileUrl(e.filePath)" target="_blank" matTooltip="Yuklab olish">
+                    <mat-icon>download</mat-icon>
+                    <span>Yuklash</span>
+                  </a>
+                }
+                @if (!isSubmitted(e.id)) {
+                  <button class="primary" (click)="openSubmitDialog(e)">
+                    <mat-icon>upload_file</mat-icon>
+                    <span>Topshirish</span>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

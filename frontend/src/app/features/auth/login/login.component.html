@@ -1,22 +1,32 @@
-<div class="login-container">
-  <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>
-        <h1>EduTrack</h1>
-        <p class="subtitle">Kollej boshqaruv tizimi</p>
-      </mat-card-title>
-    </mat-card-header>
+<div class="login-shell">
+  <aside class="login-brand">
+    <div class="brand-mark">
+      <div class="logo-glyph">E</div>
+      <span>EduTrack</span>
+    </div>
 
-    <mat-card-content>
+    <div class="brand-headline">
+      <h1>Texnikum hayotini <em>raqamlashtiramiz</em></h1>
+      <p>Direktor, o'qituvchi va o'quvchi uchun bitta tizim. Topshiriq, davomat, baho — barchasi shu yerda.</p>
+    </div>
+
+    <div class="brand-stats">
+      <div class="stat"><div class="num">1,240</div><div class="label">O'quvchilar</div></div>
+      <div class="stat"><div class="num">86</div><div class="label">O'qituvchilar</div></div>
+      <div class="stat"><div class="num">42</div><div class="label">Guruhlar</div></div>
+    </div>
+  </aside>
+
+  <section class="login-form-wrap">
+    <div class="login-card">
+      <div class="eyebrow">Kabinet · Kirish</div>
+      <h2>Xush kelibsiz</h2>
+      <p class="subtitle">Hisobingizga kirish uchun ma'lumotlaringizni kiriting.</p>
+
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Foydalanuvchi nomi</mat-label>
-          <input 
-            matInput 
-            formControlName="username"
-            placeholder="Username"
-            autocomplete="username"
-          >
+          <input matInput formControlName="username" autocomplete="username">
           <mat-icon matPrefix>person</mat-icon>
           @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
             <mat-error>Foydalanuvchi nomi talab qilinadi</mat-error>
@@ -25,38 +35,31 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Parol</mat-label>
-          <input 
-            matInput 
-            [type]="hidePassword() ? 'password' : 'text'"
-            formControlName="password"
-            placeholder="Password"
-            autocomplete="current-password"
-          >
+          <input matInput
+                 [type]="hidePassword() ? 'password' : 'text'"
+                 formControlName="password"
+                 autocomplete="current-password">
           <mat-icon matPrefix>lock</mat-icon>
-          <button 
-            mat-icon-button 
-            matSuffix 
-            type="button"
-            (click)="togglePasswordVisibility()"
-            [disabled]="loading()"
-          >
+          <button mat-icon-button matSuffix type="button"
+                  (click)="togglePasswordVisibility()" [disabled]="loading()">
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
           @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
             <mat-error>Parol talab qilinadi</mat-error>
           }
           @if (loginForm.get('password')?.hasError('minlength')) {
-            <mat-error>Parol kamida 4 ta belgidan iborat bo'lishi kerak</mat-error>
+            <mat-error>Parol kamida 6 ta belgidan iborat bo'lishi kerak</mat-error>
           }
         </mat-form-field>
 
-        <button 
-          mat-raised-button 
-          color="primary" 
-          type="submit"
-          class="full-width login-button"
-          [disabled]="loginForm.invalid || loading()"
-        >
+        <div class="help-row">
+          <label class="remember"><input type="checkbox"> Meni eslab qol</label>
+          <a routerLink="/home">Bosh sahifa</a>
+        </div>
+
+        <button mat-raised-button color="primary" type="submit"
+                class="full-width login-button"
+                [disabled]="loginForm.invalid || loading()">
           @if (loading()) {
             <mat-spinner diameter="20"></mat-spinner>
             <span>Yuklanmoqda...</span>
@@ -64,12 +67,12 @@
             <span>Kirish</span>
           }
         </button>
-
-        <a routerLink="/home" mat-stroked-button class="full-width back-home-button" style="text-decoration:none; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-          <mat-icon>home</mat-icon>
-          Bosh sahifaga qaytish
-        </a>
       </form>
-    </mat-card-content>
-  </mat-card>
+
+      <div class="role-hint">
+        <strong>Eslatma:</strong> rolingizga qarab tizim sizni kerakli kabinetga yo'naltiradi —
+        Direktor, O'qituvchi yoki O'quvchi.
+      </div>
+    </div>
+  </section>
 </div>

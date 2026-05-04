@@ -1,51 +1,78 @@
-/* Tailwind Utilities (no preflight/base to avoid conflicts with Angular Material) */
+// EduTrack v2 — Global stylesheet entrypoint
+@use './styles/tokens';
+@use './styles/theme';
+@use './styles/typography';
+@use './styles/utilities';
+@use './styles/data-table';
+
+// Tailwind utilities (no preflight to avoid Material conflicts)
 @tailwind utilities;
 
-/* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-}
-
+// =========== Base reset ===========
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; padding: 0; }
 body {
-  margin: 0;
-  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  background: var(--et-bg);
+  color: var(--et-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+// =========== Scrollbar (subtle, warm) ===========
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--et-line-2);
+  border-radius: 999px;
+  border: 2px solid var(--et-bg);
+  &:hover { background: var(--et-ink-4); }
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+// =========== Selection ===========
+::selection {
+  background: var(--et-primary-100);
+  color: var(--et-primary-800);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #888;
+// =========== Material override: ripple/focus colors ===========
+.mat-mdc-button-base { letter-spacing: -0.01em !important; }
+.mat-mdc-icon-button { --mdc-icon-button-state-layer-size: 40px; }
+
+// =========== Focus visible (a11y) ===========
+:focus-visible {
+  outline: 2px solid var(--et-primary-400);
+  outline-offset: 2px;
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+// =========== Snackbar (semantic) ===========
+.success-snackbar {
+  --mdc-snackbar-container-color: var(--et-success);
+  --mat-mdc-snack-bar-button-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+  .mdc-snackbar__surface { background-color: var(--et-success) !important; }
+  .mdc-snackbar__label { color: #fff !important; }
 }
 
-/* Utility Classes */
-.full-width {
-  width: 100%;
+.warning-snackbar {
+  --mdc-snackbar-container-color: var(--et-warning);
+  --mat-mdc-snack-bar-button-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+  .mdc-snackbar__surface { background-color: var(--et-warning) !important; }
+  .mdc-snackbar__label { color: #fff !important; }
 }
 
-.text-center {
-  text-align: center;
+.error-snackbar {
+  --mdc-snackbar-container-color: var(--et-danger);
+  --mat-mdc-snack-bar-button-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+  .mdc-snackbar__surface { background-color: var(--et-danger) !important; }
+  .mdc-snackbar__label { color: #fff !important; }
 }
+
+// =========== Utility classes (legacy) ===========
+.full-width { width: 100%; }
+.text-center { text-align: center; }
 
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
@@ -61,67 +88,3 @@ body {
 .p-2 { padding: 1rem; }
 .p-3 { padding: 1.5rem; }
 .p-4 { padding: 2rem; }
-
-/* Angular Material Overrides */
-
-/* Snackbar Styles - Using ::ng-deep to force styles if ViewEncapsulation is an issue,
-   but since this is global styles.scss, we need to target the MDC structure correctly */
-
-.success-snackbar {
-  --mdc-snackbar-container-color: #4caf50 !important;
-  --mat-mdc-snack-bar-button-color: #fff !important;
-  --mat-snack-bar-button-color: #fff !important;
-
-  .mdc-snackbar__surface {
-    background-color: #4caf50 !important;
-  }
-
-  .mdc-snackbar__label {
-    color: #fff !important;
-  }
-}
-
-.warning-snackbar {
-  --mdc-snackbar-container-color: #ff9800 !important;
-  --mat-mdc-snack-bar-button-color: #fff !important;
-  --mat-snack-bar-button-color: #fff !important;
-
-  .mdc-snackbar__surface {
-    background-color: #ff9800 !important;
-  }
-
-  .mdc-snackbar__label {
-    color: #fff !important;
-  }
-}
-
-.error-snackbar {
-  --mdc-snackbar-container-color: #f44336 !important;
-  --mat-mdc-snack-bar-button-color: #fff !important;
-  --mat-snack-bar-button-color: #fff !important;
-
-  .mdc-snackbar__surface {
-    background-color: #f44336 !important;
-  }
-
-  .mdc-snackbar__label {
-    color: #fff !important;
-  }
-}
-
-/* Card Spacing */
-mat-card {
-  margin-bottom: 1.5rem;
-}
-
-/* Form Field Spacing */
-mat-form-field {
-  margin-bottom: 1rem;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  body {
-    font-size: 14px;
-  }
-}

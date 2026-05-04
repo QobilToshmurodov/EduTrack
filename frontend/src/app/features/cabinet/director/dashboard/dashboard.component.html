@@ -1,0 +1,108 @@
+@if (loading()) {
+  <div class="dashboard-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+} @else if (stats()) {
+  <div class="dashboard">
+    <div class="hero">
+      <div class="hero-card">
+        <div class="greeting">Xush kelibsiz</div>
+        <h1>Bugun <em>{{ today | date:'EEEE, d MMMM' }}</em></h1>
+        <p class="sub">Tizimda jami {{ totalCount() }} ta yozuv. Boshqaruv panelidan barcha bo'limlarga kirishingiz mumkin.</p>
+      </div>
+      <div class="snapshot">
+        <h3>Holat</h3>
+        <div class="ring-row">
+          <div class="ring" [style.--p]="completionPct()">
+            <span class="pct">{{ completionPct() }}%</span>
+          </div>
+          <div class="ring-meta">
+            <div class="label">Topshiriqlar</div>
+            <div class="desc">Faol topshiriqlar va o'quvchilar bo'yicha umumiy ko'rsatkich.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi tone-indigo">
+        <div class="kpi-head">
+          <div class="ic"><mat-icon>people</mat-icon></div>
+        </div>
+        <div class="kpi-num">{{ stats()!.studentsCount }}</div>
+        <div class="kpi-label">O'quvchilar</div>
+      </div>
+      <div class="kpi tone-plum">
+        <div class="kpi-head">
+          <div class="ic"><mat-icon>person</mat-icon></div>
+        </div>
+        <div class="kpi-num">{{ stats()!.employeesCount }}</div>
+        <div class="kpi-label">O'qituvchilar</div>
+      </div>
+      <div class="kpi tone-teal">
+        <div class="kpi-head">
+          <div class="ic"><mat-icon>groups</mat-icon></div>
+        </div>
+        <div class="kpi-num">{{ stats()!.groupsCount }}</div>
+        <div class="kpi-label">Guruhlar</div>
+      </div>
+      <div class="kpi tone-warm">
+        <div class="kpi-head">
+          <div class="ic"><mat-icon>school</mat-icon></div>
+        </div>
+        <div class="kpi-num">{{ stats()!.professionsCount }}</div>
+        <div class="kpi-label">Yo'nalishlar</div>
+      </div>
+      <div class="kpi tone-indigo">
+        <div class="kpi-head">
+          <div class="ic"><mat-icon>book</mat-icon></div>
+        </div>
+        <div class="kpi-num">{{ stats()!.subjectsCount }}</div>
+        <div class="kpi-label">Fanlar</div>
+      </div>
+      <div class="kpi tone-teal">
+        <div class="kpi-head">
+          <div class="ic"><mat-icon>assignment</mat-icon></div>
+        </div>
+        <div class="kpi-num">{{ stats()!.assignmentsCount }}</div>
+        <div class="kpi-label">Topshiriqlar</div>
+      </div>
+    </div>
+
+    <div class="row-2">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>So'nggi faollik</h3>
+          <a routerLink="/cabinet/director/news">Barchasini ko'rish →</a>
+        </div>
+        <div class="timeline">
+          <div class="empty">Tizimga ulanib turibmiz — faollik tarixi keyinroq paydo bo'ladi.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Tezkor amallar</h3>
+        </div>
+        <div class="quick-actions">
+          <a routerLink="/cabinet/director/students">
+            <mat-icon>person_add</mat-icon>
+            <span>O'quvchi qo'shish</span>
+          </a>
+          <a routerLink="/cabinet/director/groups">
+            <mat-icon>group_add</mat-icon>
+            <span>Guruh yaratish</span>
+          </a>
+          <a routerLink="/cabinet/director/news">
+            <mat-icon>edit_note</mat-icon>
+            <span>Yangilik chop etish</span>
+          </a>
+          <a routerLink="/cabinet/director/esg">
+            <mat-icon>assignment_ind</mat-icon>
+            <span>Fan tayinlash</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+}

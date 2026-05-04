@@ -1,0 +1,79 @@
+// =====================================================
+// EduTrack Landing — Design tokens
+// Bo'ka Pedagogika Texnikumi public site
+// =====================================================
+// Kabinet (cabinet) bilan bir tizim:
+// - Pergament fon (#F6F5F1)
+// - Scholar indigo asosiy
+// - Amber (sariq) — brand aksent
+// =====================================================
+
+:root {
+  // ---- Ink (yozuv ranglari) ----
+  --lp-ink:        #0E1B3D;     // asosiy
+  --lp-ink-2:      #2A3458;     // ikkilamchi
+  --lp-ink-3:      #5C6585;     // muted
+  --lp-ink-4:      #97A0BD;     // disabled / placeholder
+
+  // ---- Surface (fon, kartalar) ----
+  --lp-bg:         #F6F5F1;     // pergament — sahifa
+  --lp-bg-2:       #EFEEE8;     // bo'lim alternativi
+  --lp-surface:    #FFFFFF;     // karta, header
+  --lp-surface-2:  #FAF9F5;     // input fon
+  --lp-line:       #E7E4DA;     // hairline
+  --lp-line-2:     #D8D4C7;     // kuchliroq
+
+  // ---- Brand: Scholar Indigo ----
+  --lp-indigo-50:  #EEF1FF;
+  --lp-indigo-100: #DCE2FF;
+  --lp-indigo-300: #8E9CFB;
+  --lp-indigo-500: #4F5DE0;
+  --lp-indigo-700: #2F3699;
+  --lp-indigo-900: #1A2563;
+
+  // ---- Brand accent: Amber (saqlanadi) ----
+  --lp-amber-50:  #FFF8E1;
+  --lp-amber-100: #FFECB3;
+  --lp-amber-300: #FFD54F;
+  --lp-amber-400: #FFC107;     // brand asosiy sariq
+  --lp-amber-500: #F5B400;     // hover / kuchliroq
+  --lp-amber-600: #C99500;     // matn ustida o'qiladigan
+  --lp-amber-700: #8B6700;     // matn
+
+  // ---- Soft accents ----
+  --lp-sky-50:    #E6F4FB;
+  --lp-sky-100:   #C2E5F4;
+  --lp-sky-500:   #38B6E0;
+
+  --lp-teal-50:   #E6FBF6;
+  --lp-teal-500:  #14B89A;
+  --lp-teal-700:  #0A7E69;
+
+  // ---- Semantic ----
+  --lp-success: #14B89A;
+  --lp-danger:  #DC4B5C;
+
+  // ---- Type ----
+  --lp-font-sans:    "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
+  --lp-font-display: "Fraunces", "Plus Jakarta Sans", serif;
+  --lp-font-mono:    "JetBrains Mono", ui-monospace, monospace;
+
+  // ---- Radii ----
+  --lp-r-sm:   8px;
+  --lp-r-md:   12px;
+  --lp-r-lg:   16px;
+  --lp-r-xl:   20px;
+  --lp-r-2xl:  24px;
+  --lp-r-3xl:  28px;
+  --lp-r-pill: 999px;
+
+  // ---- Shadows (yumshoq, ko'k tonda — sof qora emas) ----
+  --lp-shadow-1: 0 1px 2px rgba(14, 27, 61, 0.04), 0 1px 1px rgba(14, 27, 61, 0.03);
+  --lp-shadow-2: 0 4px 14px rgba(14, 27, 61, 0.06), 0 2px 4px rgba(14, 27, 61, 0.04);
+  --lp-shadow-3: 0 16px 40px rgba(14, 27, 61, 0.10), 0 4px 10px rgba(14, 27, 61, 0.05);
+  --lp-shadow-amber: 0 12px 32px -8px rgba(245, 180, 0, 0.45);
+  --lp-shadow-ink: 0 12px 32px -8px rgba(14, 27, 61, 0.40);
+
+  // ---- Motion ----
+  --lp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
