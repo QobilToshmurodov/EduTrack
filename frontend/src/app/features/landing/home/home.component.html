@@ -141,10 +141,16 @@
 <!-- ===== DIRECTIONS ===== -->
 <section id="directions" class="lp-section lp-section-bg-alt">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="lp-section-head">
-      <div class="lp-eyebrow">Qabul 2025</div>
-      <h2>Ta'lim yo'nalishlari</h2>
-      <p>Sizlarni Bo'ka Pedagogika Texnikumiga o'qishga taklif etamiz</p>
+    <div class="lp-section-head" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; text-align:left;">
+      <div>
+        <div class="lp-eyebrow" style="justify-content:flex-start;">Qabul 2025</div>
+        <h2>Ta'lim yo'nalishlari</h2>
+        <p>Sizlarni Bo'ka Pedagogika Texnikumiga o'qishga taklif etamiz</p>
+      </div>
+      <a routerLink="/directions" class="lp-news-see-all">
+        Barchasini ko'rish
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
     </div>
 
     @if (professionsLoading()) {

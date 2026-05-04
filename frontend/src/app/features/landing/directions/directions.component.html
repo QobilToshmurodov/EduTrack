@@ -1,0 +1,166 @@
+<!-- ===== HERO ===== -->
+<section class="dr-hero">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <a routerLink="/home" class="dr-back">
+      <mat-icon>chevron_left</mat-icon>
+      Bosh sahifaga qaytish
+    </a>
+
+    <div class="lp-overline">Qabul 2025–2026</div>
+    <h1 class="dr-h1">Ta'lim <em>yo'nalishlari</em></h1>
+    <p class="dr-sub">
+      Bo'ka Pedagogika Texnikumi sizlarni o'qishga taklif etadi. Quyidagi yo'nalishlardan
+      o'zingizga mosini tanlang va kelajakdagi kasbiy faoliyatga tayyorgarlik ko'ring.
+    </p>
+
+    <div class="dr-search">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Yo'nalish nomi yoki kodi bo'yicha qidirish..."
+        [(ngModel)]="searchQuery"
+        aria-label="Yo'nalishlarni qidirish">
+      @if (searchQuery()) {
+        <button class="clear-btn" (click)="searchQuery.set('')" aria-label="Tozalash">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+
+    @if (!loading() && items().length > 0) {
+      <div class="dr-stats">
+        <div class="dr-stat">
+          <div class="num">{{ items().length }}</div>
+          <div class="lbl">Ta'lim yo'nalishlari</div>
+        </div>
+        @for (d of durationCounts(); track d.years) {
+          <div class="dr-stat">
+            <div class="num">{{ d.count }}</div>
+            <div class="lbl">{{ d.years }} yillik dastur</div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== LIST ===== -->
+<section class="dr-list-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+
+    @if (loading()) {
+      <div class="dr-grid">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="dr-card skeleton">
+            <div class="dr-card-head">
+              <div class="ico" style="background:var(--lp-bg-2);"></div>
+              <div style="flex:1;">
+                <div style="height:18px; background:var(--lp-bg-2); border-radius:6px; width:80%; margin-bottom:8px;"></div>
+                <div style="height:12px; background:var(--lp-bg-2); border-radius:6px; width:50%;"></div>
+              </div>
+            </div>
+            <div style="height:14px; background:var(--lp-bg-2); border-radius:6px; margin-top:14px;"></div>
+            <div style="height:14px; background:var(--lp-bg-2); border-radius:6px; width:90%; margin-top:8px;"></div>
+            <div style="height:14px; background:var(--lp-bg-2); border-radius:6px; width:60%; margin-top:8px;"></div>
+          </div>
+        }
+      </div>
+    } @else if (items().length === 0) {
+      <div class="dr-empty">
+        <div class="emoji">🎓</div>
+        <h3>Yo'nalishlar tez orada e'lon qilinadi</h3>
+        <p>Hozircha hech qanday yo'nalish ro'yxatga olinmagan. Sahifani keyinroq tekshirib ko'ring.</p>
+      </div>
+    } @else if (filteredItems().length === 0) {
+      <div class="dr-empty">
+        <div class="emoji">🔍</div>
+        <h3>Qidiruv natijasida hech narsa topilmadi</h3>
+        <p>"{{ searchQuery() }}" so'rovi bo'yicha yo'nalish mavjud emas.</p>
+        <button class="lp-btn lp-btn-ghost" (click)="searchQuery.set('')">
+          <mat-icon>refresh</mat-icon>
+          Qidiruvni tozalash
+        </button>
+      </div>
+    } @else {
+      <div class="dr-results-meta">
+        @if (searchQuery()) {
+          <span><strong>{{ filteredItems().length }}</strong> ta natija topildi</span>
+        } @else {
+          <span>Jami <strong>{{ filteredItems().length }}</strong> ta yo'nalish</span>
+        }
+      </div>
+
+      <div class="dr-grid">
+        @for (p of filteredItems(); track p.id) {
+          <article class="dr-card">
+            <div class="dr-card-head">
+              <div class="ico">
+                @if (p.iconEmoji) {
+                  {{ p.iconEmoji }}
+                } @else {
+                  <mat-icon>school</mat-icon>
+                }
+              </div>
+              <div class="dr-card-title-block">
+                <span class="dr-code">{{ p.code }}</span>
+                <h3 class="dr-card-title">{{ p.name }}</h3>
+              </div>
+            </div>
+
+            <div class="dr-card-meta">
+              <span class="meta-item">
+                <mat-icon>schedule</mat-icon>
+                {{ p.durationYears }} yil o'qish muddati
+              </span>
+              @if (p.groupsCount > 0) {
+                <span class="meta-item">
+                  <mat-icon>groups</mat-icon>
+                  {{ p.groupsCount }} ta guruh
+                </span>
+              }
+            </div>
+
+            @if (p.description) {
+              <p class="dr-card-desc">{{ p.description }}</p>
+            } @else {
+              <p class="dr-card-desc empty">Ushbu yo'nalish haqida batafsil ma'lumot keyinroq qo'shiladi.</p>
+            }
+
+            <div class="dr-card-footer">
+              <a href="tel:+998939253433" class="dr-card-cta">
+                <mat-icon>phone</mat-icon>
+                Murojaat qilish
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ===== CONTACT CTA ===== -->
+@if (!loading() && items().length > 0) {
+  <section class="dr-contact-section">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="dr-contact-card">
+        <div class="lp-overline" style="color: var(--lp-amber-300);">Qabul komissiyasi</div>
+        <h2>Yo'nalish tanlashda yordam kerakmi?</h2>
+        <p>
+          Bizning qabul komissiyamiz vakillari sizga eng mos yo'nalishni tanlashda
+          va hujjatlarni topshirish jarayonida yordam berishga tayyor.
+        </p>
+        <div class="dr-contact-actions">
+          <a href="tel:+998939253433" class="dr-contact-btn primary">
+            <mat-icon>phone</mat-icon>
+            +998 93 925-34-33
+          </a>
+          <a routerLink="/about" class="dr-contact-btn ghost">
+            <mat-icon>info</mat-icon>
+            Texnikum haqida
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+}
