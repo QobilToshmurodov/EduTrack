@@ -43,6 +43,11 @@ namespace EduTrackDataAccess.Repositories.Submissions
             return await IncludeAll().Where(s => s.StudentId == studentId).ToListAsync();
         }
 
+        public async Task<IEnumerable<Submission>> GetByEmployeeIdAsync(int employeeId)
+        {
+            return await IncludeAll().Where(s => s.Assignment.EmployeeId == employeeId).ToListAsync();
+        }
+
         public async Task<Submission?> GetByAssignmentAndStudentAsync(int assignmentId, int studentId)
         {
             return await IncludeAll()

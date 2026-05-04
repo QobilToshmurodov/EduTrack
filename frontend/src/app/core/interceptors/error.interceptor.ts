@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
+const isAuthEndpoint = (url: string) => url.includes('/Auth/login');
+
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const authService = inject(AuthService);
@@ -13,21 +15,21 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       let errorMessage = 'An error occurred';
 
       if (error.error instanceof ErrorEvent) {
-        // Client-side error
         errorMessage = `Error: ${error.error.message}`;
       } else {
-        // Server-side error
         switch (error.status) {
           case 401:
-            errorMessage = 'Unauthorized. Please login again.';
-            authService.logout();
+            errorMessage = error.error?.message || 'Unauthorized';
+            if (!isAuthEndpoint(req.url)) {
+              authService.logout();
+            }
             break;
           case 403:
             errorMessage = 'Forbidden. You do not have permission.';
             router.navigate(['/cabinet/unauthorized']);
             break;
           case 404:
-            errorMessage = 'Resource not found.';
+            errorMessage = error.error?.message || 'Resource not found.';
             break;
           case 500:
             errorMessage = 'Internal server error.';

@@ -42,6 +42,13 @@ namespace EduTrack.Controllers
             return Ok(items.Select(MapToDto));
         }
 
+        [HttpGet("by-employee/{employeeId}")]
+        public async Task<IActionResult> GetByEmployee(int employeeId)
+        {
+            var items = await _repo.GetByEmployeeIdAsync(employeeId);
+            return Ok(items.Select(MapToDto));
+        }
+
         [HttpPost]
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Create([FromForm] int assignmentId, [FromForm] string? description, IFormFile? file)

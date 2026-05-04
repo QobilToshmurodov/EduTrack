@@ -1,4 +1,4 @@
-﻿import { inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserRole } from '../models/user.model';
@@ -11,7 +11,7 @@ export const roleGuard = (allowedRoles: UserRole[]): CanActivateFn => {
     const userRole = authService.getUserRole();
 
     if (!userRole) {
-      router.navigate(['/auth/login']);
+      router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
       return false;
     }
 
@@ -19,7 +19,7 @@ export const roleGuard = (allowedRoles: UserRole[]): CanActivateFn => {
       return true;
     }
 
-    router.navigate(['/auth/login']);
+    router.navigate(['/cabinet/unauthorized']);
     return false;
   };
 };

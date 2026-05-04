@@ -12,13 +12,11 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { SubmissionsService } from '@core/services/submissions.service';
-import { AssignmentsService } from '@core/services/assignments.service';
 import { GradesService } from '@core/services/grades.service';
 import { AuthService } from '@core/services/auth.service';
 import { NotificationService } from '@core/services/notification.service';
 import { SubmissionDto } from '@shared/models/common.models';
 import { environment } from '@environments/environment';
-import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-grade-dialog',
   standalone: true,
@@ -160,7 +158,6 @@ export class GradeDialogComponent {
 })
 export class SubmissionsComponent implements OnInit {
   private submissionsService = inject(SubmissionsService);
-  private assignmentsService = inject(AssignmentsService);
   private gradesService = inject(GradesService);
   private authService = inject(AuthService);
   private dialog = inject(MatDialog);
@@ -172,16 +169,11 @@ export class SubmissionsComponent implements OnInit {
   load() {
     this.loading.set(true);
     const profileId = this.authService.profileId();
-    if (profileId) {
-      this.assignmentsService.getByEmployee(profileId).subscribe(assignments => {
-        if (assignments.length === 0) { this.items.set([]); this.loading.set(false); return; }
-        const reqs = assignments.map(a => this.submissionsService.getByAssignment(a.id));
-        forkJoin(reqs).subscribe({
-          next: results => { this.items.set(results.flat()); this.loading.set(false); },
-          error: () => this.loading.set(false)
-        });
-      });
-    }
+    if (!profileId) { this.loading.set(false); return; }
+    this.submissionsService.getByEmployee(profileId).subscribe({
+      next: items => { this.items.set(items); this.loading.set(false); },
+      error: () => { this.notify.showError('Xatolik'); this.loading.set(false); }
+    });
   }
   getFileUrl(filePath: string): string {
     return `${environment.apiUrl}/Files/${filePath}`;

@@ -10,6 +10,7 @@ namespace EduTrackDataAccess.Repositories.Submissions
         Task<Submission?> GetByIdAsync(int id);
         Task<IEnumerable<Submission>> GetByAssignmentIdAsync(int assignmentId);
         Task<IEnumerable<Submission>> GetByStudentIdAsync(int studentId);
+        Task<IEnumerable<Submission>> GetByEmployeeIdAsync(int employeeId);
         Task<Submission?> GetByAssignmentAndStudentAsync(int assignmentId, int studentId);
         Task<Submission> CreateAsync(Submission submission);
         Task<bool> DeleteAsync(int id);

@@ -1,4 +1,5 @@
-import { Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet, Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
@@ -23,28 +24,25 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'EduTrack';
   loading = signal(false);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
-  ngOnInit() {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationStart) {
-        this.loading.set(true);
-        this.cdr.detectChanges();
-      } else if (
-        event instanceof NavigationEnd ||
-        event instanceof NavigationCancel ||
-        event instanceof NavigationError
-      ) {
-        // Kichik kechikish qo'shamiz, shunda juda tez o'tishlarda ham ko'rinadi
-        setTimeout(() => {
+  constructor() {
+    this.router.events
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(event => {
+        if (event instanceof NavigationStart) {
+          this.loading.set(true);
+        } else if (
+          event instanceof NavigationEnd ||
+          event instanceof NavigationCancel ||
+          event instanceof NavigationError
+        ) {
           this.loading.set(false);
-          this.cdr.detectChanges();
-        }, 300);
-      }
-    });
+        }
+      });
   }
 }

@@ -184,7 +184,7 @@ export class MyAssignmentsComponent implements OnInit {
     const ref = this.dialog.open(SubmissionDialogComponent, { width: '500px', data: assignment });
     ref.afterClosed().subscribe(result => {
       if (result && this.studentId) {
-        this.submissionsService.submit(assignment.id, this.studentId, result.description, result.file).subscribe({
+        this.submissionsService.submit(assignment.id, result.description, result.file).subscribe({
           next: () => { this.notify.showSuccess('Topshirildi'); this.loadSubmissions(); },
           error: () => this.notify.showError('Xatolik')
         });
