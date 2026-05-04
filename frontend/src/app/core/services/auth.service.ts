@@ -50,7 +50,7 @@ export class AuthService {
   logout(): void {
     this.storage.clear();
     this.currentUserSignal.set(null);
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/home']);
   }
 
   getToken(): string | null {
