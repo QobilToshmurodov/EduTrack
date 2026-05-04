@@ -43,10 +43,7 @@ export class NewsComponent implements OnInit {
         this.news.set(items);
         this.loading.set(false);
       },
-      error: () => {
-        this.notification.showError('Yangiliklar yuklanmadi');
-        this.loading.set(false);
-      }
+      error: () => this.loading.set(false)
     });
   }
 
@@ -72,14 +69,14 @@ export class NewsComponent implements OnInit {
     });
   }
 
-  delete(item: NewsDto): void {
-    if (!confirm(`"${item.title}" yangiligini o'chirmoqchimisiz?`)) return;
+  async delete(item: NewsDto): Promise<void> {
+    const ok = await this.notification.confirmDelete(item.title);
+    if (!ok) return;
     this.newsService.delete(item.id).subscribe({
       next: () => {
-        this.notification.showSuccess('Yangilik o\'chirildi');
+        this.notification.showSuccess("Yangilik o'chirildi");
         this.load();
-      },
-      error: () => this.notification.showError('O\'chirishda xato yuz berdi')
+      }
     });
   }
 

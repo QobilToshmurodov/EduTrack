@@ -74,7 +74,7 @@ import { ESGDialogComponent } from './esg-dialog/esg-dialog.component';
                     <td><span class="et-chip et-chip-info">{{ e.groupName }}</span></td>
                     <td>
                       <div class="row-actions">
-                        <button (click)="deleteItem(e.id)" class="danger" matTooltip="O'chirish"><mat-icon>delete</mat-icon></button>
+                        <button (click)="deleteItem(e)" class="danger" matTooltip="O'chirish"><mat-icon>delete</mat-icon></button>
                       </div>
                     </td>
                   </tr>
@@ -127,16 +127,16 @@ export class ESGComponent implements OnInit {
     const ref = this.dialog.open(ESGDialogComponent, { width: '500px' });
     ref.afterClosed().subscribe(r => {
       if (r) this.service.create(r).subscribe({
-        next: () => { this.notify.showSuccess('Saqlandi'); this.load(); },
-        error: () => this.notify.showError('Xatolik')
+        next: () => { this.notify.showSuccess('Tayinlash saqlandi'); this.load(); }
       });
     });
   }
 
-  deleteItem(id: number) {
-    this.service.delete(id).subscribe({
-      next: () => { this.notify.showSuccess("O'chirildi"); this.load(); },
-      error: () => this.notify.showError('Xatolik')
+  async deleteItem(item: ESGDto) {
+    const ok = await this.notify.confirmDelete(`${item.employeeName} — ${item.subjectName} (${item.groupName})`);
+    if (!ok) return;
+    this.service.delete(item.id).subscribe({
+      next: () => { this.notify.showSuccess("Tayinlash o'chirildi"); this.load(); }
     });
   }
 

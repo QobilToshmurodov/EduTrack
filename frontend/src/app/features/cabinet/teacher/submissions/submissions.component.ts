@@ -172,7 +172,7 @@ export class SubmissionsComponent implements OnInit {
     if (!profileId) { this.loading.set(false); return; }
     this.submissionsService.getByEmployee(profileId).subscribe({
       next: items => { this.items.set(items); this.loading.set(false); },
-      error: () => { this.notify.showError('Xatolik'); this.loading.set(false); }
+      error: () => this.loading.set(false)
     });
   }
 
@@ -192,8 +192,7 @@ export class SubmissionsComponent implements OnInit {
           value: r.value,
           comment: r.comment
         }).subscribe({
-          next: () => { this.notify.showSuccess('Baholandi'); this.load(); },
-          error: () => this.notify.showError('Xatolik')
+          next: () => { this.notify.showSuccess('Baholandi'); this.load(); }
         });
       }
     });

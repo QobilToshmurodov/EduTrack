@@ -75,23 +75,3 @@
   </main>
 </div>
 
-@if (showLogoutModal()) {
-  <div class="modal-backdrop" (click)="closeLogoutModal()">
-    <div class="logout-modal" (click)="$event.stopPropagation()">
-      <div class="modal-icon-wrap">
-        <mat-icon class="modal-icon">logout</mat-icon>
-      </div>
-      <h2 class="modal-title">Chiqishni tasdiqlang</h2>
-      <p class="modal-desc">Haqiqatan ham tizimdan chiqmoqchimisiz?</p>
-      <div class="modal-actions">
-        <button class="modal-cancel-btn" (click)="closeLogoutModal()">
-          Bekor qilish
-        </button>
-        <button class="modal-confirm-btn" (click)="confirmLogout()">
-          <mat-icon>logout</mat-icon>
-          Chiqish
-        </button>
-      </div>
-    </div>
-  </div>
-}

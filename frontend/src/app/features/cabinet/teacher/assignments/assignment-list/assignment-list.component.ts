@@ -87,7 +87,7 @@ import { switchMap, of } from 'rxjs';
                           <a [href]="getFileUrl(e.filePath)" target="_blank" matTooltip="Yuklab olish"><mat-icon>download</mat-icon></a>
                         }
                         <button (click)="openDialog(e)" matTooltip="Tahrirlash"><mat-icon>edit</mat-icon></button>
-                        <button (click)="deleteItem(e.id)" class="danger" matTooltip="O'chirish"><mat-icon>delete</mat-icon></button>
+                        <button (click)="deleteItem(e)" class="danger" matTooltip="O'chirish"><mat-icon>delete</mat-icon></button>
                       </div>
                     </td>
                   </tr>
@@ -161,17 +161,20 @@ export class AssignmentListComponent implements OnInit {
             return of(null);
           })
         ).subscribe({
-          next: () => { this.notify.showSuccess('Saqlandi'); this.load(); },
-          error: () => this.notify.showError('Xatolik')
+          next: () => {
+            this.notify.showSuccess(item ? 'Topshiriq yangilandi' : "Topshiriq qo'shildi");
+            this.load();
+          }
         });
       }
     });
   }
 
-  deleteItem(id: number) {
-    this.service.delete(id).subscribe({
-      next: () => { this.notify.showSuccess("O'chirildi"); this.load(); },
-      error: () => this.notify.showError('Xatolik')
+  async deleteItem(item: AssignmentDto) {
+    const ok = await this.notify.confirmDelete(item.title);
+    if (!ok) return;
+    this.service.delete(item.id).subscribe({
+      next: () => { this.notify.showSuccess("Topshiriq o'chirildi"); this.load(); }
     });
   }
 }

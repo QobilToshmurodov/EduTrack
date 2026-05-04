@@ -98,10 +98,7 @@ export class NewsDialogComponent implements OnInit {
         this.uploadingImage.set(false);
         this.notification.showSuccess('Rasm yuklandi');
       },
-      error: () => {
-        this.notification.showError('Rasm yuklanmadi');
-        this.uploadingImage.set(false);
-      }
+      error: () => this.uploadingImage.set(false)
     });
   }
 
@@ -131,10 +128,7 @@ export class NewsDialogComponent implements OnInit {
         this.saving.set(false);
         this.dialogRef.close(true);
       },
-      error: () => {
-        this.notification.showError('Xato yuz berdi');
-        this.saving.set(false);
-      }
+      error: () => this.saving.set(false)
     });
   }
 

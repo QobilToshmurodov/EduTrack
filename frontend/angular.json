@@ -41,7 +41,8 @@
             },
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "quill-delta"
+              "quill-delta",
+              "sweetalert2"
             ]
           },
           "configurations": {

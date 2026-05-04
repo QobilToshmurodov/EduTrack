@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '@core/services/auth.service';
+import { NotificationService } from '@core/services/notification.service';
 import { UserRole } from '@core/models/user.model';
 
 interface MenuItem {
@@ -31,11 +32,11 @@ const AVATAR_PALETTE = ['#4F5DE0', '#14B89A', '#F58A3D', '#8E47C7'];
 })
 export class CabinetLayoutComponent implements OnInit {
   authService = inject(AuthService);
+  private notify = inject(NotificationService);
 
   collapsed = signal(false);
   mobileOpen = signal(false);
   darkMode = signal(localStorage.getItem('et-theme') === 'dark');
-  showLogoutModal = signal(false);
 
   menuItems: MenuItem[] = [
     { label: 'Boshqaruv Paneli', icon: 'dashboard',       route: '/cabinet/director/dashboard',   roles: [UserRole.Admin] },
@@ -109,16 +110,8 @@ export class CabinetLayoutComponent implements OnInit {
     }
   }
 
-  openLogoutModal(): void {
-    this.showLogoutModal.set(true);
-  }
-
-  closeLogoutModal(): void {
-    this.showLogoutModal.set(false);
-  }
-
-  confirmLogout(): void {
-    this.showLogoutModal.set(false);
-    this.authService.logout();
+  async openLogoutModal(): Promise<void> {
+    const ok = await this.notify.confirmLogout();
+    if (ok) this.authService.logout();
   }
 }

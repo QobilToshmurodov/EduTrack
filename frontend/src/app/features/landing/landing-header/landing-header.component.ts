@@ -1,19 +1,21 @@
 import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {MatIcon} from "@angular/material/icon";
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { AuthService } from '@core/services/auth.service';
-import {MatButton} from "@angular/material/button";
-import {MatTooltip} from "@angular/material/tooltip";
+import { NotificationService } from '@core/services/notification.service';
+
 @Component({
   selector: 'app-landing-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatIcon, MatButton, MatTooltip],
+  imports: [CommonModule, RouterLink, RouterLinkActive, MatIcon, MatTooltip],
   templateUrl: './landing-header.component.html',
   styleUrl: './landing-header.component.scss'
 })
 export class LandingHeaderComponent {
   authService = inject(AuthService);
+  private notify = inject(NotificationService);
   menuOpen = signal(false);
 
   toggleMenu(): void {
@@ -24,8 +26,9 @@ export class LandingHeaderComponent {
     this.menuOpen.set(false);
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
     this.closeMenu();
-    this.authService.logout();
+    const ok = await this.notify.confirmLogout();
+    if (ok) this.authService.logout();
   }
 }

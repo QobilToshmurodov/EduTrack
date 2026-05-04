@@ -75,7 +75,7 @@ import { StudentDialogComponent } from './student-dialog/student-dialog.componen
                     <td>
                       <div class="row-actions">
                         <button (click)="openDialog(e)" matTooltip="Tahrirlash"><mat-icon>edit</mat-icon></button>
-                        <button (click)="deleteItem(e.id)" class="danger" matTooltip="O'chirish"><mat-icon>delete</mat-icon></button>
+                        <button (click)="deleteItem(e)" class="danger" matTooltip="O'chirish"><mat-icon>delete</mat-icon></button>
                       </div>
                     </td>
                   </tr>
@@ -130,17 +130,20 @@ export class StudentsComponent implements OnInit {
       if (result) {
         const op = item ? this.service.update(item.id, result) : this.service.create(result);
         op.subscribe({
-          next: () => { this.notify.showSuccess('Saqlandi'); this.load(); },
-          error: () => this.notify.showError('Xatolik')
+          next: () => {
+            this.notify.showSuccess(item ? "O'quvchi yangilandi" : "O'quvchi qo'shildi");
+            this.load();
+          }
         });
       }
     });
   }
 
-  deleteItem(id: number) {
-    this.service.delete(id).subscribe({
-      next: () => { this.notify.showSuccess("O'chirildi"); this.load(); },
-      error: () => this.notify.showError('Xatolik')
+  async deleteItem(item: StudentDto) {
+    const ok = await this.notify.confirmDelete(item.fullName);
+    if (!ok) return;
+    this.service.delete(item.id).subscribe({
+      next: () => { this.notify.showSuccess("O'quvchi o'chirildi"); this.load(); }
     });
   }
 

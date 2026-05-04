@@ -1,13 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 import { NewsService } from '@core/services/news.service';
 import { NewsDto } from '@shared/models/common.models';
 
 @Component({
   selector: 'app-news-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIcon],
   templateUrl: './news-detail.component.html',
   styleUrl: './news-detail.component.scss'
 })

@@ -127,8 +127,7 @@ export class MyAssignmentsComponent implements OnInit {
     ref.afterClosed().subscribe(result => {
       if (result && this.studentId) {
         this.submissionsService.submit(assignment.id, result.description, result.file).subscribe({
-          next: () => { this.notify.showSuccess('Topshirildi'); this.loadSubmissions(); },
-          error: () => this.notify.showError('Xatolik')
+          next: () => { this.notify.showSuccess('Javob topshirildi'); this.loadSubmissions(); }
         });
       }
     });

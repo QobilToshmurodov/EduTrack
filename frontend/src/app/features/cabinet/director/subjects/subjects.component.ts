@@ -72,7 +72,7 @@ import { SubjectDialogComponent } from './subject-dialog/subject-dialog.componen
                     <td>
                       <div class="row-actions">
                         <button (click)="openDialog(e)" matTooltip="Tahrirlash"><mat-icon>edit</mat-icon></button>
-                        <button (click)="deleteItem(e.id)" class="danger" matTooltip="O'chirish"><mat-icon>delete</mat-icon></button>
+                        <button (click)="deleteItem(e)" class="danger" matTooltip="O'chirish"><mat-icon>delete</mat-icon></button>
                       </div>
                     </td>
                   </tr>
@@ -126,17 +126,20 @@ export class SubjectsComponent implements OnInit {
       if (r) {
         const op = item ? this.service.update(item.id, r) : this.service.create(r);
         op.subscribe({
-          next: () => { this.notify.showSuccess('Saqlandi'); this.load(); },
-          error: () => this.notify.showError('Xatolik')
+          next: () => {
+            this.notify.showSuccess(item ? 'Fan yangilandi' : "Fan qo'shildi");
+            this.load();
+          }
         });
       }
     });
   }
 
-  deleteItem(id: number) {
-    this.service.delete(id).subscribe({
-      next: () => { this.notify.showSuccess("O'chirildi"); this.load(); },
-      error: () => this.notify.showError('Xatolik')
+  async deleteItem(item: SubjectDto) {
+    const ok = await this.notify.confirmDelete(item.name);
+    if (!ok) return;
+    this.service.delete(item.id).subscribe({
+      next: () => { this.notify.showSuccess("Fan o'chirildi"); this.load(); }
     });
   }
 }

@@ -64,10 +64,7 @@ export class LoginComponent {
           this.notificationService.showSuccess('Muvaffaqiyatli kirdingiz!');
           this.authService.navigateToDefaultRoute();
         },
-        error: (error) => {
-          this.loading.set(false);
-          this.notificationService.showError(error.message || 'Login yoki parol xato!');
-        }
+        error: () => this.loading.set(false)
       });
     }
   }
