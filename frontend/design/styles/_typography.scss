@@ -1,0 +1,47 @@
+// EduTrack v2 — Typography (font-face & utility classes)
+// Loaded via Google Fonts in index.html — no npm package needed.
+
+// Add to src/index.html <head>:
+// <link rel="preconnect" href="https://fonts.googleapis.com">
+// <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+// <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+body, html {
+  font-family: var(--et-font-sans);
+  color: var(--et-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.005em;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-family: var(--et-font-sans);
+  letter-spacing: -0.02em;
+  color: var(--et-ink);
+  font-weight: 600;
+}
+
+// Display headings — used for hero numbers, page titles
+.et-display {
+  font-family: var(--et-font-display);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+.et-display-xl { @extend .et-display; font-size: 48px; }
+.et-display-lg { @extend .et-display; font-size: 38px; }
+.et-display-md { @extend .et-display; font-size: 30px; }
+.et-display-sm { @extend .et-display; font-size: 22px; }
+
+.et-mono {
+  font-family: var(--et-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.et-uppercase-label {
+  font: 600 11px/1 var(--et-font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--et-ink-3);
+}

@@ -1,0 +1,42 @@
+// EduTrack v2 — Global stylesheet entrypoint
+// Replace src/styles.scss with this file (or `@import` it from there).
+
+@use './tokens';
+@use './theme';
+@use './typography';
+@use './utilities';
+
+// =========== Base reset ===========
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; padding: 0; }
+body {
+  background: var(--et-bg);
+  color: var(--et-ink);
+}
+
+// =========== Scrollbar (subtle, warm) ===========
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--et-line-2);
+  border-radius: 999px;
+  border: 2px solid var(--et-bg);
+  &:hover { background: var(--et-ink-4); }
+}
+
+// =========== Selection ===========
+::selection {
+  background: var(--et-primary-100);
+  color: var(--et-primary-800);
+}
+
+// =========== Material override: ripple/focus colors ===========
+.mat-mdc-button-base { letter-spacing: -0.01em !important; }
+.mat-mdc-icon-button { --mdc-icon-button-state-layer-size: 40px; }
+
+// =========== Focus visible (a11y) ===========
+:focus-visible {
+  outline: 2px solid var(--et-primary-400);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

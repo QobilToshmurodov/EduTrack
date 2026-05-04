@@ -1,0 +1,143 @@
+// EduTrack v2 — Material 3 theme
+// Hooks our tokens into Angular Material's M3 theme system.
+// Replaces `@import '@angular/material/prebuilt-themes/azure-blue.css';`
+
+@use '@angular/material' as mat;
+
+// 1) Define palettes from our brand colors
+$et-primary-palette: (
+  50: #EEF1FF,
+  100: #DCE2FF,
+  200: #B9C3FE,
+  300: #8E9CFB,
+  400: #6B7BF4,
+  500: #4F5DE0,
+  600: #3F49C2,
+  700: #2F3699,
+  800: #232873,
+  900: #1A2563,
+  contrast: (
+    50:  #0E1B3D,
+    100: #0E1B3D,
+    200: #0E1B3D,
+    300: #0E1B3D,
+    400: #FFFFFF,
+    500: #FFFFFF,
+    600: #FFFFFF,
+    700: #FFFFFF,
+    800: #FFFFFF,
+    900: #FFFFFF,
+  )
+);
+
+$et-accent-palette: (
+  50:  #E6FBF6,
+  100: #C2F4E8,
+  300: #5DDCBE,
+  500: #14B89A,
+  700: #0A7E69,
+  contrast: (
+    50: #0A7E69, 100: #0A7E69, 300: #0E1B3D,
+    500: #FFFFFF, 700: #FFFFFF,
+  )
+);
+
+// 2) Define M3 theme
+$et-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: $et-primary-palette,
+    tertiary: $et-accent-palette,
+  ),
+  typography: (
+    plain-family: "Plus Jakarta Sans, Inter, system-ui, sans-serif",
+    brand-family: "Fraunces, serif",
+    bold-weight: 700,
+    medium-weight: 600,
+    regular-weight: 500,
+  ),
+  density: (scale: 0),
+));
+
+$et-theme-dark: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: $et-primary-palette,
+    tertiary: $et-accent-palette,
+  ),
+  typography: (
+    plain-family: "Plus Jakarta Sans, Inter, system-ui, sans-serif",
+    brand-family: "Fraunces, serif",
+  ),
+));
+
+// 3) Apply
+html {
+  @include mat.all-component-themes($et-theme);
+}
+[data-theme="dark"] {
+  @include mat.all-component-colors($et-theme-dark);
+}
+
+// 4) Component-level Material overrides — make them feel native to our system
+.mat-mdc-card {
+  --mdc-elevated-card-container-color: var(--et-surface);
+  --mdc-elevated-card-container-shape: var(--et-r-lg);
+  --mdc-elevated-card-container-elevation: var(--et-shadow-1);
+  border: 1px solid var(--et-line);
+}
+
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary {
+  --mdc-protected-button-container-color: var(--et-ink);
+  --mdc-protected-button-label-text-color: #FFFFFF;
+  --mdc-filled-button-container-color: var(--et-ink);
+  --mdc-filled-button-label-text-color: #FFFFFF;
+  border-radius: var(--et-r-md) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: var(--et-r-md);
+  --mdc-outlined-text-field-outline-color: var(--et-line);
+  --mdc-outlined-text-field-hover-outline-color: var(--et-line-2);
+  --mdc-outlined-text-field-focus-outline-color: var(--et-primary-500);
+}
+
+.mat-mdc-table {
+  --mat-table-background-color: var(--et-surface);
+  --mat-table-header-headline-color: var(--et-ink-3);
+  --mat-table-row-item-outline-color: var(--et-line);
+}
+.mat-mdc-header-cell {
+  font: 600 11px/1 var(--et-font-sans) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--et-surface-2);
+}
+
+.mat-toolbar.mat-primary {
+  --mat-toolbar-container-background-color: var(--et-surface);
+  --mat-toolbar-container-text-color: var(--et-ink);
+  border-bottom: 1px solid var(--et-line);
+}
+
+.mat-mdc-snack-bar-container {
+  &.error-snackbar {
+    --mdc-snackbar-container-color: var(--et-danger);
+  }
+  &.success-snackbar {
+    --mdc-snackbar-container-color: var(--et-success);
+  }
+}
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: var(--et-r-lg);
+}
+
+// Sidebar (mat-sidenav) ergonomics
+.mat-drawer {
+  background: var(--et-surface) !important;
+  border-right: 1px solid var(--et-line) !important;
+}

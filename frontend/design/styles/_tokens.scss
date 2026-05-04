@@ -1,0 +1,114 @@
+// EduTrack v2 — Design tokens
+// CSS custom properties; Material theme picks these up via _theme.scss
+
+:root {
+  // ============ Brand: Scholar Indigo ============
+  --et-primary-50:  #EEF1FF;
+  --et-primary-100: #DCE2FF;
+  --et-primary-200: #B9C3FE;
+  --et-primary-300: #8E9CFB;
+  --et-primary-400: #6B7BF4;
+  --et-primary-500: #4F5DE0;   // brand
+  --et-primary-600: #3F49C2;
+  --et-primary-700: #2F3699;
+  --et-primary-800: #232873;
+  --et-primary-900: #1A2563;
+
+  // ============ Accent: Teal (success / motivation) ============
+  --et-accent-50:  #E6FBF6;
+  --et-accent-100: #C2F4E8;
+  --et-accent-300: #5DDCBE;
+  --et-accent-500: #14B89A;
+  --et-accent-700: #0A7E69;
+
+  // ============ Warm: orange (rating / attention) ============
+  --et-warm-50:  #FFF4EC;
+  --et-warm-100: #FFE3CC;
+  --et-warm-300: #FFB37A;
+  --et-warm-500: #F58A3D;
+  --et-warm-700: #B85F1B;
+
+  // ============ Plum: subjects / academic accent ============
+  --et-plum-50:  #F6EEFB;
+  --et-plum-300: #C99CE6;
+  --et-plum-500: #8E47C7;
+  --et-plum-700: #5E2693;
+
+  // ============ Ink (text) ============
+  --et-ink:    #0E1B3D;
+  --et-ink-2:  #2A3458;
+  --et-ink-3:  #5C6585;
+  --et-ink-4:  #97A0BD;
+
+  // ============ Surfaces ============
+  --et-bg:        #F6F5F1;     // parchment cream — body
+  --et-bg-2:      #EFEEE8;     // subtle hover / chip
+  --et-surface:   #FFFFFF;     // cards / dialogs / sidenav
+  --et-surface-2: #FAF9F5;     // input bg
+  --et-line:      #E7E4DA;     // hairline border (warm)
+  --et-line-2:    #D8D4C7;     // stronger border
+
+  // ============ Semantic ============
+  --et-success: #14B89A;
+  --et-warning: #E8A93A;
+  --et-danger:  #DC4B5C;
+  --et-info:    #4F5DE0;
+
+  // ============ Typography ============
+  --et-font-sans:    "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --et-font-display: "Fraunces", "Plus Jakarta Sans", serif;
+  --et-font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  // ============ Radii ============
+  --et-r-xs:   6px;
+  --et-r-sm:  10px;
+  --et-r-md:  14px;
+  --et-r-lg:  20px;
+  --et-r-xl:  28px;
+  --et-r-pill: 999px;
+
+  // ============ Shadows (soft, blue-tinted) ============
+  --et-shadow-1: 0 1px 2px rgba(14, 27, 61, 0.04), 0 1px 1px rgba(14, 27, 61, 0.03);
+  --et-shadow-2: 0 4px 12px rgba(14, 27, 61, 0.06), 0 2px 4px rgba(14, 27, 61, 0.04);
+  --et-shadow-3: 0 12px 32px rgba(14, 27, 61, 0.10), 0 4px 8px rgba(14, 27, 61, 0.05);
+  --et-shadow-pop: 0 24px 60px -12px rgba(79, 93, 224, 0.30);
+
+  // ============ Spacing scale ============
+  --et-space-1:  4px;
+  --et-space-2:  8px;
+  --et-space-3: 12px;
+  --et-space-4: 16px;
+  --et-space-5: 20px;
+  --et-space-6: 24px;
+  --et-space-8: 32px;
+  --et-space-10: 40px;
+
+  // ============ Motion ============
+  --et-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --et-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+// ============ Dark theme ============
+[data-theme="dark"] {
+  --et-ink:    #F2F1EC;
+  --et-ink-2:  #C9CDDF;
+  --et-ink-3:  #8A93B0;
+  --et-ink-4:  #5C6585;
+
+  --et-bg:        #0B1024;
+  --et-bg-2:      #131A36;
+  --et-surface:   #19224A;
+  --et-surface-2: #1F2A57;
+  --et-line:      #2A3666;
+  --et-line-2:    #38477E;
+
+  --et-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --et-shadow-2: 0 6px 18px rgba(0, 0, 0, 0.45);
+  --et-shadow-3: 0 18px 40px rgba(0, 0, 0, 0.55);
+
+  // chip backgrounds need adjustment
+  --et-primary-50: #1F2A57;
+  --et-accent-50:  #0F3D33;
+  --et-warm-50:    #3D2A18;
+  --et-plum-50:    #2D1F3D;
+}
