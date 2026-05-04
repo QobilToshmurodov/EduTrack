@@ -1,0 +1,390 @@
+<!-- ===== HERO ===== -->
+<section class="ab-hero">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <a routerLink="/home" class="ab-back">
+      <mat-icon>chevron_left</mat-icon>
+      Bosh sahifaga qaytish
+    </a>
+
+    <div class="lp-overline">Texnik pasport</div>
+    <h1 class="ab-h1">Bo'ka <em>Pedagogika</em><br>Texnikumi</h1>
+
+    <div class="ab-meta">
+      <div class="ab-meta-item">
+        <mat-icon>location_on</mat-icon>
+        <div>
+          <div class="lbl">Yuridik manzil</div>
+          <div class="val">Toshkent viloyati, Bo'ka tumani, Xo'jaqo'rg'on MFY, Minor ko'cha 22-uy</div>
+        </div>
+      </div>
+      <div class="ab-meta-item">
+        <mat-icon>fingerprint</mat-icon>
+        <div>
+          <div class="lbl">Yer kadastr raqami</div>
+          <div class="val">Texnik hujjatda saqlanadi</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ab-summary-grid">
+      @for (stat of summaryStats; track stat.label) {
+        <div class="ab-summary">
+          <div class="ic">{{ stat.icon }}</div>
+          <div>
+            <div class="num">{{ stat.value }}</div>
+            <div class="lbl">{{ stat.label }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== BUILDINGS ===== -->
+<section class="ab-section ab-section-alt">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ab-section-head">
+      <div class="lp-eyebrow">Infratuzilma</div>
+      <h2>Bino va inshootlar</h2>
+      <p>Texnikum hududidagi mavjud bino, sport zali va boshqa obyektlar bo'yicha texnik ma'lumot.</p>
+    </div>
+
+    <div class="ab-buildings-grid">
+      @for (b of buildings; track b.title) {
+        <div class="ab-building" [class.missing]="b.status === 'missing'">
+          <div class="ab-building-head">
+            <h3>{{ b.title }}</h3>
+            <span class="ab-status" [class.ok]="b.status === 'available'" [class.no]="b.status === 'missing'">
+              <span class="dot"></span>
+              {{ b.status === 'available' ? 'Mavjud · Yaroqli' : 'Mavjud emas' }}
+            </span>
+          </div>
+          <dl class="ab-kv">
+            @for (r of b.rows; track r.label) {
+              <div class="ab-kv-row">
+                <dt>{{ r.label }}</dt>
+                <dd>{{ r.value }}</dd>
+              </div>
+            }
+          </dl>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROGRAMS ===== -->
+<section class="ab-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ab-section-head">
+      <div class="lp-eyebrow">Kasb va mutaxassisliklar</div>
+      <h2>Tayyorlanadigan yo'nalishlar</h2>
+      <p>O'quvchilar soni bosqichlar bo'yicha taqsimoti.</p>
+    </div>
+
+    <div class="ab-table-card">
+      <div class="ab-table-scroll">
+        <table class="ab-table">
+          <thead>
+            <tr>
+              <th>Kasb / mutaxassislik</th>
+              <th class="num-col">1-bosqich</th>
+              <th class="num-col">2-bosqich</th>
+              <th class="num-col">3-bosqich</th>
+              <th class="num-col">Jami</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of existingPrograms; track p.name) {
+              <tr>
+                <td><div class="cell-name">{{ p.name }}</div></td>
+                <td class="num-col">{{ p.stage1 ?? '—' }}</td>
+                <td class="num-col">{{ p.stage2 ?? '—' }}</td>
+                <td class="num-col">{{ p.stage3 ?? '—' }}</td>
+                <td class="num-col total">{{ (p.stage1 ?? 0) + (p.stage2 ?? 0) + (p.stage3 ?? 0) }}</td>
+              </tr>
+            }
+
+            <tr class="section-divider">
+              <td colspan="5">
+                <span class="divider-label">Jumladan 2025–2026 o'quv yilidan yangi tashkil etilgan</span>
+              </td>
+            </tr>
+
+            @for (p of newPrograms; track p.name) {
+              <tr>
+                <td>
+                  <div class="cell-name">
+                    <span class="new-pill">Yangi</span>
+                    {{ p.name }}
+                  </div>
+                </td>
+                <td class="num-col">{{ p.stage1 ?? '—' }}</td>
+                <td class="num-col">—</td>
+                <td class="num-col">—</td>
+                <td class="num-col total">{{ p.stage1 ?? 0 }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PARTNERS ===== -->
+<section class="ab-section ab-section-alt">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ab-section-head">
+      <div class="lp-eyebrow">Hamkorlik</div>
+      <h2>Hamkor ish beruvchi tashkilotlar</h2>
+      <p>Texnikum bilan dual ta'lim va amaliyot doirasida hamkorlik qiladigan tashkilotlar.</p>
+    </div>
+
+    <div class="ab-table-card">
+      <div class="ab-table-scroll">
+        <table class="ab-table">
+          <thead>
+            <tr>
+              <th class="idx-col">#</th>
+              <th>Tashkilot nomi</th>
+              <th>Yo'nalishi</th>
+              <th class="num-col">Xodimlar</th>
+              <th class="num-col">Tashkil etilgan</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of partners; track p.name; let i = $index) {
+              <tr>
+                <td class="idx-col">{{ i + 1 }}</td>
+                <td><div class="cell-name">{{ p.name }}</div></td>
+                <td><span class="ab-tag">{{ p.field }}</span></td>
+                <td class="num-col">{{ p.staff }}</td>
+                <td class="num-col">{{ p.founded }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EQUIPMENT NEEDS ===== -->
+<section class="ab-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ab-section-head">
+      <div class="lp-eyebrow">Moddiy texnika baza</div>
+      <h2>Jihozlar holati va ehtiyojlar</h2>
+      <p>Mavjud o'quv-amaliyot jihozlari va talab etiladigan asbob-uskunalar ro'yxati.</p>
+    </div>
+
+    <div class="ab-needs-grid">
+      <div class="ab-need-card">
+        <div class="ab-need-head">
+          <mat-icon>build</mat-icon>
+          <h3>Ustaxona jihozlari</h3>
+        </div>
+        <p class="ab-need-status missing">Mavjud emas</p>
+        <div class="ab-need-section">
+          <div class="ab-need-title">Talab etiladigan jihozlar</div>
+          <ul class="ab-need-list">
+            @for (n of workshopNeeds; track n.profession) {
+              <li>
+                <span class="prof">{{ n.profession }}</span>
+                <span class="need">{{ n.need }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="ab-need-card">
+        <div class="ab-need-head">
+          <mat-icon>science</mat-icon>
+          <h3>Laboratoriya jihozlari</h3>
+        </div>
+        <p class="ab-need-status missing">Barchasi mavjud emas</p>
+        <div class="ab-need-section">
+          <div class="ab-need-title">Talab etiladigan laboratoriyalar</div>
+          <ul class="ab-need-list">
+            @for (n of labNeeds; track n.name) {
+              <li>
+                <span class="prof">{{ n.name }}</span>
+                <span class="need missing-text">{{ n.need }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="ab-need-card">
+        <div class="ab-need-head">
+          <mat-icon>edit_square</mat-icon>
+          <h3>Amaliyot xonasi jihozlari</h3>
+        </div>
+        <p class="ab-need-status missing">Mavjud emas</p>
+        <div class="ab-need-section">
+          <div class="ab-need-title">Talab etiladigan jihozlar</div>
+          <ul class="ab-need-list">
+            @for (n of practiceNeeds; track n.profession) {
+              <li>
+                <span class="prof">{{ n.profession }}</span>
+                <span class="need">{{ n.need }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMPUTERS ===== -->
+<section class="ab-section ab-section-alt">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ab-section-head">
+      <div class="lp-eyebrow">Raqamli infrastruktura</div>
+      <h2>Kompyuter texnikalari</h2>
+      <p>Mavjud kompyuter texnikalari soni, texnik holati va qo'shimcha ehtiyojlar.</p>
+    </div>
+
+    <div class="ab-table-card">
+      <div class="ab-table-scroll">
+        <table class="ab-table">
+          <thead>
+            <tr>
+              <th>Texnika nomi</th>
+              <th class="num-col">Soni</th>
+              <th class="num-col">Soz</th>
+              <th class="num-col">Nosoz</th>
+              <th class="num-col">Yaroqsiz</th>
+              <th>Qo'shimcha ehtiyoj</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of computers; track c.name) {
+              <tr>
+                <td><div class="cell-name">{{ c.name }}</div></td>
+                <td class="num-col total">{{ c.count }}</td>
+                <td class="num-col"><span class="status-num good">{{ c.good }}</span></td>
+                <td class="num-col"><span class="status-num warn">{{ c.broken }}</span></td>
+                <td class="num-col"><span class="status-num bad">{{ c.unusable }}</span></td>
+                <td>
+                  @if (c.needName) {
+                    <span class="ab-tag">{{ c.needName }} · {{ c.needCount }}</span>
+                  } @else {
+                    <span style="color:var(--lp-ink-4);">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TERRITORY ===== -->
+<section class="ab-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ab-section-head">
+      <div class="lp-eyebrow">Hudud va atrof-muhit</div>
+      <h2>Texnikum hududi</h2>
+      <p>Yer maydoni, ko'kalamzorlashtirish va boshqa hudud ko'rsatkichlari.</p>
+    </div>
+
+    <div class="ab-territory">
+      <div class="ab-territory-block">
+        <h3>Yer maydoni</h3>
+        <dl class="ab-kv">
+          @for (r of territory; track r.label) {
+            <div class="ab-kv-row">
+              <dt>{{ r.label }}</dt>
+              <dd>{{ r.value }}</dd>
+            </div>
+          }
+        </dl>
+      </div>
+
+      <div class="ab-stats-grid">
+        <div class="ab-stats-block">
+          <h3>Ko'kalamzorlashtirish</h3>
+          <div class="ab-mini-grid">
+            @for (s of greenery; track s.label) {
+              <div class="ab-mini-stat">
+                <div class="ic">{{ s.icon }}</div>
+                <div class="num">{{ s.value }}</div>
+                <div class="lbl">{{ s.label }}</div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="ab-stats-block">
+          <h3>Qulaylik va xizmatlar</h3>
+          <div class="ab-mini-grid">
+            @for (s of facilities; track s.label) {
+              <div class="ab-mini-stat">
+                <div class="ic">{{ s.icon }}</div>
+                <div class="num">{{ s.value }}</div>
+                <div class="lbl">{{ s.label }}</div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PPP ===== -->
+<section class="ab-section ab-section-alt">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ab-section-head">
+      <div class="lp-eyebrow">Davlat-xususiy sherikchilik</div>
+      <h2>Mavjud takliflar</h2>
+    </div>
+
+    <div class="ab-ppp-grid">
+      <div class="ab-ppp-card">
+        <div class="ab-ppp-head">
+          <mat-icon>apartment</mat-icon>
+          <h3>Bo'sh turgan bino va inshootlar</h3>
+        </div>
+        <p class="ab-ppp-empty">Hozircha takliflar mavjud emas.</p>
+      </div>
+      <div class="ab-ppp-card">
+        <div class="ab-ppp-head">
+          <mat-icon>landscape</mat-icon>
+          <h3>Bo'sh turgan yer maydonlari</h3>
+        </div>
+        <p class="ab-ppp-empty">Mavjud emas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SIGNATURE ===== -->
+<section class="ab-section ab-signature-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ab-signature">
+      <div class="ab-signature-line"></div>
+      <div class="ab-signature-content">
+        <div class="ab-signature-label">Bo'ka pedagogika texnikumi direktori</div>
+        <div class="ab-signature-name">U. Bayramov</div>
+      </div>
+      <div class="ab-signature-actions">
+        <a href="tel:+998939253433" class="ab-contact-btn">
+          <mat-icon>phone</mat-icon>
+          <span>+998 93 925-34-33</span>
+        </a>
+        <a routerLink="/news" class="ab-contact-btn ghost">
+          <mat-icon>newspaper</mat-icon>
+          <span>Yangiliklar</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

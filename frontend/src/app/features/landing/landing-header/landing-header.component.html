@@ -12,7 +12,7 @@
       <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="lp-nav-link">
         <mat-icon>home</mat-icon> Bosh sahifa
       </a>
-      <a href="#about" class="lp-nav-link">
+      <a routerLink="/about" routerLinkActive="active" class="lp-nav-link">
         <mat-icon>info</mat-icon> Biz haqimizda
       </a>
       <a href="#directions" class="lp-nav-link">
@@ -56,8 +56,8 @@
       <a routerLink="/home" (click)="closeMenu()" class="lp-nav-link">
         <mat-icon>home</mat-icon> Bosh sahifa
       </a>
-      <a href="#about" (click)="closeMenu()" class="lp-nav-link">
-        <mat-icon>info</mat-icon> Haqida
+      <a routerLink="/about" (click)="closeMenu()" class="lp-nav-link">
+        <mat-icon>info</mat-icon> Biz haqimizda
       </a>
       <a href="#directions" (click)="closeMenu()" class="lp-nav-link">
         <mat-icon>school</mat-icon> Yo'nalishlar

@@ -11,6 +11,10 @@ export const LANDING_ROUTES: Routes = [
         loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
       },
       {
+        path: 'about',
+        loadComponent: () => import('./about/about.component').then(m => m.AboutComponent)
+      },
+      {
         path: 'news',
         loadComponent: () => import('./news-list/news-list.component').then(m => m.NewsListComponent)
       },
