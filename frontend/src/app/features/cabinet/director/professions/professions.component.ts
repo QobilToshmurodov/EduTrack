@@ -55,6 +55,7 @@ import { ProfessionDialogComponent } from './profession-dialog/profession-dialog
                   <th>#</th>
                   <th>Nomi</th>
                   <th>Kod</th>
+                  <th>Muddat</th>
                   <th>Tavsif</th>
                   <th>Guruhlar</th>
                   <th></th>
@@ -66,12 +67,19 @@ import { ProfessionDialogComponent } from './profession-dialog/profession-dialog
                     <td class="cell-id">#{{ e.id }}</td>
                     <td>
                       <div class="cell-primary">
-                        <mat-icon style="color:var(--et-warm-500)">work_outline</mat-icon>
+                        @if (e.iconEmoji) {
+                          <span style="font-size: 22px; line-height: 1; width: 28px; text-align: center;">{{ e.iconEmoji }}</span>
+                        } @else {
+                          <mat-icon style="color:var(--et-warm-500)">work_outline</mat-icon>
+                        }
                         <div class="name">{{ e.name }}</div>
                       </div>
                     </td>
                     <td><span class="et-chip et-chip-success">{{ e.code }}</span></td>
-                    <td style="color:var(--et-ink-3); max-width: 380px;">{{ e.description }}</td>
+                    <td>
+                      <span class="et-chip et-chip-info">{{ e.durationYears }} yil</span>
+                    </td>
+                    <td style="color:var(--et-ink-3); max-width: 320px;">{{ e.description }}</td>
                     <td>
                       <span class="et-chip et-chip-neutral">
                         <mat-icon style="font-size:14px;width:14px;height:14px;">folder_shared</mat-icon>

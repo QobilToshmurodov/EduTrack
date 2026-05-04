@@ -43,6 +43,8 @@ namespace EduTrackDataAccess.Repositories.Professions
             existing.Name = profession.Name;
             existing.Code = profession.Code;
             existing.Description = profession.Description;
+            existing.DurationYears = profession.DurationYears;
+            existing.IconEmoji = profession.IconEmoji;
             await _dbContext.SaveChangesAsync();
             return existing;
         }

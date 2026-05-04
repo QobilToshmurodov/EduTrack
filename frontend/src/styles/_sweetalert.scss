@@ -1,0 +1,122 @@
+// SweetAlert2 — bound to EduTrack design tokens.
+// All overrides are namespaced via .et-swal so other Swal usages (if any)
+// remain unaffected.
+
+.swal2-container {
+  z-index: 3000;
+}
+
+.swal2-backdrop-show {
+  background: rgba(10, 14, 40, 0.55) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.et-swal {
+  background: var(--et-surface) !important;
+  border: 1px solid var(--et-line) !important;
+  border-radius: var(--et-r-lg) !important;
+  box-shadow: var(--et-shadow-3) !important;
+  font-family: var(--et-font-sans) !important;
+  padding: 28px 24px 22px !important;
+  max-width: 420px;
+  width: calc(100vw - 32px);
+}
+
+.et-swal-icon {
+  margin: 4px auto 14px !important;
+  width: 64px !important;
+  height: 64px !important;
+  border-width: 2px !important;
+
+  &.swal2-warning {
+    color: var(--et-warning) !important;
+    border-color: var(--et-warning) !important;
+  }
+  &.swal2-question {
+    color: var(--et-primary-500) !important;
+    border-color: var(--et-primary-500) !important;
+  }
+  &.swal2-error {
+    color: var(--et-danger) !important;
+    border-color: var(--et-danger) !important;
+    .swal2-x-mark-line-left,
+    .swal2-x-mark-line-right { background-color: var(--et-danger) !important; }
+  }
+  &.swal2-success {
+    color: var(--et-success) !important;
+    border-color: var(--et-success) !important;
+    .swal2-success-line-tip,
+    .swal2-success-line-long { background-color: var(--et-success) !important; }
+    .swal2-success-ring { border-color: var(--et-success) !important; }
+  }
+  &.swal2-info {
+    color: var(--et-info) !important;
+    border-color: var(--et-info) !important;
+  }
+}
+
+.et-swal-title {
+  font-family: var(--et-font-display) !important;
+  font-weight: 500 !important;
+  font-size: 22px !important;
+  letter-spacing: -0.02em !important;
+  color: var(--et-ink) !important;
+  padding: 0 !important;
+  margin: 0 0 8px !important;
+}
+
+.et-swal-text {
+  font: 500 14px/1.55 var(--et-font-sans) !important;
+  color: var(--et-ink-3) !important;
+  margin: 0 0 4px !important;
+  padding: 0 4px !important;
+}
+
+.et-swal-actions {
+  margin: 22px 0 0 !important;
+  gap: 10px !important;
+  width: 100%;
+  padding: 0 !important;
+}
+
+.et-swal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 18px !important;
+  border-radius: var(--et-r-md) !important;
+  border: 1px solid transparent !important;
+  font: 700 14px/1 var(--et-font-sans) !important;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+  flex: 1;
+  min-width: 110px;
+
+  &:focus { box-shadow: none !important; }
+  &:active { transform: translateY(1px); }
+}
+
+.et-swal-btn-primary {
+  background: var(--et-ink) !important;
+  color: #fff !important;
+  &:hover { background: var(--et-primary-700) !important; }
+}
+
+.et-swal-btn-danger {
+  background: var(--et-danger) !important;
+  color: #fff !important;
+  &:hover { filter: brightness(0.95); }
+}
+
+.et-swal-btn-ghost {
+  background: var(--et-surface) !important;
+  color: var(--et-ink-2) !important;
+  border-color: var(--et-line) !important;
+  &:hover {
+    background: var(--et-surface-2) !important;
+    border-color: var(--et-line-2) !important;
+  }
+}

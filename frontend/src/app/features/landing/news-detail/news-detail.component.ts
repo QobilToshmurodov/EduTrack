@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
@@ -10,7 +10,11 @@ import { NewsDto } from '@shared/models/common.models';
   standalone: true,
   imports: [CommonModule, MatIcon],
   templateUrl: './news-detail.component.html',
-  styleUrl: './news-detail.component.scss'
+  styleUrl: './news-detail.component.scss',
+  // Disable encapsulation so styles for `[innerHTML]` (Quill-generated rich text)
+  // are applied. All selectors in the SCSS are scoped under `.lp-news-detail`
+  // / `.lp-news-body` to prevent global leakage.
+  encapsulation: ViewEncapsulation.None
 })
 export class NewsDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);

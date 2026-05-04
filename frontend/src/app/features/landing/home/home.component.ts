@@ -3,16 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { NewsService } from '@core/services/news.service';
-import { NewsDto } from '@shared/models/common.models';
-
-interface Institution {
-  name: string;
-  location: string;
-  type: string;
-  cardBg: string;
-  tagStyle: string;
-  icon: string;
-}
+import { ProfessionsService } from '@core/services/professions.service';
+import { NewsDto, ProfessionDto } from '@shared/models/common.models';
 
 interface InfrastructureItem {
   icon: string;
@@ -34,61 +26,14 @@ interface AboutFeature {
 })
 export class HomeComponent implements OnInit {
   private newsService = inject(NewsService);
+  private professionsService = inject(ProfessionsService);
   private router = inject(Router);
 
   latestNews = signal<NewsDto[]>([]);
   newsLoading = signal(true);
 
-  institutions: Institution[] = [
-    {
-      name: "Maktabgacha ta'lim tashkiloti tarbiyachisi",
-      location: "2 yil o'qish muddati",
-      type: "Pedagogika",
-      cardBg: "bg-amber-50 border border-amber-100",
-      tagStyle: "bg-amber-50 text-amber-700 border border-amber-200",
-      icon: "👶"
-    },
-    {
-      name: "Kutubxonashunoslik",
-      location: "2 yil o'qish muddati",
-      type: "Axborot xizmati",
-      cardBg: "bg-sky-50 border border-sky-100",
-      tagStyle: "bg-sky-50 text-sky-700 border border-sky-200",
-      icon: "📚"
-    },
-    {
-      name: "Jismoniy tarbiya va sport",
-      location: "3 yil o'qish muddati",
-      type: "Sport",
-      cardBg: "bg-orange-50 border border-orange-100",
-      tagStyle: "bg-orange-50 text-orange-700 border border-orange-200",
-      icon: "⚽"
-    },
-    {
-      name: "Musiqa rahbari",
-      location: "3 yil o'qish muddati",
-      type: "San'at",
-      cardBg: "bg-violet-50 border border-violet-100",
-      tagStyle: "bg-violet-50 text-violet-700 border border-violet-200",
-      icon: "🎵"
-    },
-    {
-      name: "Tasviriy san'at",
-      location: "3 yil o'qish muddati",
-      type: "San'at",
-      cardBg: "bg-rose-50 border border-rose-100",
-      tagStyle: "bg-rose-50 text-rose-700 border border-rose-200",
-      icon: "🎨"
-    },
-    {
-      name: "Axborot texnologiyalari",
-      location: "2 yil o'qish muddati",
-      type: "IT",
-      cardBg: "bg-slate-100 border border-slate-200",
-      tagStyle: "bg-slate-100 text-slate-700 border border-slate-200",
-      icon: "💻"
-    }
-  ];
+  professions = signal<ProfessionDto[]>([]);
+  professionsLoading = signal(true);
 
   stats = [
     { label: "O'quvchilar", value: "222+" },
@@ -124,14 +69,20 @@ export class HomeComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.newsService.getLatest(3).subscribe({
+    this.newsService.getLatest(4).subscribe({
       next: (news) => {
         this.latestNews.set(news);
         this.newsLoading.set(false);
       },
-      error: () => {
-        this.newsLoading.set(false);
-      }
+      error: () => this.newsLoading.set(false)
+    });
+
+    this.professionsService.getAll().subscribe({
+      next: (items) => {
+        this.professions.set(items);
+        this.professionsLoading.set(false);
+      },
+      error: () => this.professionsLoading.set(false)
     });
   }
 

@@ -1,0 +1,97 @@
+<!-- ===== HERO HEADER ===== -->
+<section class="lp-news-hero">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <a routerLink="/home" class="lp-news-back">
+      <mat-icon>chevron_left</mat-icon>
+      Bosh sahifaga qaytish
+    </a>
+
+    <div class="lp-overline">Yangiliklar bo'limi</div>
+    <h1 class="lp-news-page-title">Barcha <em>yangiliklar</em></h1>
+    <p class="lp-news-page-sub">Texnikum hayoti, tadbirlar, e'lonlar va dolzarb yangiliklar to'plami.</p>
+
+    <div class="lp-news-search">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Yangilik nomi yoki matni bo'yicha qidirish..."
+        [(ngModel)]="searchQuery"
+        aria-label="Yangiliklarni qidirish">
+      @if (searchQuery()) {
+        <button class="clear-btn" (click)="searchQuery.set('')" aria-label="Tozalash">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== LIST ===== -->
+<section class="lp-news-list-section">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+
+    @if (loading()) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="lp-news-card" style="opacity:0.6;">
+            <div class="lp-news-image" style="background:var(--lp-bg-2);"></div>
+            <div class="lp-news-body">
+              <div style="height:11px; background:var(--lp-bg-2); border-radius:6px; width:30%; margin-bottom:14px;"></div>
+              <div style="height:18px; background:var(--lp-bg-2); border-radius:6px; margin-bottom:10px;"></div>
+              <div style="height:14px; background:var(--lp-bg-2); border-radius:6px; width:80%;"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (publishedItems().length === 0) {
+      <div class="lp-news-empty">
+        <div class="emoji">📰</div>
+        <h3>Hozircha yangiliklar yo'q</h3>
+        <p>Tez orada yangiliklar paydo bo'ladi. Sahifani keyinroq tekshirib ko'ring.</p>
+      </div>
+    } @else if (filteredItems().length === 0) {
+      <div class="lp-news-empty">
+        <div class="emoji">🔍</div>
+        <h3>Qidiruv natijasida hech narsa topilmadi</h3>
+        <p>"{{ searchQuery() }}" so'rovi bo'yicha yangilik mavjud emas. Boshqa kalit so'z bilan urinib ko'ring.</p>
+        <button class="lp-btn lp-btn-ghost" (click)="searchQuery.set('')">
+          <mat-icon>refresh</mat-icon>
+          Qidiruvni tozalash
+        </button>
+      </div>
+    } @else {
+      <div class="lp-news-results-meta">
+        @if (searchQuery()) {
+          <span><strong>{{ filteredItems().length }}</strong> ta natija topildi</span>
+        } @else {
+          <span>Jami <strong>{{ filteredItems().length }}</strong> ta yangilik</span>
+        }
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (news of filteredItems(); track news.id) {
+          <article class="lp-news-card" (click)="navigateToNews(news.id)" style="cursor:pointer;">
+            <div class="lp-news-image">
+              @if (news.imageUrl) {
+                <img [src]="getNewsImageUrl(news.imageUrl)" [alt]="news.title" loading="lazy"/>
+              } @else {
+                <div class="placeholder">
+                  <mat-icon style="font-size:40px; width:40px; height:40px;">article</mat-icon>
+                </div>
+              }
+            </div>
+            <div class="lp-news-body">
+              <time class="lp-news-date">{{ formatDate(news.createdDate) }}</time>
+              <h3 class="lp-news-title line-clamp-2">{{ news.title }}</h3>
+              <p class="lp-news-excerpt line-clamp-3">{{ stripHtml(news.content) }}</p>
+              <button class="lp-news-link" (click)="navigateToNews(news.id); $event.stopPropagation()">
+                Batafsil o'qish
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>

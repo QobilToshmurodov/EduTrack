@@ -36,6 +36,8 @@ namespace EduTrack.Models
         public string Name { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
         public string? Description { get; set; }
+        public int DurationYears { get; set; }
+        public string? IconEmoji { get; set; }
         public int GroupsCount { get; set; }
     }
 
@@ -47,6 +49,10 @@ namespace EduTrack.Models
         public string Code { get; set; } = string.Empty;
         [MaxLength(500)]
         public string? Description { get; set; }
+        [Range(1, 6)]
+        public int DurationYears { get; set; } = 2;
+        [MaxLength(10)]
+        public string? IconEmoji { get; set; }
     }
 
     // Employee

@@ -147,35 +147,67 @@
       <p>Sizlarni Bo'ka Pedagogika Texnikumiga o'qishga taklif etamiz</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      @for (inst of institutions; track inst.name) {
-        <div class="lp-direction-card">
-          <div class="ico">{{ inst.icon }}</div>
-          <div class="flex-1 min-w-0">
-            <h3 class="name">{{ inst.name }}</h3>
-            <div class="meta">
-              <mat-icon style="font-size:14px; width:14px; height:14px;">schedule</mat-icon>
-              {{ inst.location }}
+    @if (professionsLoading()) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="lp-direction-card" style="opacity:0.6;">
+            <div style="width:48px; height:48px; border-radius:var(--lp-r-md); background:var(--lp-bg-2); flex-shrink:0;"></div>
+            <div class="flex-1 min-w-0">
+              <div style="height:18px; background:var(--lp-bg-2); border-radius:6px; width:80%; margin-bottom:10px;"></div>
+              <div style="height:12px; background:var(--lp-bg-2); border-radius:6px; width:50%; margin-bottom:10px;"></div>
+              <div style="height:18px; background:var(--lp-bg-2); border-radius:6px; width:30%;"></div>
             </div>
-            <span class="tag">{{ inst.type }}</span>
           </div>
-        </div>
-      }
-    </div>
+        }
+      </div>
+    } @else if (professions().length === 0) {
+      <div style="text-align:center; padding:60px 20px; background:var(--lp-surface); border:1px solid var(--lp-line); border-radius:var(--lp-r-xl);">
+        <div style="font-size:48px; margin-bottom:12px;">🎓</div>
+        <p style="font:600 16px/1 var(--lp-font-sans); color:var(--lp-ink-2);">Yo'nalishlar tez orada e'lon qilinadi</p>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (p of professions(); track p.id) {
+          <div class="lp-direction-card">
+            <div class="ico">
+              @if (p.iconEmoji) {
+                {{ p.iconEmoji }}
+              } @else {
+                <mat-icon style="font-size:22px; width:22px; height:22px;">school</mat-icon>
+              }
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="name">{{ p.name }}</h3>
+              <div class="meta">
+                <mat-icon style="font-size:14px; width:14px; height:14px;">schedule</mat-icon>
+                {{ p.durationYears }} yil o'qish muddati
+              </div>
+              <span class="tag">{{ p.code }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </div>
 </section>
 
 <!-- ===== NEWS ===== -->
 <section id="news" class="lp-section">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="lp-section-head" style="text-align:left;">
-      <div class="lp-eyebrow" style="justify-content:flex-start;">Yangiliklar</div>
-      <h2>So'nggi yangiliklar</h2>
+    <div class="lp-section-head" style="text-align:left; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:40px;">
+      <div>
+        <div class="lp-eyebrow" style="justify-content:flex-start;">Yangiliklar</div>
+        <h2>So'nggi yangiliklar</h2>
+      </div>
+      <a routerLink="/news" class="lp-news-see-all">
+        Barchasini ko'rish
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
     </div>
 
     @if (newsLoading()) {
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @for (i of [1,2,3]; track i) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (i of [1,2,3,4]; track i) {
           <div class="lp-news-card" style="opacity:0.6;">
             <div class="lp-news-image" style="background:var(--lp-bg-2);"></div>
             <div class="lp-news-body">
@@ -193,12 +225,12 @@
         <p style="font:500 14px/1.4 var(--lp-font-sans); color:var(--lp-ink-3); margin-top:8px;">Tez orada yangiliklar paydo bo'ladi</p>
       </div>
     } @else {
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @for (news of latestNews(); track news.id) {
           <article class="lp-news-card" (click)="navigateToNews(news.id)" style="cursor:pointer;">
             <div class="lp-news-image">
               @if (news.imageUrl) {
-                <img [src]="getNewsImageUrl(news.imageUrl)" [alt]="news.title"/>
+                <img [src]="getNewsImageUrl(news.imageUrl)" [alt]="news.title" loading="lazy"/>
               } @else {
                 <div class="placeholder"><mat-icon style="font-size:40px; width:40px; height:40px;">article</mat-icon></div>
               }
@@ -214,6 +246,13 @@
             </div>
           </article>
         }
+      </div>
+
+      <div class="lp-news-bottom-cta">
+        <a routerLink="/news" class="lp-btn lp-btn-ghost">
+          Barcha yangiliklarni ko'rish
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
       </div>
     }
   </div>

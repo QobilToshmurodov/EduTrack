@@ -1,14 +1,15 @@
 <div class="lp-news-detail">
-  <button (click)="goBack()" class="lp-news-back">
+  <button (click)="goBack()" class="lp-news-back" type="button">
     <mat-icon>chevron_left</mat-icon>
     Orqaga qaytish
   </button>
 
   @if (loading()) {
     <div class="lp-news-skeleton">
-      <div class="lp-news-cover" style="height:280px; background:var(--lp-bg-2);"></div>
       <div style="height:13px; background:var(--lp-bg-2); border-radius:8px; width:25%; margin-bottom:18px;"></div>
-      <div style="height:36px; background:var(--lp-bg-2); border-radius:8px; width:75%; margin-bottom:30px;"></div>
+      <div style="height:36px; background:var(--lp-bg-2); border-radius:8px; width:75%; margin-bottom:18px;"></div>
+      <div style="height:36px; background:var(--lp-bg-2); border-radius:8px; width:55%; margin-bottom:30px;"></div>
+      <div class="lp-news-cover" style="height:280px; background:var(--lp-bg-2);"></div>
       <div style="height:16px; background:var(--lp-bg-2); border-radius:8px; margin-bottom:10px;"></div>
       <div style="height:16px; background:var(--lp-bg-2); border-radius:8px; width:90%; margin-bottom:10px;"></div>
       <div style="height:16px; background:var(--lp-bg-2); border-radius:8px; width:80%;"></div>
@@ -16,11 +17,12 @@
   }
 
   @if (error()) {
-    <div style="text-align:center; padding:80px 20px;">
-      <div style="font-size:64px; margin-bottom:16px;">📭</div>
-      <h2 style="font-family:var(--lp-font-display); font-weight:500; font-size:28px; color:var(--lp-ink); margin-bottom:10px; letter-spacing:-0.02em;">Yangilik topilmadi</h2>
-      <p style="font:500 15px/1.5 var(--lp-font-sans); color:var(--lp-ink-3); margin-bottom:32px;">Ushbu yangilik mavjud emas yoki o'chirilgan.</p>
-      <button (click)="goBack()" class="lp-btn lp-btn-primary" style="display:inline-flex; align-items:center; gap:8px; padding:12px 22px; background:var(--lp-ink); color:#fff; border:0; border-radius:var(--lp-r-md); font:700 14px/1 var(--lp-font-sans); cursor:pointer;">
+    <div class="lp-news-error">
+      <div class="emoji">📭</div>
+      <h2>Yangilik topilmadi</h2>
+      <p>Ushbu yangilik mavjud emas yoki o'chirilgan.</p>
+      <button (click)="goBack()" type="button"
+              style="display:inline-flex; align-items:center; gap:8px; padding:12px 22px; background:var(--lp-ink); color:#fff; border:0; border-radius:var(--lp-r-md); font:700 14px/1 var(--lp-font-sans); cursor:pointer;">
         Bosh sahifaga qaytish
       </button>
     </div>
@@ -37,8 +39,8 @@
           {{ formatDate(article.createdDate) }}
         </span>
         @if (article.isPublished) {
-          <span style="display:inline-flex; align-items:center; gap:6px; padding:3px 10px; background:var(--lp-teal-50); color:var(--lp-teal-700); border-radius:var(--lp-r-pill); font:700 11px/1 var(--lp-font-sans); text-transform:uppercase; letter-spacing:0.06em;">
-            <span style="width:6px; height:6px; background:var(--lp-teal-500); border-radius:50%;"></span>
+          <span class="lp-news-published-pill">
+            <span class="dot"></span>
             Nashr etilgan
           </span>
         }
@@ -46,15 +48,15 @@
 
       @if (article.imageUrl) {
         <div class="lp-news-cover">
-          <img [src]="getFullImageUrl(article.imageUrl)" [alt]="article.title"/>
+          <img [src]="getFullImageUrl(article.imageUrl)" [alt]="article.title" loading="eager"/>
         </div>
       }
 
       <div class="lp-news-body" [innerHTML]="article.content"></div>
     </article>
 
-    <div style="margin-top:48px; display:flex; justify-content:center;">
-      <button (click)="goBack()" class="lp-news-back">
+    <div class="lp-news-detail-bottom">
+      <button (click)="goBack()" class="lp-news-back" type="button">
         <mat-icon>chevron_left</mat-icon>
         Barcha yangiliklarga qaytish
       </button>

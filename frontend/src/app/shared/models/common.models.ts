@@ -3,6 +3,8 @@
   name: string;
   code: string;
   description?: string;
+  durationYears: number;
+  iconEmoji?: string;
   groupsCount: number;
 }
 

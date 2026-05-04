@@ -1,4 +1,4 @@
-﻿using EduTrack.Models;
+using EduTrack.Models;
 using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Professions;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +8,6 @@ namespace EduTrack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ProfessionsController : ControllerBase
     {
         private readonly IProfessionRepository _repo;
@@ -18,34 +17,23 @@ namespace EduTrack.Controllers
             _repo = repo;
         }
 
+        // Anonim — landing sahifasi yo'nalishlarni ko'rsatishi uchun ochiq.
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
             var items = await _repo.GetAllAsync();
-            var result = items.Select(p => new ProfessionDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Code = p.Code,
-                Description = p.Description,
-                GroupsCount = p.Groups.Count
-            });
+            var result = items.Select(MapToDto);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
             var p = await _repo.GetByIdAsync(id);
             if (p == null) return NotFound();
-            return Ok(new ProfessionDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Code = p.Code,
-                Description = p.Description,
-                GroupsCount = p.Groups.Count
-            });
+            return Ok(MapToDto(p));
         }
 
         [HttpPost]
@@ -56,17 +44,12 @@ namespace EduTrack.Controllers
             {
                 Name = dto.Name,
                 Code = dto.Code,
-                Description = dto.Description
+                Description = dto.Description,
+                DurationYears = dto.DurationYears,
+                IconEmoji = dto.IconEmoji
             };
             var created = await _repo.CreateAsync(entity);
-            return Ok(new ProfessionDto
-            {
-                Id = created.Id,
-                Name = created.Name,
-                Code = created.Code,
-                Description = created.Description,
-                GroupsCount = 0
-            });
+            return Ok(MapToDto(created));
         }
 
         [HttpPut("{id}")]
@@ -77,17 +60,12 @@ namespace EduTrack.Controllers
             {
                 Name = dto.Name,
                 Code = dto.Code,
-                Description = dto.Description
+                Description = dto.Description,
+                DurationYears = dto.DurationYears,
+                IconEmoji = dto.IconEmoji
             };
             var updated = await _repo.UpdateAsync(id, entity);
-            return Ok(new ProfessionDto
-            {
-                Id = updated.Id,
-                Name = updated.Name,
-                Code = updated.Code,
-                Description = updated.Description,
-                GroupsCount = updated.Groups?.Count ?? 0
-            });
+            return Ok(MapToDto(updated));
         }
 
         [HttpDelete("{id}")]
@@ -98,5 +76,16 @@ namespace EduTrack.Controllers
             if (!result) return NotFound();
             return NoContent();
         }
+
+        private static ProfessionDto MapToDto(Profession p) => new()
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Code = p.Code,
+            Description = p.Description,
+            DurationYears = p.DurationYears,
+            IconEmoji = p.IconEmoji,
+            GroupsCount = p.Groups?.Count ?? 0
+        };
     }
 }

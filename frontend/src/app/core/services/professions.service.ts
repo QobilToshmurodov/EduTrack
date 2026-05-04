@@ -3,6 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProfessionDto } from '@shared/models/common.models';
 
+export interface ProfessionWriteDto {
+  name: string;
+  code: string;
+  description?: string;
+  durationYears: number;
+  iconEmoji?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProfessionsService {
   private http = inject(HttpClient);
@@ -16,11 +24,11 @@ export class ProfessionsService {
     return this.http.get<ProfessionDto>(`${this.base}/${id}`);
   }
 
-  create(data: { name: string; code: string; description?: string }): Observable<ProfessionDto> {
+  create(data: ProfessionWriteDto): Observable<ProfessionDto> {
     return this.http.post<ProfessionDto>(this.base, data);
   }
 
-  update(id: number, data: { name: string; code: string; description?: string }): Observable<ProfessionDto> {
+  update(id: number, data: ProfessionWriteDto): Observable<ProfessionDto> {
     return this.http.put<ProfessionDto>(`${this.base}/${id}`, data);
   }
 

@@ -442,6 +442,50 @@
   &:hover mat-icon { transform: translateX(4px); }
 }
 
+// "Barchasini ko'rish" inline link in section header
+.lp-news-see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  font: 700 13px/1 var(--lp-font-sans);
+  color: var(--lp-ink-2);
+  text-decoration: none;
+  background: var(--lp-surface);
+  border: 1px solid var(--lp-line);
+  border-radius: var(--lp-r-md);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  letter-spacing: -0.005em;
+
+  mat-icon {
+    font-size: 16px; width: 16px; height: 16px;
+    transition: transform 0.18s var(--lp-ease);
+  }
+
+  &:hover {
+    background: var(--lp-bg-2);
+    border-color: var(--lp-amber-300);
+    color: var(--lp-ink);
+    mat-icon { transform: translateX(3px); color: var(--lp-amber-700); }
+  }
+}
+
+.lp-news-bottom-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+
+  .lp-btn-ghost {
+    padding: 14px 28px;
+    font-size: 14px;
+    mat-icon {
+      font-size: 18px; width: 18px; height: 18px;
+      transition: transform 0.18s var(--lp-ease);
+    }
+    &:hover mat-icon { transform: translateX(3px); }
+  }
+}
+
 // ---- CTA SECTION (page footer'idan oldin) ----
 .lp-cta-section {
   padding: 80px 0;
