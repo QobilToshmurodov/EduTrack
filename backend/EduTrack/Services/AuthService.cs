@@ -12,12 +12,12 @@ namespace EduTrack.Services
 
     public class AuthService : IAuthService
     {
-        private readonly IUserReporitory _userRepo;
+        private readonly IUserRepository _userRepo;
         private readonly IJWTService _jwtService;
         private readonly IEmployeeRepository _employeeRepo;
         private readonly IStudentRepository _studentRepo;
 
-        public AuthService(IUserReporitory userRepo, IJWTService jwtService,
+        public AuthService(IUserRepository userRepo, IJWTService jwtService,
             IEmployeeRepository employeeRepo, IStudentRepository studentRepo)
         {
             _userRepo = userRepo;
@@ -30,10 +30,10 @@ namespace EduTrack.Services
         {
             var user = await _userRepo.GetByUsernameAsync(dto.Username);
             if (user == null)
-                throw new Exception("Username yoki parol xato");
+                throw new InvalidCredentialsException("Username yoki parol xato");
 
             if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-                throw new Exception("Username yoki parol xato");
+                throw new InvalidCredentialsException("Username yoki parol xato");
 
             int? profileId = null;
             if (user.Role == "Teacher")
@@ -49,7 +49,7 @@ namespace EduTrack.Services
 
             return new LoginResponseModel
             {
-                Token = _jwtService.GenerateToken(user),
+                Token = _jwtService.GenerateToken(user, profileId),
                 Role = user.Role,
                 UserId = user.Id,
                 ProfileId = profileId

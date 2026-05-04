@@ -39,7 +39,7 @@ namespace EduTrackDataAccess.Repositories.Professions
         public async Task<Profession> UpdateAsync(int id, Profession profession)
         {
             var existing = await _dbContext.Professions.FindAsync(id);
-            if (existing == null) throw new Exception("Profession not found");
+            if (existing == null) throw new KeyNotFoundException("Profession not found");
             existing.Name = profession.Name;
             existing.Code = profession.Code;
             existing.Description = profession.Description;

@@ -1,7 +1,7 @@
-﻿using EduTrack.Models;
+using EduTrack.Models;
+using EduTrack.Services;
 using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Students;
-using EduTrackDataAccess.Repositories.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,20 +13,19 @@ namespace EduTrack.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly IStudentRepository _repo;
-        private readonly IUserReporitory _userRepo;
+        private readonly IStudentService _service;
 
-        public StudentsController(IStudentRepository repo, IUserReporitory userRepo)
+        public StudentsController(IStudentRepository repo, IStudentService service)
         {
             _repo = repo;
-            _userRepo = userRepo;
+            _service = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var items = await _repo.GetAllAsync();
-            var result = items.Select(s => MapToDto(s));
-            return Ok(result);
+            return Ok(items.Select(MapToDto));
         }
 
         [HttpGet("{id}")]
@@ -49,21 +48,7 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateStudentDto dto)
         {
-            var user = new User
-            {
-                Username = dto.Username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                Role = "Student"
-            };
-            var createdUser = await _userRepo.CreateUser(user);
-
-            var student = new Student
-            {
-                UserId = createdUser.Id,
-                FullName = dto.FullName,
-                GroupId = dto.GroupId
-            };
-            var created = await _repo.CreateAsync(student);
+            var created = await _service.CreateWithUserAsync(dto);
             return Ok(MapToDto(created));
         }
 
@@ -71,30 +56,20 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UpdateStudentDto dto)
         {
-            try
+            var entity = new Student
             {
-                var entity = new Student
-                {
-                    FullName = dto.FullName,
-                    GroupId = dto.GroupId
-                };
-                var updated = await _repo.UpdateAsync(id, entity);
-                return Ok(MapToDto(updated));
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+                FullName = dto.FullName,
+                GroupId = dto.GroupId
+            };
+            var updated = await _repo.UpdateAsync(id, entity);
+            return Ok(MapToDto(updated));
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var student = await _repo.GetByIdAsync(id);
-            if (student == null) return NotFound();
-            await _repo.DeleteAsync(id);
-            await _userRepo.DeleteUser(student.UserId);
+            await _service.DeleteWithUserAsync(id);
             return NoContent();
         }
 

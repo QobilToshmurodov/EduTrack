@@ -1,4 +1,5 @@
 using EduTrack.Models;
+using EduTrack.Services;
 using EduTrackDataAccess.Repositories.News;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -97,30 +98,23 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, CreateNewsDto dto)
         {
-            try
+            var entity = new EduTrackDataAccess.Entities.News
             {
-                var entity = new EduTrackDataAccess.Entities.News
-                {
-                    Title = dto.Title,
-                    Content = dto.Content,
-                    ImageUrl = dto.ImageUrl,
-                    IsPublished = dto.IsPublished
-                };
-                var updated = await _repo.UpdateAsync(id, entity);
-                return Ok(new NewsDto
-                {
-                    Id = updated.Id,
-                    Title = updated.Title,
-                    Content = updated.Content,
-                    ImageUrl = updated.ImageUrl,
-                    CreatedDate = updated.CreatedDate,
-                    IsPublished = updated.IsPublished
-                });
-            }
-            catch (Exception ex)
+                Title = dto.Title,
+                Content = dto.Content,
+                ImageUrl = dto.ImageUrl,
+                IsPublished = dto.IsPublished
+            };
+            var updated = await _repo.UpdateAsync(id, entity);
+            return Ok(new NewsDto
             {
-                return NotFound(ex.Message);
-            }
+                Id = updated.Id,
+                Title = updated.Title,
+                Content = updated.Content,
+                ImageUrl = updated.ImageUrl,
+                CreatedDate = updated.CreatedDate,
+                IsPublished = updated.IsPublished
+            });
         }
 
         [HttpDelete("{id}")]
@@ -136,8 +130,8 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("Fayl yuklanmadi.");
+            var error = FileValidator.Validate(file, FileValidator.ImageExtensions, FileValidator.MaxImageSize);
+            if (error != null) return BadRequest(error);
 
             var uploadsDir = Path.Combine(_env.ContentRootPath, "Uploads", "News");
             Directory.CreateDirectory(uploadsDir);

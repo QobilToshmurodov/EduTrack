@@ -1,4 +1,4 @@
-﻿using EduTrack.Models;
+using EduTrack.Models;
 using EduTrack.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,15 +18,8 @@ namespace EduTrack.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel dto)
         {
-            try
-            {
-                var result = await _authService.LoginAsync(dto);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+            var result = await _authService.LoginAsync(dto);
+            return Ok(result);
         }
     }
 }

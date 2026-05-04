@@ -49,7 +49,7 @@ namespace EduTrackDataAccess.Repositories.Employees
         public async Task<Employee> UpdateAsync(int id, Employee employee)
         {
             var existing = await _dbContext.Employees.FindAsync(id);
-            if (existing == null) throw new Exception("Employee not found");
+            if (existing == null) throw new KeyNotFoundException("Employee not found");
             existing.FullName = employee.FullName;
             existing.Phone = employee.Phone;
             existing.Email = employee.Email;

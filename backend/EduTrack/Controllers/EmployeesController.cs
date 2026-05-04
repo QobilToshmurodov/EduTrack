@@ -1,7 +1,7 @@
-﻿using EduTrack.Models;
+using EduTrack.Models;
+using EduTrack.Services;
 using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Employees;
-using EduTrackDataAccess.Repositories.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,20 +13,19 @@ namespace EduTrack.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeeRepository _repo;
-        private readonly IUserReporitory _userRepo;
+        private readonly IEmployeeService _service;
 
-        public EmployeesController(IEmployeeRepository repo, IUserReporitory userRepo)
+        public EmployeesController(IEmployeeRepository repo, IEmployeeService service)
         {
             _repo = repo;
-            _userRepo = userRepo;
+            _service = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var items = await _repo.GetAllAsync();
-            var result = items.Select(e => MapToDto(e));
-            return Ok(result);
+            return Ok(items.Select(MapToDto));
         }
 
         [HttpGet("{id}")]
@@ -49,23 +48,7 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateEmployeeDto dto)
         {
-            var user = new User
-            {
-                Username = dto.Username,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                Role = "Teacher"
-            };
-            var createdUser = await _userRepo.CreateUser(user);
-
-            var employee = new Employee
-            {
-                UserId = createdUser.Id,
-                FullName = dto.FullName,
-                Email = dto.Email,
-                Phone = dto.Phone,
-                ProfessionId = dto.ProfessionId
-            };
-            var created = await _repo.CreateAsync(employee);
+            var created = await _service.CreateWithUserAsync(dto);
             return Ok(MapToDto(created));
         }
 
@@ -73,32 +56,22 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UpdateEmployeeDto dto)
         {
-            try
+            var entity = new Employee
             {
-                var entity = new Employee
-                {
-                    FullName = dto.FullName,
-                    Email = dto.Email,
-                    Phone = dto.Phone,
-                    ProfessionId = dto.ProfessionId
-                };
-                var updated = await _repo.UpdateAsync(id, entity);
-                return Ok(MapToDto(updated));
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+                FullName = dto.FullName,
+                Email = dto.Email,
+                Phone = dto.Phone,
+                ProfessionId = dto.ProfessionId
+            };
+            var updated = await _repo.UpdateAsync(id, entity);
+            return Ok(MapToDto(updated));
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var employee = await _repo.GetByIdAsync(id);
-            if (employee == null) return NotFound();
-            await _repo.DeleteAsync(id);
-            await _userRepo.DeleteUser(employee.UserId);
+            await _service.DeleteWithUserAsync(id);
             return NoContent();
         }
 

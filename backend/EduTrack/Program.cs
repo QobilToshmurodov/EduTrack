@@ -13,6 +13,7 @@ using EduTrackDataAccess.Repositories.Employees;
 using EduTrackDataAccess.Repositories.EmployeeSubjectGroups;
 using EduTrackDataAccess.Repositories.News;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.FileProviders;
@@ -39,6 +40,11 @@ builder.Services.AddDbContext<EdutrackDbContext>(options =>
 // builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 // builder.WebHost.UseUrls("http://localhost:7000");
 
+builder.Services.Configure<FormOptions>(o =>
+{
+    o.MultipartBodyLengthLimit = 15 * 1024 * 1024;
+});
+
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
@@ -57,7 +63,7 @@ builder.Services.AddCors(options =>
 });
 
 // Repositories
-builder.Services.AddScoped<IUserReporitory, UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProfessionRepository, ProfessionRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
@@ -72,6 +78,13 @@ builder.Services.AddScoped<INewsRepository, NewsRepository>();
 // Services
 builder.Services.AddScoped<IJWTService, JWTService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("Jwt:Key is not configured. Set it via user-secrets or environment variables.");
+if (jwtKey.Length < 32)
+    throw new InvalidOperationException("Jwt:Key must be at least 32 characters long.");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -84,9 +97,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-            )
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     });
 builder.Services.AddAuthorization();
@@ -131,12 +142,17 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+if (app.Environment.IsDevelopment())
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = string.Empty;
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
+}
 
 // app.UseDefaultFiles();
 // app.UseStaticFiles();

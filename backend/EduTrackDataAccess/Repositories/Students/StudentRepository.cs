@@ -59,7 +59,7 @@ namespace EduTrackDataAccess.Repositories.Students
         public async Task<Student> UpdateAsync(int id, Student student)
         {
             var existing = await _dbContext.Students.FindAsync(id);
-            if (existing == null) throw new Exception("Student not found");
+            if (existing == null) throw new KeyNotFoundException("Student not found");
             existing.FullName = student.FullName;
             existing.GroupId = student.GroupId;
             await _dbContext.SaveChangesAsync();

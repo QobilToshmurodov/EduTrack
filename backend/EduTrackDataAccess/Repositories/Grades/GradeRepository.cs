@@ -43,7 +43,7 @@ namespace EduTrackDataAccess.Repositories.Grades
         public async Task<Grade> UpdateAsync(int id, Grade grade)
         {
             var existing = await _dbContext.Grades.FindAsync(id);
-            if (existing == null) throw new Exception("Grade not found");
+            if (existing == null) throw new KeyNotFoundException("Grade not found");
             existing.Value = grade.Value;
             existing.Comment = grade.Comment;
             existing.GradedAt = DateTime.UtcNow;

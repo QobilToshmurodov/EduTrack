@@ -35,7 +35,7 @@ namespace EduTrackDataAccess.Repositories.Subjects
         public async Task<Subject> UpdateAsync(int id, Subject subject)
         {
             var existing = await _dbContext.Subjects.FindAsync(id);
-            if (existing == null) throw new Exception("Subject not found");
+            if (existing == null) throw new KeyNotFoundException("Subject not found");
             existing.Name = subject.Name;
             existing.Description = subject.Description;
             await _dbContext.SaveChangesAsync();

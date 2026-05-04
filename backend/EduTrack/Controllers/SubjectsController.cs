@@ -47,16 +47,9 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, CreateSubjectDto dto)
         {
-            try
-            {
-                var entity = new Subject { Name = dto.Name, Description = dto.Description };
-                var updated = await _repo.UpdateAsync(id, entity);
-                return Ok(new SubjectDto { Id = updated.Id, Name = updated.Name, Description = updated.Description });
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var entity = new Subject { Name = dto.Name, Description = dto.Description };
+            var updated = await _repo.UpdateAsync(id, entity);
+            return Ok(new SubjectDto { Id = updated.Id, Name = updated.Name, Description = updated.Description });
         }
 
         [HttpDelete("{id}")]

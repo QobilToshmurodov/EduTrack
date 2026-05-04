@@ -1,4 +1,5 @@
 ﻿using EduTrack.Models;
+using EduTrack.Services;
 using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Assignments;
 using Microsoft.AspNetCore.Authorization;
@@ -72,31 +73,24 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Teacher,Admin")]
         public async Task<IActionResult> Update(int id, UpdateAssignmentDto dto)
         {
-            try
+            var entity = new Assignment
             {
-                var entity = new Assignment
-                {
-                    Title = dto.Title,
-                    Description = dto.Description,
-                    DueDate = dto.DueDate,
-                    SubjectId = dto.SubjectId,
-                    GroupId = dto.GroupId
-                };
-                var updated = await _repo.UpdateAsync(id, entity);
-                return Ok(MapToDto(updated));
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+                Title = dto.Title,
+                Description = dto.Description,
+                DueDate = dto.DueDate,
+                SubjectId = dto.SubjectId,
+                GroupId = dto.GroupId
+            };
+            var updated = await _repo.UpdateAsync(id, entity);
+            return Ok(MapToDto(updated));
         }
 
         [HttpPost("{id}/upload")]
         [Authorize(Roles = "Teacher,Admin")]
         public async Task<IActionResult> UploadFile(int id, IFormFile file)
         {
-            if (file == null || file.Length == 0) return BadRequest("No file uploaded");
-            if (file.Length > 5 * 1024 * 1024) return BadRequest("File size exceeds 5MB");
+            var error = FileValidator.Validate(file, FileValidator.DocumentExtensions, FileValidator.MaxDocumentSize);
+            if (error != null) return BadRequest(error);
 
             var assignment = await _repo.GetByIdAsync(id);
             if (assignment == null) return NotFound();

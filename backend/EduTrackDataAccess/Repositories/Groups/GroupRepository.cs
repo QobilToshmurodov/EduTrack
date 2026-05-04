@@ -41,7 +41,7 @@ namespace EduTrackDataAccess.Repositories.Groups
         public async Task<Group> UpdateAsync(int id, Group group)
         {
             var existing = await _dbContext.Groups.FindAsync(id);
-            if (existing == null) throw new Exception("Group not found");
+            if (existing == null) throw new KeyNotFoundException("Group not found");
             existing.Name = group.Name;
             existing.ProfessionId = group.ProfessionId;
             await _dbContext.SaveChangesAsync();

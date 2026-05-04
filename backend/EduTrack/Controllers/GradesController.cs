@@ -1,4 +1,5 @@
-﻿using EduTrack.Models;
+using EduTrack.Models;
+using EduTrack.Services;
 using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Grades;
 using Microsoft.AspNetCore.Authorization;
@@ -37,11 +38,15 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Teacher,Admin")]
         public async Task<IActionResult> Create(CreateGradeDto dto)
         {
+            var employeeId = User.GetProfileId();
+            if (employeeId is null && User.GetRole() != "Admin")
+                return Forbid();
+
             var entity = new Grade
             {
                 SubmissionId = dto.SubmissionId,
                 StudentId = dto.StudentId,
-                EmployeeId = dto.EmployeeId,
+                EmployeeId = employeeId ?? dto.EmployeeId,
                 Value = dto.Value,
                 Comment = dto.Comment,
                 GradedAt = DateTime.UtcNow
@@ -55,16 +60,9 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Teacher,Admin")]
         public async Task<IActionResult> Update(int id, UpdateGradeDto dto)
         {
-            try
-            {
-                var entity = new Grade { Value = dto.Value, Comment = dto.Comment };
-                var updated = await _repo.UpdateAsync(id, entity);
-                return Ok(MapToDto(updated));
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var entity = new Grade { Value = dto.Value, Comment = dto.Comment };
+            var updated = await _repo.UpdateAsync(id, entity);
+            return Ok(MapToDto(updated));
         }
 
         [HttpDelete("{id}")]

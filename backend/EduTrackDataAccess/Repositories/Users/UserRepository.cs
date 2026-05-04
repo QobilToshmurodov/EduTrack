@@ -1,14 +1,12 @@
-﻿using EduTrackDataAccess.Entities;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using EduTrackDataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EduTrackDataAccess.Repositories.Users
 {
-    public class UserRepository : IUserReporitory
+    public class UserRepository : IUserRepository
     {
         private readonly EdutrackDbContext _dbContext;
 
@@ -17,48 +15,49 @@ namespace EduTrackDataAccess.Repositories.Users
             _dbContext = dbContext;
         }
 
-        public async Task<User> CreateUser(User user)
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await _dbContext.Users.ToListAsync();
+        }
+
+        public async Task<User?> GetByIdAsync(int id)
+        {
+            return await _dbContext.Users.FindAsync(id);
+        }
+
+        public async Task<User?> GetByUsernameAsync(string username)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task<User> CreateAsync(User user)
         {
             await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
             return user;
         }
 
-        public async Task<bool> DeleteUser(int id)
+        public async Task<User> UpdateAsync(int id, User user)
         {
-           var user = await _dbContext.Users.FindAsync(id);
-            if (user != null)
-            {
-                _dbContext.Users.Remove(user);
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
+            var existing = await _dbContext.Users.FindAsync(id)
+                ?? throw new KeyNotFoundException($"User {id} not found");
 
-        public async Task<IEnumerable<User>> GetAllUser()
-        {
-            return await _dbContext.Users.ToListAsync();
-        }
+            existing.Username = user.Username;
+            existing.Role = user.Role;
+            if (!string.IsNullOrEmpty(user.PasswordHash))
+                existing.PasswordHash = user.PasswordHash;
 
-        public async Task<User> GetUser(int id)
-        {
-            return await _dbContext.Users.FindAsync(id);
-        }
-
-        public async Task<User> UpdateUser(int id, User user)
-        {
-            var updateuser= _dbContext.Users.Attach(user);
-            updateuser.State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
-            return user;
+            return existing;
         }
 
-        public async Task<User> GetByUsernameAsync(string username)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return await _dbContext.Users
-                .FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _dbContext.Users.FindAsync(id);
+            if (user is null) return false;
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
-
     }
 }

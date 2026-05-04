@@ -1,4 +1,5 @@
-﻿using EduTrack.Models;
+using EduTrack.Models;
+using EduTrack.Services;
 using EduTrackDataAccess.Entities;
 using EduTrackDataAccess.Repositories.Submissions;
 using Microsoft.AspNetCore.Authorization;
@@ -42,10 +43,20 @@ namespace EduTrack.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Student,Admin")]
-        public async Task<IActionResult> Create([FromForm] int assignmentId, [FromForm] int studentId, [FromForm] string? description, IFormFile? file)
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> Create([FromForm] int assignmentId, [FromForm] string? description, IFormFile? file)
         {
-            var existing = await _repo.GetByAssignmentAndStudentAsync(assignmentId, studentId);
+            var studentId = User.GetProfileId();
+            if (studentId is null)
+                return Forbid();
+
+            if (file != null)
+            {
+                var error = FileValidator.Validate(file, FileValidator.DocumentExtensions, FileValidator.MaxDocumentSize);
+                if (error != null) return BadRequest(error);
+            }
+
+            var existing = await _repo.GetByAssignmentAndStudentAsync(assignmentId, studentId.Value);
             if (existing != null) return BadRequest("Already submitted");
 
             string? filePath = null;
@@ -68,7 +79,7 @@ namespace EduTrack.Controllers
             var submission = new Submission
             {
                 AssignmentId = assignmentId,
-                StudentId = studentId,
+                StudentId = studentId.Value,
                 Description = description,
                 FilePath = filePath,
                 SubmittedAt = DateTime.UtcNow

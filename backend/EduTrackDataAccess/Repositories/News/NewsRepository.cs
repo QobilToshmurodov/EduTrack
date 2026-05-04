@@ -46,7 +46,7 @@ namespace EduTrackDataAccess.Repositories.News
         public async Task<Entities.News> UpdateAsync(int id, Entities.News news)
         {
             var existing = await _dbContext.News.FindAsync(id);
-            if (existing == null) throw new Exception("News not found");
+            if (existing == null) throw new KeyNotFoundException("News not found");
             existing.Title = news.Title;
             existing.Content = news.Content;
             existing.ImageUrl = news.ImageUrl;

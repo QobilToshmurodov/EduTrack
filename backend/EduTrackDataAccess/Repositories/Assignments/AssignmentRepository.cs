@@ -55,7 +55,7 @@ namespace EduTrackDataAccess.Repositories.Assignments
         public async Task<Assignment> UpdateAsync(int id, Assignment assignment)
         {
             var existing = await _dbContext.Assignments.FindAsync(id);
-            if (existing == null) throw new Exception("Assignment not found");
+            if (existing == null) throw new KeyNotFoundException("Assignment not found");
             existing.Title = assignment.Title;
             existing.Description = assignment.Description;
             existing.DueDate = assignment.DueDate;

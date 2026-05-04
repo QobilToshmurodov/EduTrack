@@ -47,16 +47,9 @@ namespace EduTrack.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, CreateGroupDto dto)
         {
-            try
-            {
-                var entity = new Group { Name = dto.Name, ProfessionId = dto.ProfessionId };
-                var updated = await _repo.UpdateAsync(id, entity);
-                return Ok(MapToDto(updated));
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var entity = new Group { Name = dto.Name, ProfessionId = dto.ProfessionId };
+            var updated = await _repo.UpdateAsync(id, entity);
+            return Ok(MapToDto(updated));
         }
 
         [HttpDelete("{id}")]

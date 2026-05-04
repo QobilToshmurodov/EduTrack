@@ -1,9 +1,13 @@
-﻿namespace EduTrack.Models
+using System.ComponentModel.DataAnnotations;
+
+namespace EduTrack.Models
 {
     // Auth
     public class LoginModel
     {
+        [Required, MinLength(3), MaxLength(50)]
         public string Username { get; set; } = string.Empty;
+        [Required, MinLength(6), MaxLength(100)]
         public string Password { get; set; } = string.Empty;
     }
 
@@ -17,8 +21,11 @@
 
     public class RegisterModel
     {
+        [Required, MinLength(3), MaxLength(50)]
         public string Username { get; set; } = string.Empty;
+        [Required, MinLength(6), MaxLength(100)]
         public string Password { get; set; } = string.Empty;
+        [Required, RegularExpression("^(Admin|Teacher|Student)$")]
         public string Role { get; set; } = string.Empty;
     }
 
@@ -34,8 +41,11 @@
 
     public class CreateProfessionDto
     {
+        [Required, MaxLength(150)]
         public string Name { get; set; } = string.Empty;
+        [Required, MaxLength(20)]
         public string Code { get; set; } = string.Empty;
+        [MaxLength(500)]
         public string? Description { get; set; }
     }
 
@@ -53,18 +63,26 @@
 
     public class CreateEmployeeDto
     {
+        [Required, MaxLength(150)]
         public string FullName { get; set; } = string.Empty;
+        [Required, MinLength(3), MaxLength(50)]
         public string Username { get; set; } = string.Empty;
+        [Required, MinLength(6), MaxLength(100)]
         public string Password { get; set; } = string.Empty;
+        [EmailAddress, MaxLength(150)]
         public string? Email { get; set; }
+        [Phone, MaxLength(30)]
         public string? Phone { get; set; }
         public int? ProfessionId { get; set; }
     }
 
     public class UpdateEmployeeDto
     {
+        [Required, MaxLength(150)]
         public string FullName { get; set; } = string.Empty;
+        [EmailAddress, MaxLength(150)]
         public string? Email { get; set; }
+        [Phone, MaxLength(30)]
         public string? Phone { get; set; }
         public int? ProfessionId { get; set; }
     }
@@ -82,14 +100,18 @@
 
     public class CreateStudentDto
     {
+        [Required, MaxLength(150)]
         public string FullName { get; set; } = string.Empty;
+        [Required, MinLength(3), MaxLength(50)]
         public string Username { get; set; } = string.Empty;
+        [Required, MinLength(6), MaxLength(100)]
         public string Password { get; set; } = string.Empty;
         public int? GroupId { get; set; }
     }
 
     public class UpdateStudentDto
     {
+        [Required, MaxLength(150)]
         public string FullName { get; set; } = string.Empty;
         public int? GroupId { get; set; }
     }
@@ -106,6 +128,7 @@
 
     public class CreateGroupDto
     {
+        [Required, MaxLength(100)]
         public string Name { get; set; } = string.Empty;
         public int? ProfessionId { get; set; }
     }
@@ -120,7 +143,9 @@
 
     public class CreateSubjectDto
     {
+        [Required, MaxLength(150)]
         public string Name { get; set; } = string.Empty;
+        [MaxLength(500)]
         public string? Description { get; set; }
     }
 
@@ -138,9 +163,9 @@
 
     public class CreateESGDto
     {
-        public int EmployeeId { get; set; }
-        public int SubjectId { get; set; }
-        public int GroupId { get; set; }
+        [Range(1, int.MaxValue)] public int EmployeeId { get; set; }
+        [Range(1, int.MaxValue)] public int SubjectId { get; set; }
+        [Range(1, int.MaxValue)] public int GroupId { get; set; }
     }
 
     // Assignment
@@ -163,21 +188,27 @@
 
     public class CreateAssignmentDto
     {
+        [Required, MaxLength(200)]
         public string Title { get; set; } = string.Empty;
+        [MaxLength(2000)]
         public string? Description { get; set; }
+        [Required]
         public DateTime DueDate { get; set; }
-        public int SubjectId { get; set; }
-        public int GroupId { get; set; }
-        public int EmployeeId { get; set; }
+        [Range(1, int.MaxValue)] public int SubjectId { get; set; }
+        [Range(1, int.MaxValue)] public int GroupId { get; set; }
+        [Range(1, int.MaxValue)] public int EmployeeId { get; set; }
     }
 
     public class UpdateAssignmentDto
     {
+        [Required, MaxLength(200)]
         public string Title { get; set; } = string.Empty;
+        [MaxLength(2000)]
         public string? Description { get; set; }
+        [Required]
         public DateTime DueDate { get; set; }
-        public int SubjectId { get; set; }
-        public int GroupId { get; set; }
+        [Range(1, int.MaxValue)] public int SubjectId { get; set; }
+        [Range(1, int.MaxValue)] public int GroupId { get; set; }
     }
 
     // Submission
@@ -196,8 +227,7 @@
 
     public class CreateSubmissionDto
     {
-        public int AssignmentId { get; set; }
-        public int StudentId { get; set; }
+        [Range(1, int.MaxValue)] public int AssignmentId { get; set; }
     }
 
     // Grade
@@ -215,16 +245,18 @@
 
     public class CreateGradeDto
     {
-        public int SubmissionId { get; set; }
-        public int StudentId { get; set; }
+        [Range(1, int.MaxValue)] public int SubmissionId { get; set; }
+        [Range(1, int.MaxValue)] public int StudentId { get; set; }
         public int EmployeeId { get; set; }
-        public decimal Value { get; set; }
+        [Range(0, 100)] public decimal Value { get; set; }
+        [MaxLength(1000)]
         public string? Comment { get; set; }
     }
 
     public class UpdateGradeDto
     {
-        public decimal Value { get; set; }
+        [Range(0, 100)] public decimal Value { get; set; }
+        [MaxLength(1000)]
         public string? Comment { get; set; }
     }
 
@@ -241,8 +273,11 @@
 
     public class CreateNewsDto
     {
+        [Required, MaxLength(200)]
         public string Title { get; set; } = string.Empty;
+        [Required, MaxLength(10000)]
         public string Content { get; set; } = string.Empty;
+        [MaxLength(500)]
         public string? ImageUrl { get; set; }
         public bool IsPublished { get; set; } = true;
     }
