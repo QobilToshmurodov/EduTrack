@@ -21,21 +21,11 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// SQLite database path
-string dbPath;
-if (builder.Environment.IsDevelopment())
-{
-    // In development, put it in the project root
-    dbPath = Path.Combine(Directory.GetCurrentDirectory(), "edutrack.db");
-}
-else
-{
-    // In production, put it next to the executable
-    dbPath = Path.Combine(AppContext.BaseDirectory, "edutrack.db");
-}
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is not configured.");
 
 builder.Services.AddDbContext<EdutrackDbContext>(options =>
-    options.UseSqlite($"Data Source={dbPath}"));
+    options.UseNpgsql(connectionString));
 
 // builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 // builder.WebHost.UseUrls("http://localhost:7000");
